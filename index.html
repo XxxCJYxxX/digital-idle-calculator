@@ -137,9 +137,30 @@ a { color: var(--color-blue); text-decoration: none; }
    Layout
    ============================================================ */
 .app-container {
-  max-width: 780px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 16px 32px;
+}
+
+/* Wide screen breakpoints */
+@media (min-width: 768px) {
+  .app-container { max-width: 1200px; padding: 0 24px 32px; }
+  .stats-bar { grid-template-columns: repeat(4, 1fr); }
+  /* Device list: 2 columns on tablet */
+  .device-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .charts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1200px) {
+  .app-container { max-width: 1400px; padding: 0 32px 40px; }
+  /* Device list: 3 columns on desktop */
+  .device-list { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat-value { font-size: 24px; }
+}
+@media (min-width: 1600px) {
+  .app-container { max-width: 1600px; }
+  .device-list { grid-template-columns: repeat(4, 1fr); }
+  .app-title { font-size: 32px; }
 }
 
 /* Header */
@@ -273,10 +294,9 @@ a { color: var(--color-blue); text-decoration: none; }
   border-radius: var(--radius-lg);
   padding: 18px 20px;
   box-shadow: var(--shadow-sm);
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: start;
   transition: box-shadow var(--transition), transform var(--transition);
 }
 .device-card:hover { box-shadow: var(--shadow-md); }
@@ -322,7 +342,6 @@ a { color: var(--color-blue); text-decoration: none; }
 /* Warranty Countdown */
 .device-warranty {
   display: flex; flex-wrap: wrap; gap: 8px;
-  grid-column: 1 / -1;
   margin-top: 4px;
 }
 .warranty-badge {
@@ -342,7 +361,9 @@ a { color: var(--color-blue); text-decoration: none; }
 
 /* Card Actions */
 .card-actions {
-  display: flex; flex-direction: column; gap: 4px;
+  display: flex; flex-direction: row; gap: 4px;
+  justify-content: flex-end;
+  margin-top: auto;
 }
 .card-action-btn {
   width: 44px; height: 44px;
@@ -624,22 +645,100 @@ a { color: var(--color-blue); text-decoration: none; }
 
 /* Custom background support */
 body.has-custom-bg {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-size: var(--bg-size, cover);
+  background-position: var(--bg-position, center);
+  background-repeat: var(--bg-repeat, no-repeat);
+  background-attachment: var(--bg-attachment, fixed);
 }
 body.has-custom-bg::before {
   content: '';
   position: fixed;
   inset: 0;
   background: var(--color-bg);
-  opacity: 0.75;
+  opacity: var(--bg-overlay-opacity, 0.75);
   z-index: -1;
 }
-[data-theme="dark"] body.has-custom-bg::before { opacity: 0.82; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) body.has-custom-bg::before { opacity: 0.82; }
+
+/* Background settings panel */
+.bg-settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.bg-preview {
+  width: 100%;
+  height: 120px;
+  border-radius: var(--radius-md);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--color-separator);
+}
+.bg-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bg-slider-row label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  min-width: 64px;
+  flex-shrink: 0;
+}
+.bg-slider-row input[type="range"] {
+  flex: 1;
+  height: 32px;
+  accent-color: var(--color-blue);
+}
+.bg-slider-row .slider-val {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.bg-align-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  max-width: 180px;
+}
+.bg-align-btn {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+}
+.bg-align-btn.active {
+  border-color: var(--color-blue);
+  background: var(--color-blue-bg);
+  color: var(--color-blue);
+}
+.bg-size-select {
+  display: flex;
+  gap: 6px;
+}
+.bg-size-btn {
+  flex: 1;
+  height: 36px;
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-input);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  transition: all var(--transition);
+}
+.bg-size-btn.active {
+  border-color: var(--color-blue);
+  background: var(--color-blue-bg);
+  color: var(--color-blue);
 }
 .action-dropdown {
   position: absolute; right: 0; top: 44px;
@@ -972,6 +1071,73 @@ body.has-custom-bg::before {
 </div>
 
 <!-- ============================================================
+     Modal: Background Settings
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalBgSettings" role="dialog" aria-modal="true" aria-label="背景图设置">
+  <div class="modal-sheet" style="max-width: 480px;">
+    <div class="modal-header">
+      <h2 class="modal-title">背景图设置</h2>
+      <button class="icon-btn" id="btnCloseBgSettings" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="bg-settings-group">
+        <div class="bg-preview" id="bgPreview"></div>
+
+        <div class="form-group">
+          <label class="form-label">明度（遮罩透明度）</label>
+          <div class="bg-slider-row">
+            <input type="range" id="bgBrightness" min="0" max="100" value="25">
+            <span class="slider-val" id="bgBrightnessVal">25%</span>
+          </div>
+          <div class="form-hint">数值越大背景越清晰</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">高斯模糊</label>
+          <div class="bg-slider-row">
+            <input type="range" id="bgBlur" min="0" max="50" value="0">
+            <span class="slider-val" id="bgBlurVal">0px</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">对齐位置</label>
+          <div class="bg-align-grid" id="bgAlignGrid">
+            <button class="bg-align-btn" data-pos="left top">↖</button>
+            <button class="bg-align-btn active" data-pos="center top">↑</button>
+            <button class="bg-align-btn" data-pos="right top">↗</button>
+            <button class="bg-align-btn" data-pos="left center">←</button>
+            <button class="bg-align-btn" data-pos="center center">●</button>
+            <button class="bg-align-btn" data-pos="right center">→</button>
+            <button class="bg-align-btn" data-pos="left bottom">↙</button>
+            <button class="bg-align-btn" data-pos="center bottom">↓</button>
+            <button class="bg-align-btn" data-pos="right bottom">↘</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">裁切方式</label>
+          <div class="bg-size-select" id="bgSizeSelect">
+            <button class="bg-size-btn active" data-size="cover">裁切填充</button>
+            <button class="bg-size-btn" data-size="contain">完整显示</button>
+            <button class="bg-size-btn" data-size="auto">原始大小</button>
+          </div>
+          <div class="form-hint">裁切填充=铺满屏幕裁切多余部分；完整显示=不裁切可能留白</div>
+        </div>
+
+        <div class="form-group" style="display:flex;gap:8px;">
+          <button class="btn btn-secondary btn-block" id="btnReuploadBg">更换图片</button>
+          <button class="btn btn-danger btn-block" id="btnRemoveBg">清除背景</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary btn-block" id="btnApplyBgSettings">应用</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
      Application Script
      ============================================================ -->
 <script>
@@ -979,7 +1145,7 @@ body.has-custom-bg::before {
    Database Layer — IndexedDB
    ============================================================ */
 const DB_NAME = 'IdleDeviceDB';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 let db = null;
 
 function openDB() {
@@ -995,6 +1161,13 @@ function openDB() {
       if (!d.objectStoreNames.contains('categories')) {
         const catStore = d.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
         catStore.createIndex('name', 'name', { unique: true });
+      }
+      if (!d.objectStoreNames.contains('settings')) {
+        d.createObjectStore('settings', { keyPath: 'key' });
+      }
+      // Handle upgrade from v1
+      if (e.oldVersion < 2 && !d.objectStoreNames.contains('settings')) {
+        d.createObjectStore('settings', { keyPath: 'key' });
       }
     };
     req.onsuccess = (e) => { db = e.target.result; resolve(db); };
@@ -1800,43 +1973,144 @@ function initTheme() {
 }
 
 /* ============================================================
-   Custom Background
+   Custom Background — IndexedDB for image + localStorage for settings
    ============================================================ */
-function applyCustomBg() {
-  const bg = localStorage.getItem('customBg');
-  if (bg) {
+const BG_DEFAULTS = { brightness: 25, blur: 0, position: 'center center', size: 'cover' };
+
+function getBgSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('bgSettings') || '{}');
+    return { ...BG_DEFAULTS, ...s };
+  } catch { return { ...BG_DEFAULTS }; }
+}
+
+function saveBgSettings(s) {
+  localStorage.setItem('bgSettings', JSON.stringify(s));
+}
+
+function dbGetSetting(key) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx('settings').get(key);
+    req.onsuccess = () => resolve(req.result ? req.result.value : null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbSetSetting(key, value) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx('settings', 'readwrite').put({ key, value });
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function getCustomBgImage() {
+  return await dbGetSetting('customBg');
+}
+
+async function setCustomBgImage(dataUrl) {
+  await dbSetSetting('customBg', dataUrl);
+}
+
+async function deleteCustomBgImage() {
+  return new Promise((resolve, reject) => {
+    const req = dbTx('settings', 'readwrite').delete('customBg');
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+let currentBgImage = null;
+
+async function applyCustomBg() {
+  const img = await getCustomBgImage();
+  currentBgImage = img;
+  if (img) {
+    const s = getBgSettings();
     document.body.classList.add('has-custom-bg');
-    document.body.style.backgroundImage = `url(${bg})`;
+    document.body.style.setProperty('--bg-size', s.size);
+    document.body.style.setProperty('--bg-position', s.position);
+    document.body.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
+    document.body.style.setProperty('--bg-attachment', 'fixed');
+    document.body.style.setProperty('--bg-overlay-opacity', String(s.brightness / 100));
+    document.body.style.filter = `blur(${s.blur}px)`;
+    document.body.style.backgroundImage = `url(${img})`;
   } else {
     document.body.classList.remove('has-custom-bg');
     document.body.style.backgroundImage = '';
+    document.body.style.filter = '';
   }
 }
 
-function handleBgUpload(file) {
+async function handleBgUpload(file) {
   if (!file) return;
   if (!file.type.startsWith('image/')) {
     showToast('请选择图片文件', 'error');
     return;
   }
-  if (file.size > 4 * 1024 * 1024) {
-    showToast('图片不能超过 4MB', 'error');
-    return;
-  }
   const reader = new FileReader();
-  reader.onload = (e) => {
-    localStorage.setItem('customBg', e.target.result);
-    applyCustomBg();
+  reader.onload = async (e) => {
+    await setCustomBgImage(e.target.result);
+    await applyCustomBg();
     showToast('背景图已设置', 'success');
+    openBgSettings();
   };
   reader.onerror = () => showToast('图片读取失败', 'error');
   reader.readAsDataURL(file);
 }
 
-function clearCustomBg() {
-  localStorage.removeItem('customBg');
-  applyCustomBg();
+async function clearCustomBg() {
+  await deleteCustomBgImage();
+  localStorage.removeItem('bgSettings');
+  currentBgImage = null;
+  await applyCustomBg();
   showToast('背景图已清除', 'success');
+}
+
+function openBgSettings() {
+  const s = getBgSettings();
+  const preview = $('#bgPreview');
+  if (currentBgImage) {
+    preview.style.backgroundImage = `url(${currentBgImage})`;
+  } else {
+    preview.style.backgroundImage = '';
+    preview.style.background = 'var(--color-fill-tertiary)';
+  }
+  $('#bgBrightness').value = s.brightness;
+  $('#bgBrightnessVal').textContent = s.brightness + '%';
+  $('#bgBlur').value = s.blur;
+  $('#bgBlurVal').textContent = s.blur + 'px';
+  $$('#bgAlignGrid .bg-align-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.pos === s.position);
+  });
+  $$('#bgSizeSelect .bg-size-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === s.size);
+  });
+  openModal('#modalBgSettings');
+}
+
+function applyBgSettingsLive() {
+  const s = {
+    brightness: parseInt($('#bgBrightness').value),
+    blur: parseInt($('#bgBlur').value),
+    position: $$('#bgAlignGrid .bg-align-btn.active')?.[0]?.dataset.pos || BG_DEFAULTS.position,
+    size: $$('#bgSizeSelect .bg-size-btn.active')?.[0]?.dataset.size || BG_DEFAULTS.size,
+  };
+  $('#bgBrightnessVal').textContent = s.brightness + '%';
+  $('#bgBlurVal').textContent = s.blur + 'px';
+  document.body.style.setProperty('--bg-size', s.size);
+  document.body.style.setProperty('--bg-position', s.position);
+  document.body.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
+  document.body.style.setProperty('--bg-overlay-opacity', String(s.brightness / 100));
+  document.body.style.filter = `blur(${s.blur}px)`;
+  return s;
+}
+
+async function confirmBgSettings() {
+  const s = applyBgSettingsLive();
+  saveBgSettings(s);
+  closeModal('#modalBgSettings');
+  showToast('背景设置已应用', 'success');
 }
 
 /* ============================================================
@@ -1983,21 +2257,53 @@ function bindEvents() {
   $('#btnThemeToggle').addEventListener('click', toggleTheme);
 
   // Custom background
-  $('#btnSetBg').addEventListener('click', () => {
+  $('#btnSetBg').addEventListener('click', async () => {
     closeAllModals();
     $('#actionDropdown').classList.remove('open');
-    $('#bgFileInput').click();
+    const img = await getCustomBgImage();
+    if (img) {
+      openBgSettings();
+    } else {
+      $('#bgFileInput').click();
+    }
   });
-  $('#btnClearBg').addEventListener('click', () => {
+  $('#btnClearBg').addEventListener('click', async () => {
     closeAllModals();
     $('#actionDropdown').classList.remove('open');
-    clearCustomBg();
+    await clearCustomBg();
   });
   $('#bgFileInput').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) handleBgUpload(file);
     e.target.value = '';
   });
+
+  // Background settings panel
+  $('#btnCloseBgSettings').addEventListener('click', () => closeModal('#modalBgSettings'));
+  $('#bgBrightness').addEventListener('input', applyBgSettingsLive);
+  $('#bgBlur').addEventListener('input', applyBgSettingsLive);
+  $$('#bgAlignGrid .bg-align-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#bgAlignGrid .bg-align-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyBgSettingsLive();
+    });
+  });
+  $$('#bgSizeSelect .bg-size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#bgSizeSelect .bg-size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyBgSettingsLive();
+    });
+  });
+  $('#btnReuploadBg').addEventListener('click', () => {
+    $('#bgFileInput').click();
+  });
+  $('#btnRemoveBg').addEventListener('click', async () => {
+    await clearCustomBg();
+    closeModal('#modalBgSettings');
+  });
+  $('#btnApplyBgSettings').addEventListener('click', confirmBgSettings);
 
   // Periodic refresh for warranty countdown (every 60s)
   setInterval(() => {
@@ -2012,8 +2318,8 @@ function bindEvents() {
    ============================================================ */
 async function init() {
   initTheme();
-  applyCustomBg();
   await openDB();
+  await applyCustomBg();
   await loadCategories();
   await loadDevices();
   bindEvents();
