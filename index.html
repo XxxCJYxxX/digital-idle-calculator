@@ -616,6 +616,126 @@
   border-top-color: rgba(216, 168, 71, 0.14);
 }
 
+/* 环状统计卡片 — 暖金橘边 */
+[data-theme="sonetto"] .ring-card,
+[data-theme="sonetto-dark"] .ring-card {
+  border: none;
+  border-top: 2px solid rgba(212, 168, 75, 0.22);
+}
+[data-theme="sonetto"] .ring-card:hover,
+[data-theme="sonetto-dark"] .ring-card:hover {
+  border-top-color: rgba(227, 140, 55, 0.38);
+}
+
+/* 图表卡片 */
+[data-theme="sonetto"] .chart-card,
+[data-theme="sonetto-dark"] .chart-card {
+  border: none;
+  border-top: 2px solid rgba(212, 168, 75, 0.20);
+}
+
+/* 订阅概览卡片 */
+[data-theme="sonetto"] .sub-overview-card,
+[data-theme="sonetto-dark"] .sub-overview-card {
+  border: none;
+  border-top: 1px solid rgba(212, 168, 75, 0.20);
+}
+
+/* 弹窗 */
+[data-theme="sonetto"] .modal-sheet,
+[data-theme="sonetto-dark"] .modal-sheet {
+  border: 1px solid rgba(212, 168, 75, 0.18);
+}
+
+/* 下拉菜单 */
+[data-theme="sonetto"] .action-dropdown,
+[data-theme="sonetto-dark"] .action-dropdown {
+  border: 1px solid rgba(212, 168, 75, 0.16);
+}
+
+/* 输入框聚焦 */
+[data-theme="sonetto"] input:focus,
+[data-theme="sonetto"] select:focus,
+[data-theme="sonetto-dark"] input:focus,
+[data-theme="sonetto-dark"] select:focus {
+  border-color: #E38B37;
+  box-shadow: 0 0 0 3px rgba(227, 139, 55, 0.12);
+}
+
+/* 对比表格 */
+[data-theme="sonetto"] .compare-table th,
+[data-theme="sonetto-dark"] .compare-table th {
+  background: #FCF6EC;
+  color: #8B6914;
+}
+[data-theme="sonetto-dark"] .compare-table th {
+  background: #2A2015;
+  color: #E8A34D;
+}
+[data-theme="sonetto"] .compare-table td,
+[data-theme="sonetto-dark"] .compare-table td {
+  border-color: rgba(212, 168, 75, 0.15);
+}
+
+/* 品牌芯片 */
+[data-theme="sonetto"] .preset-brand-chip,
+[data-theme="sonetto-dark"] .preset-brand-chip {
+  border-color: rgba(212, 168, 75, 0.25);
+}
+[data-theme="sonetto"] .preset-brand-chip:hover,
+[data-theme="sonetto-dark"] .preset-brand-chip:hover {
+  border-color: #E38B37;
+  background: #FCF6EC;
+}
+[data-theme="sonetto-dark"] .preset-brand-chip:hover {
+  background: #2A2015;
+}
+
+/* Toast */
+[data-theme="sonetto"] .toast.success,
+[data-theme="sonetto-dark"] .toast.success {
+  background: #FCF6EC;
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  color: #8B6914;
+}
+[data-theme="sonetto-dark"] .toast.success {
+  background: #2A2015;
+  color: #E8A34D;
+}
+
+/* 工具栏下拉 */
+[data-theme="sonetto"] .toolbar select,
+[data-theme="sonetto"] .sub-toolbar select,
+[data-theme="sonetto-dark"] .toolbar select,
+[data-theme="sonetto-dark"] .sub-toolbar select {
+  border-color: rgba(212, 168, 75, 0.20);
+}
+[data-theme="sonetto"] .toolbar select:hover,
+[data-theme="sonetto"] .sub-toolbar select:hover,
+[data-theme="sonetto-dark"] .toolbar select:hover,
+[data-theme="sonetto-dark"] .sub-toolbar select:hover {
+  border-color: #E38B37;
+}
+
+/* Sonetto 主题丝带标题装饰 */
+[data-theme="sonetto"] .device-card::after,
+[data-theme="sonetto-dark"] .device-card::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: rgba(212, 168, 75, 0.30);
+  z-index: 4;
+  pointer-events: none;
+}
+[data-theme="sonetto"] .device-card,
+[data-theme="sonetto-dark"] .device-card {
+  position: relative;
+}
+
 /* ============================================================
    Theme Transition — silky smooth crossfade
    ============================================================ */
