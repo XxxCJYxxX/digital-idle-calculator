@@ -644,12 +644,20 @@ a { color: var(--color-blue); text-decoration: none; }
 .theme-toggle svg { width: 22px; height: 22px; fill: currentColor; }
 
 /* Custom background support */
-body.has-custom-bg {
+#customBgLayer {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
   background-size: var(--bg-size, cover);
   background-position: var(--bg-position, center);
   background-repeat: var(--bg-repeat, no-repeat);
   background-attachment: var(--bg-attachment, fixed);
+  display: none;
+  pointer-events: none;
 }
+body.has-custom-bg #customBgLayer { display: block; }
+
+/* Overlay tint on top of blurred bg, behind content */
 body.has-custom-bg::before {
   content: '';
   position: fixed;
@@ -657,6 +665,7 @@ body.has-custom-bg::before {
   background: var(--color-bg);
   opacity: var(--bg-overlay-opacity, 0.75);
   z-index: -1;
+  pointer-events: none;
 }
 
 /* Background settings panel */
@@ -776,6 +785,9 @@ body.has-custom-bg::before {
 </style>
 </head>
 <body>
+
+<!-- Custom background layer (blur applied here, not on body) -->
+<div id="customBgLayer"></div>
 
 <!-- ============================================================
      App Container
@@ -2025,20 +2037,21 @@ let currentBgImage = null;
 async function applyCustomBg() {
   const img = await getCustomBgImage();
   currentBgImage = img;
+  const layer = $('#customBgLayer');
   if (img) {
     const s = getBgSettings();
     document.body.classList.add('has-custom-bg');
-    document.body.style.setProperty('--bg-size', s.size);
-    document.body.style.setProperty('--bg-position', s.position);
-    document.body.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
-    document.body.style.setProperty('--bg-attachment', 'fixed');
+    layer.style.backgroundImage = `url(${img})`;
+    layer.style.setProperty('--bg-size', s.size);
+    layer.style.setProperty('--bg-position', s.position);
+    layer.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
+    layer.style.setProperty('--bg-attachment', 'fixed');
     document.body.style.setProperty('--bg-overlay-opacity', String(s.brightness / 100));
-    document.body.style.filter = `blur(${s.blur}px)`;
-    document.body.style.backgroundImage = `url(${img})`;
+    layer.style.filter = `blur(${s.blur}px)`;
   } else {
     document.body.classList.remove('has-custom-bg');
-    document.body.style.backgroundImage = '';
-    document.body.style.filter = '';
+    layer.style.backgroundImage = '';
+    layer.style.filter = '';
   }
 }
 
@@ -2098,11 +2111,12 @@ function applyBgSettingsLive() {
   };
   $('#bgBrightnessVal').textContent = s.brightness + '%';
   $('#bgBlurVal').textContent = s.blur + 'px';
-  document.body.style.setProperty('--bg-size', s.size);
-  document.body.style.setProperty('--bg-position', s.position);
-  document.body.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
+  const layer = $('#customBgLayer');
+  layer.style.setProperty('--bg-size', s.size);
+  layer.style.setProperty('--bg-position', s.position);
+  layer.style.setProperty('--bg-repeat', s.size === 'auto' ? 'repeat' : 'no-repeat');
   document.body.style.setProperty('--bg-overlay-opacity', String(s.brightness / 100));
-  document.body.style.filter = `blur(${s.blur}px)`;
+  layer.style.filter = `blur(${s.blur}px)`;
   return s;
 }
 
