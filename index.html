@@ -2467,6 +2467,22 @@ function today() {
   return new Date().toISOString().split('T')[0];
 }
 
+function addDays(dateStr, days) {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split('T')[0];
+}
+
+function computeNextPayment(startDate, cycle) {
+  const c = cycleDays(cycle);
+  if (c <= 0) return ''; // lifetime
+  // Advance from start date until we hit a date >= today
+  let next = new Date(startDate);
+  const now = new Date(); now.setHours(0,0,0,0);
+  while (next < now) { next.setDate(next.getDate() + c); }
+  return next.toISOString().split('T')[0];
+}
+
 function daysBetween(d1, d2) {
   return Math.max(0, Math.floor((new Date(d2) - new Date(d1)) / 86400000));
 }
@@ -3489,7 +3505,12 @@ function renderSubPresetPicker(filterCat) {
       $('#subIcon').value = el.dataset.icon;
       $('#subPrice').value = parseFloat(el.dataset.price) || '';
       $('#subCycle').value = el.dataset.cycle;
-      $('#subNextPayment').value = el.dataset.cycle !== 'lifetime' ? today() : '';
+      if (el.dataset.cycle !== 'lifetime') {
+        $('#subStartDate').value = today();
+        $('#subNextPayment').value = computeNextPayment(today(), el.dataset.cycle);
+      } else {
+        $('#subNextPayment').value = '';
+      }
     });
   });
 }
