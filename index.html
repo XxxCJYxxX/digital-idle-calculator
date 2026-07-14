@@ -64,6 +64,22 @@
   --font-mono:  "SF Mono", "Menlo", "Consolas", monospace;
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Animation Easing Curves (non-linear) */
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-back: cubic-bezier(0.68, -0.3, 0.32, 1.3);
+  --ease-bounce:      cubic-bezier(0.22, 1.28, 0.38, 1.52);
+  --ease-smooth:      cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out-back:    cubic-bezier(0.34, 1.3, 0.64, 1);
+
+  /* Animation Durations */
+  --dur-press:   0.1s;
+  --dur-fast:    0.18s;
+  --dur-hover:   0.22s;
+  --dur-normal:  0.3s;
+  --dur-enter:   0.45s;
+  --dur-spring:  0.5s;
 }
 /* Dark theme */
 [data-theme="dark"] {
@@ -383,6 +399,161 @@
     --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
     --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
   }
+}
+
+/* ============================================================
+   Animation System — non-linear spring physics
+   ============================================================ */
+
+/* ---- Card hover lift ---- */
+.device-card, .ring-card, .sub-card, .chart-card, .sub-overview-card {
+  transition: transform var(--dur-hover) var(--ease-out-expo),
+              box-shadow var(--dur-hover) var(--ease-out-expo);
+}
+.device-card:hover, .ring-card:hover, .sub-card:hover, .chart-card:hover,
+.sub-overview-card:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.10), var(--glass-shadow-inner);
+}
+.device-card:active, .ring-card:active, .sub-card:active, .chart-card:active,
+.sub-overview-card:active {
+  transform: translateY(0) scale(0.99);
+  transition: transform var(--dur-press) var(--ease-smooth);
+}
+
+/* ---- Device card entrance (stagger via JS) ---- */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Button press-down + hover lift ---- */
+.btn-primary, .icon-btn, .tab-btn {
+  transition: transform var(--dur-press) var(--ease-spring),
+              box-shadow var(--dur-fast) var(--ease-out-expo);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+}
+.btn-primary:active { transform: scale(0.96); }
+.icon-btn:active { transform: scale(0.92); transition: transform 0.08s var(--ease-smooth); }
+
+/* ---- Modal spring entrance ---- */
+@keyframes modalEnter {
+  from { opacity: 0; transform: translateY(24px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-overlay:not(.hidden) .modal-sheet {
+  animation: modalEnter var(--dur-spring) var(--ease-spring);
+}
+
+/* ---- Toast bounce in ---- */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.94); }
+  40%  { transform: translateY(-1px) scale(1.01); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast:not(.removing) {
+  animation: toastIn var(--dur-spring) var(--ease-bounce);
+}
+
+/* ---- Dropdown scale+fade ---- */
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.action-dropdown.open {
+  animation: dropdownIn var(--dur-fast) var(--ease-out-expo);
+}
+
+/* ---- Stats item hover pulse ---- */
+.stat-item {
+  transition: transform var(--dur-hover) var(--ease-out-expo);
+}
+.stat-item:hover {
+  transform: scale(1.03);
+}
+
+/* ---- Preset items ---- */
+.sub-preset-item {
+  transition: transform 0.12s var(--ease-out-expo),
+              border-color 0.12s var(--ease-smooth),
+              background 0.12s var(--ease-smooth);
+}
+.sub-preset-item:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* ---- Tab switch ripple ---- */
+.tab-btn {
+  transition: background var(--dur-fast) var(--ease-smooth),
+              color var(--dur-fast) var(--ease-smooth),
+              transform var(--dur-press) var(--ease-spring),
+              border-color var(--dur-fast) var(--ease-smooth);
+}
+
+/* ---- Warranty badge pulse ---- */
+@keyframes pulseBadge {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.75; }
+}
+.warranty-badge.danger {
+  animation: pulseBadge 2s var(--ease-smooth) infinite;
+}
+
+/* ---- Action menu button ---- */
+#btnActionMenu {
+  transition: transform var(--dur-press) var(--ease-spring);
+}
+#btnActionMenu:active {
+  transform: scale(0.88) rotate(8deg);
+}
+
+/* ---- Ring card entrance stagger ---- */
+@keyframes ringIn {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ---- Filter/sort selects ---- */
+.toolbar select, .sub-toolbar select {
+  transition: border-color var(--dur-fast) var(--ease-smooth),
+              box-shadow var(--dur-fast) var(--ease-smooth);
+}
+.toolbar select:hover, .sub-toolbar select:hover {
+  box-shadow: 0 0 0 2px rgba(var(--glass-rgb, 0,122,255), 0.15);
+}
+
+/* ---- Modal overlay fade ---- */
+.modal-overlay {
+  transition: opacity var(--dur-fast) var(--ease-out-expo);
+}
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+}
+
+/* ---- Glass opacity slider ---- */
+#glassOpacitySlider {
+  transition: accent-color var(--dur-fast) var(--ease-smooth);
+}
+
+/* ---- Brand chip ---- */
+.preset-brand-chip {
+  transition: all var(--dur-fast) var(--ease-spring);
+}
+.preset-brand-chip:hover {
+  transform: scale(1.08);
+}
+
+/* ---- Compare header row ---- */
+.compare-table th {
+  transition: background var(--dur-fast) var(--ease-smooth);
+}
+
+/* ---- 预设库产品线 header ---- */
+.preset-line-header {
+  transition: background var(--dur-fast) var(--ease-smooth);
 }
 
 /* ============================================================
@@ -3176,7 +3347,7 @@ function renderDeviceList() {
     emptyEl.classList.remove('hidden');
   } else {
     emptyEl.classList.add('hidden');
-    container.innerHTML = list.map(d => {
+    container.innerHTML = list.map((d, i) => {
       const wStatus = warrantyStatus(d.warrantyRemain);
       const acStatus = warrantyStatus(d.appleCareRemain);
       let warrantyHTML = '';
@@ -3187,7 +3358,7 @@ function renderDeviceList() {
         warrantyHTML += `<div class="warranty-badge ${acStatus}" aria-label="延保${warrantyText(d.appleCareRemain)}"><span class="warranty-dot"></span>AC+/延保${warrantyText(d.appleCareRemain)}</div>`;
       }
       return `
-      <div class="device-card" data-id="${d.id}">
+      <div class="device-card" data-id="${d.id}" style="animation: cardIn var(--dur-enter) var(--ease-out-expo) both; animation-delay: ${i * 0.04}s">
         <div class="device-info">
           <div class="device-name">${escHtml(d.name)}</div>
           <span class="device-category">${escHtml(d.category)}</span>
@@ -3641,6 +3812,8 @@ function renderRings() {
     // Create card
     const card = document.createElement('div');
     card.className = 'ring-card';
+    card.style.animation = `ringIn var(--dur-enter) var(--ease-out-expo) both`;
+    card.style.animationDelay = `${idx * 0.05}s`;
 
     const canvas = document.createElement('canvas');
     canvas.width = CANVAS_SIZE * DPR;
