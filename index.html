@@ -98,87 +98,196 @@
     radial-gradient(ellipse 60% 50% at 90% 80%, rgba(191,90,242,0.08) 0%, transparent 60%),
     var(--color-bg);
 }
-/* Sonetto theme (Retro Academic / Warm Tangerine) */
+/* ============================================================
+   Sonetto — 十四行诗 主题
+   视觉锚点：暖金橘发丝 / 黑白棋盘袖口 / 玻璃笔水晶折射
+            金铜星章 / 学院黑缎带 / 象牙白制服
+   ============================================================ */
 :root[data-theme="sonetto"] {
   color-scheme: light;
-  --color-bg:              #F7F5F0;
-  --color-bg-card:         #FFFFFF;
-  --color-bg-elevated:     #FFFDF9;
-  --color-bg-input:        #F1EEE8;
-  --color-text:            #2A2A30;
-  --color-text-secondary:  #6B665C;
-  --color-text-tertiary:   #9A948A;
-  --color-separator:       #E8E4DB;
-  --color-fill-tertiary:   #EDE9E0;
-  --color-overlay:         rgba(42,42,48,0.35);
-  --color-blue:            #D4863A;
-  --color-blue-bg:         #FFF4E8;
-  --color-red:             #C64B42;
-  --color-red-bg:          #FFEEED;
-  --color-orange:          #E87C3A;
-  --color-orange-bg:       #FFF4E5;
-  --color-green:           #6B9E7C;
-  --color-green-bg:        #E9F7ED;
-  --color-purple:          #8A7EB8;
-  --color-teal:            #A6D9C8;
-  /* Liquid Glass — sonetto */
-  --glass-rgb:             255, 253, 249;
-  --glass-alpha:           0.62;
+
+  /* ── 基础层次：象牙白制服 → 米白纸页 ── */
+  --color-bg:              #F8F5EE;
+  --color-bg-card:         #FFFDF8;
+  --color-bg-elevated:     #FFFFFB;
+  --color-bg-input:        #F2EDE3;
+  --color-text:            #2C2C35;
+  --color-text-secondary:  #706B60;
+  --color-text-tertiary:   #A0988A;
+  --color-separator:       #E7E1D4;
+  --color-fill-tertiary:   #EDE7DA;
+  --color-overlay:         rgba(44,44,53,0.35);
+
+  /* ── 暖金橘主色（发丝 / 高亮 / 主按钮） ── */
+  --color-blue:            #D9832E;
+  --color-blue-bg:         #FFF3E2;
+
+  /* ── 深绯红（缎带 / 危险 / 删除） ── */
+  --color-red:             #C6453E;
+  --color-red-bg:          #FFEDEC;
+
+  /* ── 水晶青（玻璃笔 / 法杖 / 安全 / 成功） ── */
+  --color-green:           #5E9E78;
+  --color-green-bg:        #E7F5EC;
+
+  /* ── 暖琥珀（警告 / 关注） ── */
+  --color-orange:          #E88B3E;
+  --color-orange-bg:       #FFF2E1;
+
+  /* ── 薰衣草灰（次强调） ── */
+  --color-purple:          #8B7EAA;
+  --color-teal:            #A8D5C8;
+
+  /* ── 液态玻璃：模拟玻璃笔的微蓝水晶光泽 ── */
+  --glass-rgb:             254, 252, 246;
+  --glass-alpha:           0.60;
   --glass-alpha-strong:    0.82;
-  --glass-alpha-subtle:    0.46;
-  --glass-border:          rgba(212, 168, 71, 0.28);
+  --glass-alpha-subtle:    0.44;
+  --glass-border:          rgba(168, 213, 200, 0.32);
   --glass-blur:            22px;
-  --glass-saturate:        175%;
-  --shadow-sm:  0 1px 3px rgba(42,42,48,0.06);
-  --shadow-md:  0 4px 16px rgba(42,42,48,0.06);
-  --shadow-lg:  0 8px 32px rgba(42,42,48,0.10);
+  --glass-saturate:        170%;
+
+  /* ── 金铜徽章阴影 ── */
+  --shadow-sm:  0 1px 3px rgba(44,44,53,0.05);
+  --shadow-md:  0 4px 16px rgba(44,44,53,0.06);
+  --shadow-lg:  0 8px 32px rgba(44,44,53,0.09);
+
+  /* ── Sonetto 专有渐变句柄（供元素覆写用） ── */
+  --sonetto-glow-warm:   radial-gradient(ellipse 80% 50% at 50% -10%, rgba(227,140,55,0.09) 0%, transparent 60%);
+  --sonetto-glow-cool:   radial-gradient(ellipse 60% 45% at 85% 80%, rgba(168,213,200,0.07) 0%, transparent 55%);
+  --sonetto-glow-amber:  radial-gradient(ellipse 50% 40% at 15% 75%, rgba(212,168,75,0.05) 0%, transparent 60%);
 }
+
 :root[data-theme="sonetto"] body {
+  /* 三层柔光 + 半透明棋盘格水印（模拟袖口/发带纹理）*/
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,124,58,0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(166,217,200,0.08) 0%, transparent 60%),
+    var(--sonetto-glow-warm),
+    var(--sonetto-glow-cool),
+    var(--sonetto-glow-amber),
+    repeating-conic-gradient(
+      rgba(0,0,0,0.015) 0% 25%,
+      transparent 0% 50%
+    ) 0 0 / 32px 32px,
     var(--color-bg);
 }
-/* Dark Sonetto (Midnight Academic) */
+
+/* ============================================================
+   Sonetto · 夜 — 深色学院 / 墨夜暖光
+   ============================================================ */
 :root[data-theme="sonetto-dark"] {
   color-scheme: dark;
-  --color-bg:              #1E1E24;
-  --color-bg-card:         #2A2A30;
-  --color-bg-elevated:     #33333A;
-  --color-bg-input:        #2A2A30;
-  --color-text:            #F7F5F0;
-  --color-text-secondary:  #B0ABA4;
-  --color-text-tertiary:   #7A746B;
-  --color-separator:       #3A3A42;
-  --color-fill-tertiary:   #3E3E46;
+
+  --color-bg:              #1C1C24;
+  --color-bg-card:         #26262F;
+  --color-bg-elevated:     #2F2F39;
+  --color-bg-input:        #26262F;
+  --color-text:            #F1EDE5;
+  --color-text-secondary:  #B5AFA4;
+  --color-text-tertiary:   #7D7568;
+  --color-separator:       #383842;
+  --color-fill-tertiary:   #3C3C47;
   --color-overlay:         rgba(0,0,0,0.55);
-  --color-blue:            #F5A94D;
+
+  --color-blue:            #F5A54D;
   --color-blue-bg:         #3A2C1A;
   --color-red:             #FF6B5E;
   --color-red-bg:          #3A1C1C;
-  --color-orange:          #F5A94D;
+  --color-orange:          #F5A54D;
   --color-orange-bg:       #3A2C1A;
   --color-green:           #7AC293;
   --color-green-bg:        #1A3320;
   --color-purple:          #A99DFF;
   --color-purple-bg:       #2A1A44;
-  --color-teal:            #A6D9C8;
-  --glass-rgb:             42, 42, 48;
+  --color-teal:            #8ACCB8;
+
+  --glass-rgb:             38, 38, 47;
   --glass-alpha:           0.62;
   --glass-alpha-strong:    0.82;
   --glass-alpha-subtle:    0.46;
-  --glass-border:          rgba(245, 169, 77, 0.18);
+  --glass-border:          rgba(245, 165, 77, 0.15);
   --glass-blur:            24px;
   --glass-saturate:        195%;
+
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.45);
   --shadow-md:  0 4px 16px rgba(0,0,0,0.40);
   --shadow-lg:  0 8px 32px rgba(0,0,0,0.50);
+
+  --sonetto-glow-warm:   radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,165,77,0.10) 0%, transparent 60%);
+  --sonetto-glow-cool:   radial-gradient(ellipse 60% 45% at 85% 80%, rgba(138,204,184,0.05) 0%, transparent 55%);
+  --sonetto-glow-amber:  radial-gradient(ellipse 50% 40% at 15% 75%, rgba(245,165,77,0.04) 0%, transparent 60%);
 }
+
 :root[data-theme="sonetto-dark"] body {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,124,58,0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(166,217,200,0.06) 0%, transparent 60%),
+    var(--sonetto-glow-warm),
+    var(--sonetto-glow-cool),
+    var(--sonetto-glow-amber),
+    repeating-conic-gradient(
+      rgba(255,255,255,0.02) 0% 25%,
+      transparent 0% 50%
+    ) 0 0 / 36px 36px,
     var(--color-bg);
+}
+
+/* ============================================================
+   Sonetto Visual Overrides — character motifs
+   ============================================================ */
+
+/* 学院缎带 tab 选中态：暖金橘底线 */
+[data-theme="sonetto"] .tab-btn.active,
+[data-theme="sonetto-dark"] .tab-btn.active {
+  border-bottom-color: var(--color-blue);
+  box-shadow: 0 2px 0 var(--color-blue);
+}
+
+/* 金铜徽章光泽：卡片顶部细线模拟勋章缎带边缘 */
+[data-theme="sonetto"] .device-card,
+[data-theme="sonetto-dark"] .device-card {
+  border-top: 2px solid rgba(216, 168, 71, 0.22);
+}
+[data-theme="sonetto"] .device-card:hover,
+[data-theme="sonetto-dark"] .device-card:hover {
+  border-top-color: rgba(216, 168, 71, 0.44);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(212, 168, 75, 0.10);
+}
+
+/* 玻璃笔水晶光泽：stat-item 左边青绿发光线 */
+[data-theme="sonetto"] .stat-item,
+[data-theme="sonetto-dark"] .stat-item {
+  border-left: 2px solid rgba(168, 213, 200, 0.32);
+}
+
+/* 金铜按钮渐变背景 */
+[data-theme="sonetto"] .btn-primary {
+  background: linear-gradient(135deg, #D9832E 0%, #C57524 100%);
+}
+[data-theme="sonetto-dark"] .btn-primary {
+  background: linear-gradient(135deg, #F5A54D 0%, #D9832E 100%);
+}
+
+/* 学院缎带 icon-btn hover */
+[data-theme="sonetto"] .icon-btn:hover,
+[data-theme="sonetto-dark"] .icon-btn:hover {
+  background: var(--color-blue-bg);
+}
+
+/* 标题下方水晶装饰线 */
+[data-theme="sonetto"] .app-header,
+[data-theme="sonetto-dark"] .app-header {
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, transparent 0%, rgba(227, 139, 55, 0.35) 20%, rgba(168, 213, 200, 0.35) 50%, rgba(212, 168, 75, 0.25) 80%, transparent 100%) 1;
+}
+
+/* 订阅卡片：金铜左框线 */
+[data-theme="sonetto"] .sub-card,
+[data-theme="sonetto-dark"] .sub-card {
+  border-left: 3px solid rgba(216, 168, 71, 0.28);
+}
+
+/* 分割线：暖金渐变 */
+[data-theme="sonetto"] .dropdown-slider-row,
+[data-theme="sonetto-dark"] .dropdown-slider-row {
+  border-top-color: rgba(216, 168, 71, 0.14);
 }
 
 /* System preference when no manual override */
@@ -3234,8 +3343,8 @@ function getChartColors() {
     : ['#007AFF', '#AF52DE', '#34C759', '#FF9500', '#FF3B30', '#5AC8FA'];
   if (isSonetto) {
     bars = isDark
-      ? ['#F5A94D', '#E87C3A', '#A6D9C8', '#D4A847', '#FF6B5E', '#7AC293']
-      : ['#E87C3A', '#F5A94D', '#A6D9C8', '#D4A847', '#C64B42', '#6B9E7C'];
+      ? ['#F5A54D', '#FF7A3D', '#8ACCB8', '#C9A13E', '#FF6B5E', '#7AC293']
+      : ['#E38B37', '#F5A54D', '#A8D5C8', '#C9A13E', '#C6453E', '#5E9E78'];
   }
   return { text, grid, bars };
 }
@@ -3722,8 +3831,9 @@ function updateThemeMeta() {
   const theme = getEffectiveTheme();
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   let color = '#F2F2F7';
-  if (theme === 'dark' || theme === 'sonetto-dark') color = '#000000';
-  else if (theme === 'sonetto') color = '#F7F5F0';
+  if (theme === 'dark') color = '#000000';
+  else if (theme === 'sonetto-dark') color = '#1C1C24';
+  else if (theme === 'sonetto') color = '#F8F5EE';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
