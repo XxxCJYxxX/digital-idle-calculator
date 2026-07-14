@@ -808,6 +808,17 @@ body.has-custom-bg::before {
   background: var(--color-blue-bg);
   color: var(--color-blue);
 }
+/* Icon Picker */
+.icon-pick-btn {
+  width: 100%; aspect-ratio: 1;
+  border: 2px solid transparent; border-radius: var(--radius-sm);
+  background: var(--glass-bg); cursor: pointer;
+  font-size: 1.35em; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.icon-pick-btn:hover { border-color: var(--color-blue); background: var(--color-blue-bg); }
+.icon-pick-btn.active { border-color: var(--color-blue); background: var(--color-blue-bg); }
+
 .action-dropdown {
   position: absolute; right: 0; top: 44px;
   background: var(--glass-bg-strong);
@@ -1015,6 +1026,10 @@ body.has-custom-bg::before {
           <button id="btnClearBg" role="menuitem" aria-label="清除背景图">
             <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             清除背景图
+          </button>
+          <button id="btnSetIcon" role="menuitem" aria-label="设置网站图标">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            设置图标
           </button>
           <div class="divider" role="separator"></div>
           <div class="divider" role="separator"></div>
@@ -1353,6 +1368,22 @@ body.has-custom-bg::before {
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary btn-block" id="btnApplyBgSettings">应用</button>
+    </div>
+  </div>
+</div>
+
+<!-- Icon Picker Modal -->
+<div class="modal-overlay hidden" id="modalIcon" role="dialog" aria-modal="true" aria-label="设置网站图标">
+  <div class="modal-sheet" style="max-width: 440px;">
+    <div class="modal-header">
+      <h2 class="modal-title">设置网站图标</h2>
+      <button class="modal-close" id="btnCloseIconModal" aria-label="关闭">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:16px" id="iconGrid"></div>
+      <button class="btn btn-primary btn-block" id="btnResetIcon">恢复默认图标</button>
     </div>
   </div>
 </div>
@@ -2287,7 +2318,7 @@ function renderStatsBar() {
   const list = state.devices.map(computeDevice);
   const totalDevices = list.length;
   const totalValue = list.reduce((s, d) => s + d.purchasePrice, 0);
-  const avgDaily = list.length > 0 ? list.reduce((s, d) => s + d.dailyCost, 0) / list.length : 0;
+  const totalDaily = list.reduce((s, d) => s + d.dailyCost, 0);
   const expiringSoon = list.filter(d => d.warrantyRemain !== null && d.warrantyRemain >= 0 && d.warrantyRemain <= 30).length;
 
   $('#statsBar').innerHTML = `
@@ -2300,8 +2331,8 @@ function renderStatsBar() {
       <div class="stat-value">${fmtPrice(totalValue)}</div>
     </div>
     <div class="stat-item">
-      <div class="stat-label">平均日均损耗</div>
-      <div class="stat-value">${fmtPrice(avgDaily)}</div>
+      <div class="stat-label">总日均损耗</div>
+      <div class="stat-value">${fmtPrice(totalDaily)}</div>
     </div>
     <div class="stat-item">
       <div class="stat-label">即将到期保修</div>
@@ -3332,6 +3363,77 @@ function bindEvents() {
     closeModal('#modalBgSettings');
   });
   $('#btnApplyBgSettings').addEventListener('click', confirmBgSettings);
+
+  // --- Icon Picker ---
+  const WEB_ICONS = [
+    '📱','💻','⌚','🎧','🎮','📷','🚁','🥽','⌨️','🔊',
+    '💰','📉','💸','🔥','⭐','💡','🔋','⚡','🛡️','🎯',
+    '🧮','📊','📦','🛒','🏷️','🎁','🔔','💎','🌟','👑',
+    '🐱','🐶','🐼','🦊','🐰','🐸','🐧','🦄','🐙','🐳',
+    '🍎','🍊','🍋','🍇','🍓','🌸','🌺','🌻','🍀','🌙',
+    '🚀','🌍','✨','💫','🌈','☀️','🌊','🏔️','🎪','♻️'
+  ];
+  const ICON_STORAGE_KEY = 'customWebIcon';
+
+  function applyIcon(emoji) {
+    if (!emoji) {
+      localStorage.removeItem(ICON_STORAGE_KEY);
+      setFavicon('');
+      return;
+    }
+    localStorage.setItem(ICON_STORAGE_KEY, emoji);
+    setFavicon(emoji);
+  }
+
+  function setFavicon(emoji) {
+    let link = document.querySelector('link[rel="icon"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    if (!emoji) {
+      document.head.querySelectorAll('link[rel="icon"]').forEach(l => l.remove());
+      return;
+    }
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><text y="28" font-size="28">${emoji}</text></svg>`;
+    link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }
+
+  function loadSavedIcon() {
+    const saved = localStorage.getItem(ICON_STORAGE_KEY);
+    if (saved) setFavicon(saved);
+  }
+
+  function openIconPicker() {
+    closeAllModals();
+    $('#actionDropdown').classList.remove('open');
+    const grid = $('#iconGrid');
+    const current = localStorage.getItem(ICON_STORAGE_KEY);
+    grid.innerHTML = WEB_ICONS.map(icon => {
+      const active = icon === current ? ' active' : '';
+      return `<button class="icon-pick-btn${active}" data-icon="${icon}" aria-label="${icon}">${icon}</button>`;
+    }).join('');
+    grid.querySelectorAll('.icon-pick-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const emoji = btn.dataset.icon;
+        applyIcon(emoji);
+        closeModal('#modalIcon');
+        showToast(`图标已设置为 ${emoji}`);
+      });
+    });
+    openModal('#modalIcon');
+  }
+
+  $('#btnSetIcon').addEventListener('click', openIconPicker);
+  $('#btnCloseIconModal').addEventListener('click', () => closeModal('#modalIcon'));
+  $('#btnResetIcon').addEventListener('click', () => {
+    applyIcon('');
+    closeModal('#modalIcon');
+    showToast('已恢复默认图标');
+  });
+
+  loadSavedIcon();
 
   // Periodic refresh for warranty countdown (every 60s)
   setInterval(() => {
