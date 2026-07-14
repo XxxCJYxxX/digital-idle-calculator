@@ -290,6 +290,51 @@
   border-top-color: rgba(216, 168, 71, 0.14);
 }
 
+/* ============================================================
+   Theme Transition — silky smooth crossfade
+   ============================================================ */
+
+/* View Transition API (Chrome/Safari/Edge) */
+::view-transition-old(root) {
+  animation: vtFadeOut 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+::view-transition-new(root) {
+  animation: vtFadeIn 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+}
+@keyframes vtFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes vtFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Fallback for browsers without View Transition API (e.g. Firefox) */
+.theme-switching,
+.theme-switching body,
+.theme-switching .app-container,
+.theme-switching .device-card,
+.theme-switching .stat-item,
+.theme-switching .ring-card,
+.theme-switching .chart-card,
+.theme-switching .sub-card,
+.theme-switching .tab-nav,
+.theme-switching .tab-btn,
+.theme-switching .modal-sheet,
+.theme-switching .btn-primary,
+.theme-switching .action-dropdown {
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.theme-switching .icon-btn svg,
+.theme-switching .warranty-badge,
+.theme-switching .tab-btn .tab-icon {
+  transition: fill 0.35s ease, color 0.35s ease, background-color 0.35s ease !important;
+}
+
 /* System preference when no manual override */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
@@ -4019,17 +4064,30 @@ function updateThemeMeta() {
    Theme Selector
    ============================================================ */
 function applyTheme(next) {
-  if (!next) {
-    document.documentElement.removeAttribute('data-theme');
-    localStorage.removeItem('theme');
+  const doSwitch = () => {
+    if (!next) {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.removeItem('theme');
+    } else {
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+    updateThemeMeta();
+    if (state.currentTab === 'stats') renderRings();
+    if (state.currentTab === 'compare') renderComparison();
+    refreshSubscriptionUI();
+  };
+
+  // Smooth view transition (Chrome 111+ / Safari 18+ / Edge 111+)
+  if (document.startViewTransition) {
+    document.startViewTransition(() => doSwitch());
   } else {
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
+    document.documentElement.classList.add('theme-switching');
+    doSwitch();
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-switching');
+    }, 420);
   }
-  updateThemeMeta();
-  if (state.currentTab === 'stats') renderRings();
-  if (state.currentTab === 'compare') renderComparison();
-  refreshSubscriptionUI();
 }
 
 function initTheme() {
