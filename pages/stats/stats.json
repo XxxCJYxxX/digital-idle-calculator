@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "chart-bar": "/components/chart-bar/chart-bar",
+    "t-empty": "tdesign-miniprogram/empty/empty"
+  },
+  "navigationBarTitleText": "可视化统计"
+}

@@ -1,0 +1,54 @@
+<!-- components/device-card/device-card.wxml -->
+<view class="card" wx:if="{{computed}}">
+  <!-- 头部：名称 + 分类 + 操作 -->
+  <view class="card-header">
+    <view class="card-info">
+      <view class="card-name">{{device.name}}</view>
+      <t-tag size="small" theme="primary" variant="light" class="card-tag">
+        {{device.category}}
+      </t-tag>
+    </view>
+    <view class="card-actions">
+      <view class="action-btn" bindtap="onEdit" hover-class="action-hover" aria-label="编辑{{device.name}}">
+        <t-icon name="edit" size="36rpx" />
+      </view>
+      <view class="action-btn action-danger" bindtap="onDelete" hover-class="action-hover" aria-label="删除{{device.name}}">
+        <t-icon name="delete" size="36rpx" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 元信息 -->
+  <view class="card-meta">
+    <text class="text-secondary">购入 {{dateText}}</text>
+    <text class="text-secondary">¥{{priceText}}</text>
+  </view>
+
+  <!-- 成本指标 -->
+  <view class="card-costs">
+    <view class="cost-item">
+      <text class="cost-label">闲置天数</text>
+      <text class="cost-value">{{computed.totalDays}} 天</text>
+    </view>
+    <view class="cost-item">
+      <text class="cost-label">日均损耗</text>
+      <text class="cost-value">¥{{dailyText}}</text>
+    </view>
+    <view class="cost-item">
+      <text class="cost-label">总闲置成本</text>
+      <text class="cost-value">¥{{totalText}}</text>
+    </view>
+  </view>
+
+  <!-- 保修/延保倒计时 -->
+  <view class="card-warranty" wx:if="{{warrantyLabel || acLabel}}">
+    <view wx:if="{{warrantyLabel}}" class="warranty-tag warranty-{{warrantyStatus}}">
+      <view class="warranty-dot" style="background-color:{{warrantyColor}}"></view>
+      <text>保修 {{warrantyLabel}}</text>
+    </view>
+    <view wx:if="{{acLabel}}" class="warranty-tag warranty-{{acStatus}}">
+      <view class="warranty-dot" style="background-color:{{acColor}}"></view>
+      <text>AC+/延保 {{acLabel}}</text>
+    </view>
+  </view>
+</view>

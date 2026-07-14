@@ -1,0 +1,58 @@
+<!-- pages/compare/compare.wxml — 多设备对比 -->
+<view class="page-compare">
+
+  <!-- 概览 -->
+  <view class="cmp-summary" wx:if="{{!isEmpty}}">
+    <text class="cmp-summary-text">{{totalDevices}} 台设备 · 闲置总成本 ¥{{totalCost}}</text>
+  </view>
+
+  <!-- 对比表格 -->
+  <view wx:if="{{!isEmpty}}">
+    <scroll-view scroll-x class="cmp-table-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="cmp-table">
+        <!-- 表头 -->
+        <view class="cmp-row cmp-header">
+          <view class="cmp-cell cmp-cell-name">设备</view>
+          <view class="cmp-cell">分类</view>
+          <view class="cmp-cell cmp-cell-num">购买日</view>
+          <view class="cmp-cell cmp-cell-num">价格</view>
+          <view class="cmp-cell cmp-cell-num">闲置天</view>
+          <view class="cmp-cell cmp-cell-num">日均损耗</view>
+          <view class="cmp-cell cmp-cell-num">保修</view>
+          <view class="cmp-cell cmp-cell-num">延保</view>
+        </view>
+        <!-- 数据行 -->
+        <view
+          wx:for="{{devices}}"
+          wx:key="id"
+          class="cmp-row {{index % 2 === 0 ? 'cmp-row-even' : ''}}"
+        >
+          <view class="cmp-cell cmp-cell-name">
+            <text class="cmp-device-name">{{item.name}}</text>
+          </view>
+          <view class="cmp-cell">
+            <text class="cmp-tag">{{item.category}}</text>
+          </view>
+          <view class="cmp-cell cmp-cell-num cmp-cell-secondary">{{item.dateText}}</view>
+          <view class="cmp-cell cmp-cell-num">{{item.priceText}}</view>
+          <view class="cmp-cell cmp-cell-num">{{item.totalDays}}天</view>
+          <view class="cmp-cell cmp-cell-num">{{item.dailyText}}</view>
+          <view class="cmp-cell cmp-cell-num cmp-warranty-{{item.warrantyStatus}}">
+            {{item.warrantyLabel}}
+          </view>
+          <view class="cmp-cell cmp-cell-num cmp-warranty-{{item.acStatus}}">
+            {{item.acLabel}}
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 空状态 -->
+  <t-empty
+    wx:if="{{isEmpty}}"
+    icon="app"
+    description="添加两台以上设备后可进行对比"
+    style="margin-top:180rpx;"
+  />
+</view>

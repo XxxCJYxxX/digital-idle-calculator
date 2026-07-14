@@ -1,0 +1,9 @@
+{
+  "name": "idle-device-calculator",
+  "version": "1.0.0",
+  "description": "电子产品吃灰计算器 - 微信小程序版",
+  "main": "app.js",
+  "dependencies": {
+    "tdesign-miniprogram": "^1.5.0"
+  }
+}

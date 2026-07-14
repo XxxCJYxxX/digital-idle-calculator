@@ -1,0 +1,10 @@
+<!-- components/chart-bar/chart-bar.wxml -->
+<view class="chart-wrap">
+  <view class="chart-title" wx:if="{{title}}">{{title}}</view>
+  <canvas
+    type="2d"
+    id="barCanvas"
+    class="chart-canvas"
+    style="width:100%;height:{{canvasHeight}}rpx;"
+  ></canvas>
+</view>

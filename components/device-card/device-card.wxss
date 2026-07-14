@@ -1,0 +1,136 @@
+/* components/device-card/device-card.wxss */
+
+.card {
+  background-color: var(--td-bg-color-container, #FFFFFF);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: #1C1C1E;
+    box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* 头部 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  flex: 1;
+  min-width: 0;
+}
+.card-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: -0.4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.card-tag {
+  align-self: flex-start;
+}
+
+/* 操作按钮 */
+.card-actions {
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+.action-btn {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12rpx;
+  color: var(--td-text-color-placeholder, #8E8E93);
+  transition: background 0.15s;
+}
+.action-btn:active { background-color: var(--td-bg-color-component, #F2F2F7); }
+.action-hover { opacity: 0.6; }
+.action-danger:active { background-color: #FFEEED; }
+@media (prefers-color-scheme: dark) {
+  .action-danger:active { background-color: #3A1C1C; }
+}
+
+/* 元信息 */
+.card-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 16rpx;
+  font-size: 24rpx;
+}
+
+/* 成本指标 */
+.card-costs {
+  display: flex;
+  margin-top: 20rpx;
+  gap: 12rpx;
+}
+.cost-item {
+  flex: 1;
+  background-color: var(--td-bg-color-component, #F2F2F7);
+  border-radius: 12rpx;
+  padding: 16rpx 12rpx;
+  text-align: center;
+}
+@media (prefers-color-scheme: dark) {
+  .cost-item { background-color: #2C2C2E; }
+}
+.cost-label {
+  font-size: 20rpx;
+  color: var(--td-text-color-placeholder, #8E8E93);
+  text-transform: uppercase;
+  letter-spacing: 0.5rpx;
+}
+.cost-value {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-top: 4rpx;
+  letter-spacing: -0.3rpx;
+}
+
+/* 保修标签 */
+.card-warranty {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-top: 16rpx;
+}
+.warranty-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+}
+.warranty-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+.warranty-safe {
+  background-color: var(--color-green-bg, #E9F7ED);
+  color: var(--color-green, #34C759);
+}
+.warranty-warning {
+  background-color: var(--color-orange-bg, #FFF4E5);
+  color: var(--color-orange, #FF9500);
+}
+.warranty-danger {
+  background-color: var(--color-red-bg, #FFEEED);
+  color: var(--color-red, #FF3B30);
+}

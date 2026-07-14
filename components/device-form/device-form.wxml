@@ -1,0 +1,96 @@
+<!-- components/device-form/device-form.wxml -->
+<t-popup
+  visible="{{visible}}"
+  placement="bottom"
+  bind:visible-change="onVisibleChange"
+  close-on-overlay-click="{{true}}"
+>
+  <view class="form-container">
+    <!-- 标题栏 -->
+    <view class="form-header">
+      <text class="form-title">{{isEdit ? '编辑设备' : '添加设备'}}</text>
+      <view class="form-close" bindtap="onCancel" hover-class="form-close-hover">
+        <t-icon name="close" size="40rpx" />
+      </view>
+    </view>
+
+    <!-- 表单区 -->
+    <scroll-view scroll-y class="form-body" enhanced show-scrollbar="{{false}}">
+      <!-- 设备名称 -->
+      <view class="form-field">
+        <view class="form-label">设备名称</view>
+        <t-input
+          value="{{formData.name}}"
+          placeholder="如 iPhone 16 Pro Max"
+          maxlength="{{30}}"
+          clearable
+          bind:change="onNameChange"
+        />
+      </view>
+
+      <!-- 分类 -->
+      <view class="form-field">
+        <view class="form-label">设备分类</view>
+        <picker mode="selector" range="{{catRange}}" value="{{catIndex}}" bindchange="onCatChange">
+          <view class="picker-wrap">
+            <text class="{{formData.category ? '' : 'picker-placeholder'}}">
+              {{formData.category || '请选择设备分类'}}
+            </text>
+            <t-icon name="chevron-right" size="32rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+
+      <!-- 购买金额 -->
+      <view class="form-field">
+        <view class="form-label">购买开票金额（元）</view>
+        <t-input
+          value="{{formData.price}}"
+          placeholder="0.00"
+          type="number"
+          bind:change="onPriceChange"
+        />
+        <view class="form-hint">仅允许输入数字与小数点</view>
+      </view>
+
+      <!-- 购买日期 -->
+      <view class="form-field">
+        <view class="form-label">购买日期</view>
+        <picker mode="date" value="{{formData.purchaseDate}}" end="{{today}}" bindchange="onPurchaseDateChange">
+          <view class="picker-wrap">
+            <text class="{{formData.purchaseDate ? '' : 'picker-placeholder'}}">{{purchaseDateText}}</text>
+            <t-icon name="calendar" size="32rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+
+      <!-- 保修截止 -->
+      <view class="form-field">
+        <view class="form-label">保修截止日期 <text class="form-optional">（选填）</text></view>
+        <picker mode="date" value="{{formData.warrantyEnd}}" bindchange="onWarrantyDateChange">
+          <view class="picker-wrap">
+            <text class="{{formData.warrantyEnd ? '' : 'picker-placeholder'}}">{{warrantyDateText}}</text>
+            <t-icon name="calendar" size="32rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+
+      <!-- AC+/延保到期 -->
+      <view class="form-field">
+        <view class="form-label">AC+ / 延保到期日期 <text class="form-optional">（选填）</text></view>
+        <picker mode="date" value="{{formData.appleCareEnd}}" bindchange="onAcDateChange">
+          <view class="picker-wrap">
+            <text class="{{formData.appleCareEnd ? '' : 'picker-placeholder'}}">{{acDateText}}</text>
+            <t-icon name="calendar" size="32rpx" color="#8E8E93" />
+          </view>
+        </picker>
+      </view>
+    </scroll-view>
+
+    <!-- 底部操作 -->
+    <view class="form-footer safe-bottom">
+      <t-button theme="light" size="large" block bind:tap="onCancel">取消</t-button>
+      <t-button theme="primary" size="large" block bind:tap="onSave">保存</t-button>
+    </view>
+  </view>
+</t-popup>

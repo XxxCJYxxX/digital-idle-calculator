@@ -1,0 +1,99 @@
+/* pages/compare/compare.wxss */
+
+.page-compare {
+  padding: 24rpx;
+  padding-bottom: 140rpx;
+}
+
+/* 概览 */
+.cmp-summary {
+  background-color: var(--td-bg-color-container, #FFFFFF);
+  border-radius: 20rpx;
+  padding: 20rpx 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+@media (prefers-color-scheme: dark) {
+  .cmp-summary { background-color: #1C1C1E; }
+}
+.cmp-summary-text {
+  font-size: 26rpx;
+  color: var(--td-text-color-secondary, #6E6E73);
+}
+
+/* 表格 */
+.cmp-table-scroll {
+  width: 100%;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+.cmp-table {
+  min-width: 900rpx;
+  background-color: var(--td-bg-color-container, #FFFFFF);
+}
+@media (prefers-color-scheme: dark) {
+  .cmp-table { background-color: #1C1C1E; }
+}
+
+.cmp-row {
+  display: flex;
+  border-bottom: 1rpx solid var(--td-component-border, #E5E5EA);
+}
+@media (prefers-color-scheme: dark) {
+  .cmp-row { border-bottom-color: #38383A; }
+}
+.cmp-row:last-child { border-bottom: none; }
+.cmp-row-even { background-color: rgba(0, 0, 0, 0.02); }
+@media (prefers-color-scheme: dark) {
+  .cmp-row-even { background-color: rgba(255, 255, 255, 0.03); }
+}
+
+/* 表头 */
+.cmp-header {
+  background-color: var(--td-bg-color-component, #F2F2F7);
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--td-text-color-secondary, #6E6E73);
+}
+@media (prefers-color-scheme: dark) {
+  .cmp-header { background-color: #2C2C2E; }
+}
+
+.cmp-cell {
+  flex: 1;
+  padding: 20rpx 16rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+.cmp-cell-name { flex: 1.5; min-width: 160rpx; }
+.cmp-cell-num { justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.cmp-cell-secondary { color: var(--td-text-color-secondary, #6E6E73); }
+
+.cmp-device-name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+/* 分类标签 */
+.cmp-tag {
+  display: inline-block;
+  font-size: 20rpx;
+  background-color: #E5F0FF;
+  color: #007AFF;
+  padding: 4rpx 16rpx;
+  border-radius: 12rpx;
+}
+@media (prefers-color-scheme: dark) {
+  .cmp-tag { background-color: #1A2A44; color: #0A84FF; }
+}
+
+/* 保修状态颜色 */
+.cmp-warranty-safe { color: var(--color-green, #34C759); }
+.cmp-warranty-warning { color: var(--color-orange, #FF9500); }
+.cmp-warranty-danger { color: var(--color-red, #FF3B30); }

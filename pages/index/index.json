@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "device-card": "/components/device-card/device-card",
+    "device-form": "/components/device-form/device-form",
+    "t-button": "tdesign-miniprogram/button/button",
+    "t-dropdown-menu": "tdesign-miniprogram/dropdown-menu/dropdown-menu",
+    "t-dropdown-item": "tdesign-miniprogram/dropdown-item/dropdown-item",
+    "t-empty": "tdesign-miniprogram/empty/empty",
+    "t-icon": "tdesign-miniprogram/icon/icon"
+  },
+  "navigationBarTitleText": "吃灰计算器"
+}

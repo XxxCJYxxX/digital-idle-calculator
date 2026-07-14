@@ -1,0 +1,106 @@
+<!-- pages/index/index.wxml — 设备列表 -->
+<view class="page-index">
+
+  <!-- 概览统计条 -->
+  <view class="summary-bar">
+    <view class="summary-item">
+      <text class="summary-label">设备数量</text>
+      <text class="summary-value">{{statsSummary.totalDevices}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="summary-label">闲置总价值</text>
+      <text class="summary-value">¥{{statsSummary.totalValue}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="summary-label">平均日均损耗</text>
+      <text class="summary-value">¥{{statsSummary.avgDaily}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="summary-label">即将到期保修</text>
+      <text class="summary-value {{statsSummary.expiringCount > 0 ? 'text-danger' : ''}}">
+        {{statsSummary.expiringCount}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 筛选排序工具栏 -->
+  <view class="toolbar">
+    <picker
+      mode="selector"
+      range="{{categoryOptions}}"
+      range-key="label"
+      value="{{catFilter ? catFilterIndex : 0}}"
+      bindchange="onFilterChange"
+    >
+      <view class="toolbar-picker">
+        <text class="ellipsis">{{catFilterLabel}}</text>
+        <t-icon name="chevron-down" size="28rpx" color="#8E8E93" />
+      </view>
+    </picker>
+
+    <picker
+      mode="selector"
+      range="{{sortOptions}}"
+      range-key="label"
+      value="{{sortIndex}}"
+      bindchange="onSortChange"
+    >
+      <view class="toolbar-picker">
+        <text class="ellipsis">{{sortLabel}}</text>
+        <t-icon name="chevron-down" size="28rpx" color="#8E8E93" />
+      </view>
+    </picker>
+
+    <view class="toolbar-spacer"></view>
+
+    <view class="toolbar-action" bindtap="onCatManage" hover-class="toolbar-action-hover">
+      <t-icon name="view-module" size="32rpx" />
+    </view>
+    <view class="toolbar-action" bindtap="onImport" hover-class="toolbar-action-hover">
+      <t-icon name="upload" size="32rpx" />
+    </view>
+    <view class="toolbar-action" bindtap="onExport" hover-class="toolbar-action-hover">
+      <t-icon name="download" size="32rpx" />
+    </view>
+    <view class="toolbar-action toolbar-action-danger" bindtap="onReset" hover-class="toolbar-action-hover">
+      <t-icon name="delete" size="32rpx" />
+    </view>
+  </view>
+
+  <!-- 设备列表 -->
+  <view class="device-list" wx:if="{{devices.length > 0}}">
+    <device-card
+      wx:for="{{devices}}"
+      wx:key="id"
+      device="{{item}}"
+      isDark="{{isDark}}"
+      bind:edit="onEditDevice"
+      bind:delete="onDeleteDevice"
+    />
+  </view>
+
+  <!-- 空状态 -->
+  <t-empty
+    wx:if="{{devices.length === 0}}"
+    icon="app"
+    description="还没有设备"
+    style="margin-top:120rpx;"
+  >
+    <t-button theme="primary" size="medium" bind:tap="onAddTap" slot="action">
+      添加第一台设备
+    </t-button>
+  </t-empty>
+
+  <!-- 悬浮添加按钮 -->
+  <view class="fab" bindtap="onAddTap" hover-class="fab-hover" aria-label="添加新设备">
+    <t-icon name="add" size="48rpx" color="#FFFFFF" />
+  </view>
+
+  <!-- 设备表单弹窗 -->
+  <device-form
+    visible="{{formVisible}}"
+    editDevice="{{editDevice}}"
+    bind:save="onFormSave"
+    bind:close="onFormClose"
+  />
+</view>

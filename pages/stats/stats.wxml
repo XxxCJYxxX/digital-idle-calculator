@@ -1,0 +1,38 @@
+<!-- pages/stats/stats.wxml — 可视化统计 -->
+<view class="page-stats">
+  <!-- 概览卡片 -->
+  <view class="stats-summary" wx:if="{{!isEmpty}}">
+    <view class="stat-card">
+      <text class="stat-card-label">设备总数</text>
+      <text class="stat-card-value">{{devices.length}} 台</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-card-label">总闲置成本</text>
+      <text class="stat-card-value">¥{{totalCost}}</text>
+    </view>
+  </view>
+
+  <!-- 图表 -->
+  <view wx:if="{{!isEmpty}}">
+    <chart-bar
+      title="设备闲置天数统计"
+      data="{{idleData}}"
+      valueFormat="days"
+      isDark="{{isDark}}"
+    />
+    <chart-bar
+      title="日均损耗对比（元/天）"
+      data="{{costData}}"
+      valueFormat="price"
+      isDark="{{isDark}}"
+    />
+  </view>
+
+  <!-- 空状态 -->
+  <t-empty
+    wx:if="{{isEmpty}}"
+    icon="chart"
+    description="暂无数据，请先添加设备"
+    style="margin-top:180rpx;"
+  />
+</view>
