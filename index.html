@@ -267,13 +267,21 @@
 
 /* ============================================================
    Kallen · 第六夜想曲
-   紫 · 浅紫 · 白 — 怪盗的克制美学
+   紫 · 浅紫 · 白
+   视觉符号：紫鸢花 / 鸦羽线 / 十字刻印 / 冰晶
    ============================================================ */
 
-/* ── 三色体系：白底 + 紫色主控 + 浅紫点缀 ── */
+/* ── SVG 纹饰资源 ── */
+/* 鸢尾花纹：简化几何紫鸢花 data-uri 用于背景 watermark */
+/* 鸦羽十字：斜十字交叉 + 羽片纹理 */
+
+/* ═══════════════════════════════════════════════════════════
+   色彩体系
+   ═══════════════════════════════════════════════════════════ */
 :root[data-theme="kallen"] {
   color-scheme: light;
 
+  /* 白底微紫 */
   --color-bg:              #F4F2F8;
   --color-bg-card:         #FBFAFD;
   --color-bg-elevated:     #FFFFFF;
@@ -283,9 +291,9 @@
   --color-text-tertiary:   #8C86A8;
   --color-separator:       #E4E0F0;
   --color-fill-tertiary:   #EDEAF5;
-  --color-overlay:         rgba(28,24,48,0.28);
+  --color-overlay:         rgba(28,24,48,0.30);
 
-  /* 紫色主色 */
+  /* 紫系 */
   --color-blue:            #6E5CBF;
   --color-blue-bg:         #F0ECFA;
   --color-red:             #C05A6A;
@@ -297,12 +305,12 @@
   --color-purple:          #8B7AC8;
   --color-teal:            #9BA4C4;
 
-  /* 液态玻璃 — 白底紫调 */
+  /* 液态玻璃 —— 透紫冰面 */
   --glass-rgb:             251, 250, 253;
   --glass-alpha:           0.62;
   --glass-alpha-strong:    0.84;
   --glass-alpha-subtle:    0.46;
-  --glass-border:          rgba(110, 92, 191, 0.14);
+  --glass-border:          rgba(110, 92, 191, 0.15);
   --glass-border-bottom:   rgba(0,0,0,0.04);
   --glass-blur:            28px;
   --glass-saturate:        180%;
@@ -310,62 +318,241 @@
   --glass-sheen:           rgba(255,255,255,0.30);
   --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.72);
   --glass-shadow:          0 1px 2px rgba(28,24,48,0.04),
-                           0 4px 14px rgba(28,24,48,0.05),
-                           0 12px 36px rgba(28,24,48,0.08);
+                           0 4px 14px rgba(28,24,48,0.06),
+                           0 12px 36px rgba(28,24,48,0.10);
   --shadow-sm:  0 1px 3px rgba(28,24,48,0.05);
-  --shadow-md:  0 4px 16px rgba(28,24,48,0.06);
-  --shadow-lg:  0 8px 32px rgba(28,24,48,0.09);
+  --shadow-md:  0 4px 16px rgba(28,24,48,0.07);
+  --shadow-lg:  0 8px 32px rgba(28,24,48,0.10);
 
-  /* 顶部紫色微光 */
-  --kallen-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(110,92,191,0.10) 0%, transparent 55%);
+  /* 顶部紫光晕 */
+  --kallen-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(110,92,191,0.12) 0%, transparent 55%);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   背景 —— 五层叠加
+   ═══════════════════════════════════════════════════════════ */
 :root[data-theme="kallen"] body {
-  background: var(--kallen-glow), var(--color-bg);
+  background:
+    /* 1. 顶部紫色辉光 */
+    var(--kallen-glow),
+    /* 2. 鸦羽右斜纹 —— 长羽片的纹理 */
+    repeating-linear-gradient(
+      52deg,
+      transparent 0px,
+      transparent 42px,
+      rgba(110,92,191,0.045) 42px,
+      rgba(110,92,191,0.045) 43px
+    ),
+    /* 3. 鸦羽左斜纹 —— 交叉形成羽片交叉 */
+    repeating-linear-gradient(
+      -38deg,
+      transparent 0px,
+      transparent 56px,
+      rgba(139,122,200,0.03) 56px,
+      rgba(139,122,200,0.03) 57px
+    ),
+    /* 4. 紫鸢花光点 —— 极简几何菱形散落（模拟花瓣） */
+    radial-gradient(circle at 12% 18%, rgba(139,122,200,0.10) 0px, transparent 6px),
+    radial-gradient(circle at 78% 35%, rgba(110,92,191,0.08) 0px, transparent 8px),
+    radial-gradient(circle at 35% 72%, rgba(139,122,200,0.07) 0px, transparent 5px),
+    radial-gradient(circle at 88% 80%, rgba(110,92,191,0.06) 0px, transparent 7px),
+    radial-gradient(circle at 22% 55%, rgba(139,122,200,0.05) 0px, transparent 4px),
+    /* 5. 底色 */
+    var(--color-bg);
 }
 
-/* ── 冰晶顶线：卡片上方一道浅紫色细线 ── */
-[data-theme="kallen"] .device-card,
-[data-theme="kallen"] .ring-card,
-[data-theme="kallen"] .sub-card,
-[data-theme="kallen"] .chart-card {
-  border-top: 1px solid rgba(139, 122, 200, 0.28);
+/* ═══════════════════════════════════════════════════════════
+   Tab 导航 —— 紫色底线 + 选中发光
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .tab-btn {
+  color: #8C86A8;
+}
+[data-theme="kallen"] .tab-btn:hover {
+  color: #6E5CBF;
+}
+[data-theme="kallen"] .tab-btn.active {
+  color: #6E5CBF;
+  border-bottom: 2px solid #6E5CBF;
 }
 
-/* ── 鸦羽线：统计卡左侧深紫线 ── */
-[data-theme="kallen"] .stat-item {
-  border-left: 2px solid #5A4894;
-}
+/* ═══════════════════════════════════════════════════════════
+   卡片 —— 紫鸢花顶线 + 十字刻印 + 鸦羽侧边
+   ═══════════════════════════════════════════════════════════ */
 
-/* ── 时停刻印：右下角 4px 深紫圆点 ── */
-[data-theme="kallen"] .device-card { position: relative; }
+/* 设备卡片 */
+[data-theme="kallen"] .device-card {
+  border: none;
+  border-top: 1px solid rgba(139, 122, 200, 0.32);
+  border-left: 1px solid rgba(139, 122, 200, 0.12);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+/* 时停刻印 —— 右下角深紫圆点（鸦羽三层标记） */
 [data-theme="kallen"] .device-card::after {
   content: "";
   position: absolute;
   bottom: 12px;
   right: 14px;
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: #5A4894;
   z-index: 4;
   pointer-events: none;
 }
-
-/* ── 紫色 tab ── */
-[data-theme="kallen"] .tab-btn.active {
-  border-bottom: 2px solid #6E5CBF;
-  color: #6E5CBF;
+/* 紫鸢花 —— 左上角浅紫微光（领口紫鸢花的暗示） */
+[data-theme="kallen"] .device-card::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(139, 122, 200, 0.18);
+  z-index: 4;
+  pointer-events: none;
+}
+[data-theme="kallen"] .device-card:hover {
+  border-top-color: rgba(110, 92, 191, 0.45);
+  border-left-color: rgba(139, 122, 200, 0.25);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px rgba(110,92,191,0.08);
 }
 
-/* ── 紫色按钮 ── */
-[data-theme="kallen"] .btn-primary { background: #6E5CBF; }
-[data-theme="kallen"] .btn-primary:hover { background: #5D4CAE; }
-[data-theme="kallen"] .icon-btn:hover { background: #F0ECFA; }
+/* 环状统计卡片 —— 冰晶边 */
+[data-theme="kallen"] .ring-card {
+  border: none;
+  border-top: 2px solid rgba(139, 122, 200, 0.22);
+}
+[data-theme="kallen"] .ring-card:hover {
+  border-top-color: rgba(110, 92, 191, 0.38);
+}
 
-/* ── 订阅卡鸦羽线 ── */
+/* 图表面板卡片 */
+[data-theme="kallen"] .chart-card {
+  border: none;
+  border-top: 2px solid rgba(139, 122, 200, 0.22);
+}
+
+/* 统计卡片 */
+[data-theme="kallen"] .stat-item {
+  border-left: 2px solid #5A4894;
+}
+
+/* 订阅卡片 */
 [data-theme="kallen"] .sub-card {
-  border-left: 1px solid #5A4894;
+  border: none;
+  border-top: 1px solid rgba(139, 122, 200, 0.22);
+  border-left: 2px solid #5A4894;
+}
+
+/* 订阅概览卡片 */
+[data-theme="kallen"] .sub-overview-card {
+  border: none;
+  border-top: 1px solid rgba(139, 122, 200, 0.22);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   按钮 —— 紫色渐变
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .btn-primary {
+  background: #6E5CBF;
+}
+[data-theme="kallen"] .btn-primary:hover {
+  background: #5D4CAE;
+}
+[data-theme="kallen"] .btn-primary:active {
+  background: #4E3EA0;
+}
+[data-theme="kallen"] .icon-btn {
+  color: #6E5CBF;
+}
+[data-theme="kallen"] .icon-btn:hover {
+  background: #F0ECFA;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   输入框 / 下拉框 —— 紫色聚焦环
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] input:focus,
+[data-theme="kallen"] select:focus,
+[data-theme="kallen"] textarea:focus {
+  border-color: #6E5CBF;
+  box-shadow: 0 0 0 3px rgba(110,92,191,0.12);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   弹窗 —— 紫边修饰
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .modal-sheet {
+  border: 1px solid rgba(139, 122, 200, 0.20);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   下拉菜单
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .action-dropdown {
+  border: 1px solid rgba(139, 122, 200, 0.18);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   App Header —— 底部紫色渐变装饰线
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .app-header {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(110,92,191,0.25) 15%,
+    rgba(139,122,200,0.35) 40%,
+    rgba(110,92,191,0.20) 65%,
+    transparent 100%
+  ) 1;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   工具栏
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .toolbar select,
+[data-theme="kallen"] .sub-toolbar select {
+  border-color: #D4CEE8;
+}
+[data-theme="kallen"] .toolbar select:hover,
+[data-theme="kallen"] .sub-toolbar select:hover {
+  border-color: #8B7AC8;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   对比表格
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .compare-table th {
+  background: #F0ECFA;
+  color: #5A4894;
+}
+[data-theme="kallen"] .compare-table td {
+  border-color: #E4E0F0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   品牌芯片 / 预设项
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .preset-brand-chip {
+  border-color: #D4CEE8;
+}
+[data-theme="kallen"] .preset-brand-chip:hover {
+  border-color: #8B7AC8;
+  background: #F0ECFA;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Toast 提示
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="kallen"] .toast.success {
+  background: #F0ECFA;
+  border: 1px solid rgba(110,92,191,0.25);
+  color: #5A4894;
 }
 
 /* ============================================================
