@@ -267,129 +267,120 @@
 
 /* ============================================================
    Kallen · 第六夜想曲
-   视觉锚点：幽紫夜幕 / 冰蓝鸦羽 / 月光长发 / 怪盗剪影
+   冰晶基底 · 鸦羽线 · 时停刻印
    ============================================================ */
+
+/* ── 配色：雪白基底的冰蓝色调 ── */
 :root[data-theme="kallen"] {
   color-scheme: light;
-  --color-bg:              #F0EFF6;
-  --color-bg-card:         #FAF9FD;
-  --color-bg-elevated:     #FDFCFF;
-  --color-bg-input:        #EAE7F5;
-  --color-text:            #1A1530;
-  --color-text-secondary:  #6A6380;
-  --color-text-tertiary:   #9A92B0;
-  --color-separator:       #E2DEF0;
-  --color-fill-tertiary:   #EAE6F5;
-  --color-overlay:         rgba(26,21,48,0.35);
-  --color-blue:            #6C5CE7;
-  --color-blue-bg:         #EFEBFF;
-  --color-red:             #D9465E;
-  --color-red-bg:          #FFEDF0;
-  --color-green:           #38B2AC;
-  --color-green-bg:        #E6FFFA;
-  --color-orange:          #D68E3C;
-  --color-orange-bg:       #FFF5EB;
-  --color-purple:          #9B7EE8;
-  --color-teal:            #5BCEFA;
-  --glass-rgb:             250, 249, 253;
-  --glass-alpha:           0.60;
-  --glass-alpha-strong:    0.82;
-  --glass-alpha-subtle:    0.44;
-  --glass-border:          rgba(108, 92, 231, 0.18);
+
+  --color-bg:              #F3F7FA;
+  --color-bg-card:         #FAFCFE;
+  --color-bg-elevated:     #FFFFFF;
+  --color-bg-input:        #EDF2F6;
+  --color-text:            #19212E;
+  --color-text-secondary:  #556374;
+  --color-text-tertiary:   #8B98A8;
+  --color-separator:       #DDE4ED;
+  --color-fill-tertiary:   #ECF1F6;
+  --color-overlay:         rgba(25,33,46,0.30);
+
+  /* 冰蓝主色 */
+  --color-blue:            #4A90C4;
+  --color-blue-bg:         #EAF3FA;
+  --color-red:             #C85A64;
+  --color-red-bg:          #FCEEF0;
+  --color-green:           #4D9E8A;
+  --color-green-bg:        #E8F5F1;
+  --color-orange:          #C4843D;
+  --color-orange-bg:       #FCF3E8;
+  --color-purple:          #5A72A0;
+  --color-teal:            #6DAAC4;
+
+  /* 液态玻璃 — 冰面质感 */
+  --glass-rgb:             250, 252, 254;
+  --glass-alpha:           0.62;
+  --glass-alpha-strong:    0.84;
+  --glass-alpha-subtle:    0.46;
+  --glass-border:          rgba(74, 144, 196, 0.14);
+  --glass-border-bottom:   rgba(0,0,0,0.04);
   --glass-blur:            28px;
-  --glass-saturate:        190%;
-  --glass-brightness:      1.06;
-  --glass-sheen:           rgba(255,255,255,0.26);
-  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.7);
-  --glass-shadow:          0 1px 2px rgba(26,21,48,0.05),
-                           0 6px 20px rgba(26,21,48,0.07),
-                           0 16px 48px rgba(26,21,48,0.10);
-  --shadow-sm:  0 1px 3px rgba(26,21,48,0.06);
-  --shadow-md:  0 4px 16px rgba(26,21,48,0.07);
-  --shadow-lg:  0 8px 32px rgba(26,21,48,0.10);
-  --kallen-glow-violet:    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,92,231,0.18) 0%, transparent 50%);
-  --kallen-glow-ice:       radial-gradient(ellipse 55% 45% at 85% 80%, rgba(91,206,250,0.14) 0%, transparent 45%);
-  --kallen-glow-moon:      radial-gradient(ellipse 50% 40% at 15% 70%, rgba(179,136,255,0.12) 0%, transparent 50%);
+  --glass-saturate:        180%;
+  --glass-brightness:      1.04;
+  --glass-sheen:           rgba(255,255,255,0.30);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.72);
+  --glass-shadow:          0 1px 2px rgba(25,33,46,0.04),
+                           0 4px 14px rgba(25,33,46,0.05),
+                           0 12px 36px rgba(25,33,46,0.08);
+  --shadow-sm:  0 1px 3px rgba(25,33,46,0.05);
+  --shadow-md:  0 4px 16px rgba(25,33,46,0.06);
+  --shadow-lg:  0 8px 32px rgba(25,33,46,0.09);
+
+  /* 顶部冷光 */
+  --kallen-frost-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(74,144,196,0.10) 0%, transparent 55%);
 }
+
 :root[data-theme="kallen"] body {
-  /* 鸦羽十字网格 + 冰晶粒子 + 三层辉光 */
   background:
-    var(--kallen-glow-violet),
-    var(--kallen-glow-ice),
-    var(--kallen-glow-moon),
-    /* 鸦羽斜纹：45° 和 -45° 交叉形成羽片纹理 */
-    repeating-linear-gradient(
-      45deg,
-      transparent 0px,
-      transparent 24px,
-      rgba(108,92,231,0.08) 24px,
-      rgba(108,92,231,0.08) 26px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent 0px,
-      transparent 24px,
-      rgba(91,206,250,0.05) 24px,
-      rgba(91,206,250,0.05) 26px
-    ),
-    /* 冰晶粒子：高光点散落 */
-    radial-gradient(circle at 15% 25%, rgba(91,206,250,0.18) 0px, transparent 4px),
-    radial-gradient(circle at 75% 40%, rgba(179,136,255,0.15) 0px, transparent 5px),
-    radial-gradient(circle at 40% 70%, rgba(91,206,250,0.12) 0px, transparent 3px),
-    radial-gradient(circle at 85% 85%, rgba(108,92,231,0.14) 0px, transparent 4px),
-    radial-gradient(circle at 25% 90%, rgba(179,136,255,0.10) 0px, transparent 3px),
+    var(--kallen-frost-glow),
     var(--color-bg);
 }
 
-/* ── Kallen 专属视觉覆盖 ── */
-[data-theme="kallen"] .tab-btn.active {
-  border-bottom-color: var(--color-blue);
-  box-shadow: 0 2px 0 var(--color-blue);
+/* ── 冰晶顶线：卡片顶部一道极细的青色线，像霜在玻璃上凝结 ── */
+[data-theme="kallen"] .device-card,
+[data-theme="kallen"] .ring-card,
+[data-theme="kallen"] .sub-card,
+[data-theme="kallen"] .chart-card {
+  border-top: 1px solid rgba(109, 170, 196, 0.30);
 }
+
+/* ── 鸦羽线：统计卡左侧一条深靛蓝细线，像乌鸦尾羽落在雪地上 ── */
+[data-theme="kallen"] .stat-item {
+  border-left: 2px solid #4A627A;
+}
+
+/* ── 时停刻印：卡片右下角一个精确的 4px 深蓝圆点，
+     无光晕，不闪烁 —— 像乐谱上的终止符、怪盗留下的银色印记 ── */
 [data-theme="kallen"] .device-card {
-  border-top: 2px solid rgba(91, 206, 250, 0.32);
-  border-left: 2px solid rgba(108, 92, 231, 0.25);
   position: relative;
 }
-/* 时停刻印：右下角微光标记（模拟鸦羽三层印记） */
-[data-theme="kallen"] .device-card::before {
+[data-theme="kallen"] .device-card::after {
   content: "";
   position: absolute;
-  bottom: 10px;
+  bottom: 12px;
   right: 14px;
-  width: 10px;
-  height: 10px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(108,92,231,0.55), rgba(108,92,231,0.2));
-  box-shadow: 0 0 10px rgba(108,92,231,0.30), 0 0 20px rgba(108,92,231,0.10);
+  background: #2D3E5C;
   z-index: 4;
   pointer-events: none;
 }
-[data-theme="kallen"] .device-card:hover {
-  border-top-color: rgba(91, 206, 250, 0.60);
-  border-left-color: rgba(108, 92, 231, 0.50);
-  box-shadow: var(--shadow-md), 0 0 20px rgba(108,92,231,0.20), 0 0 40px rgba(108,92,231,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+
+/* ── 冰蓝 tab 选中态：一道窄窄的青蓝底线 ── */
+[data-theme="kallen"] .tab-btn.active {
+  border-bottom: 2px solid #4A90C4;
+  color: #4A90C4;
 }
-[data-theme="kallen"] .stat-item {
-  border-left: 2px solid rgba(91, 206, 250, 0.40);
-}
-[data-theme="kallen"] .ring-card {
-  border-top: 2px solid rgba(91, 206, 250, 0.28);
-  border-left: 2px solid rgba(108, 92, 231, 0.22);
-}
+
+/* ── 按钮：冰蓝渐变，克制 ── */
 [data-theme="kallen"] .btn-primary {
-  background: linear-gradient(135deg, #6C5CE7 0%, #B388FF 100%);
+  background: #4A90C4;
+}
+[data-theme="kallen"] .btn-primary:hover {
+  background: #3D7FB5;
 }
 [data-theme="kallen"] .icon-btn:hover {
-  background: var(--color-blue-bg);
+  background: #EAF3FA;
 }
-[data-theme="kallen"] .app-header {
-  border-bottom: 2px solid transparent;
-  border-image: linear-gradient(90deg, transparent 0%, rgba(108,92,231,0.35) 20%, rgba(91,206,250,0.35) 55%, rgba(179,136,255,0.25) 80%, transparent 100%) 1;
-}
+
+/* ── 订阅卡鸦羽线 ── */
 [data-theme="kallen"] .sub-card {
-  border-left: 3px solid rgba(108, 92, 231, 0.35);
+  border-left: 1px solid #4A627A;
 }
+
+/* ── header：无装饰，保持干净 ── */
+
 /* ============================================================
    Sonetto Visual Overrides — character motifs
    ============================================================ */
@@ -3913,9 +3904,8 @@ function renderRings() {
 
   // Ring colors
   const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#5BCEFA' : '#FF9500';
-  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#6C5CE7' : '#5AC8FA';
-  if (isKallen && isDark) { colorIdle = '#4DF0FF'; colorCost = '#9B7EE8'; }
+  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#4A90C4' : '#FF9500';
+  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#4A627A' : '#5AC8FA';
   const textColor = getThemeColorVar('--color-text') || (isDark ? '#F5F5F7' : '#1C1C1E');
 
   const CANVAS_SIZE = 200;
@@ -4431,7 +4421,7 @@ function updateThemeMeta() {
   let color = '#F2F2F7';
   if (theme === 'dark' || theme === 'sonetto-dark' ) color = '#000000';
   else if (theme === 'sonetto') color = '#F8F5EE';
-  else if (theme === 'kallen') color = '#F0EFF6';
+  else if (theme === 'kallen') color = '#F3F7FA';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
