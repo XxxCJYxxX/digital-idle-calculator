@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="description" content="电子产品吃灰计算器 - 追踪闲置设备的价值损耗与保修期限">
+<title>吃灰计算器</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   CSS Custom Properties — Apple HIG Color System
+   ============================================================ */
+:root {
+  color-scheme: light dark;
+  --color-bg:              light-dark(#F2F2F7, #000000);
+  --color-bg-card:         light-dark(#FFFFFF, #1C1C1E);
+  --color-bg-elevated:     light-dark(#FFFFFF, #2C2C2E);
+  --color-bg-input:        light-dark(#F2F2F7, #1C1C1E);
+  --color-text:            light-dark(#1D1D1F, #F5F5F7);
+  --color-text-secondary:  light-dark(#6E6E73, #98989D);
+  --color-text-tertiary:   light-dark(#8E8E93, #636366);
+  --color-separator:       light-dark(#E5E5EA, #38383A);
+  --color-fill-tertiary:   light-dark(#E8E8ED, #3A3A3C);
+  --color-overlay:         light-dark(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+  /* Accent — Apple system colors */
+  --color-blue:            light-dark(#007AFF, #0A84FF);
+  --color-blue-bg:         light-dark(#E5F0FF, #1A2A44);
+  --color-red:             light-dark(#FF3B30, #FF453A);
+  --color-red-bg:          light-dark(#FFEEED, #3A1C1C);
+  --color-orange:          light-dark(#FF9500, #FF9F0A);
+  --color-orange-bg:       light-dark(#FFF4E5, #3A2C1A);
+  --color-green:           light-dark(#34C759, #30D158);
+  --color-green-bg:        light-dark(#E9F7ED, #1A3320);
+  --color-purple:          light-dark(#AF52DE, #BF5AF2);
+  --color-teal:            light-dark(#5AC8FA, #64D2FF);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm:  light-dark(0 1px 3px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.5));
+  --shadow-md:  light-dark(0 4px 16px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.4));
+  --shadow-lg:  light-dark(0 8px 32px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.5));
+  --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "PingFang SC", "Noto Sans SC", sans-serif;
+  --font-mono:  "SF Mono", "Menlo", "Consolas", monospace;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-stack);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.47059;
+  font-size: 15px;
+  min-height: 100dvh;
+  letter-spacing: -0.022em;
+}
+input, select, button, textarea {
+  font-family: inherit; font-size: inherit; color: inherit;
+}
+button { cursor: pointer; border: none; background: none; -webkit-tap-highlight-color: transparent; }
+a { color: var(--color-blue); text-decoration: none; }
+:focus-visible {
+  outline: 3px solid var(--color-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+@supports not selector(:focus-visible) {
+  :focus { outline: 3px solid var(--color-blue); outline-offset: 2px; border-radius: 4px; }
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.app-container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 16px 32px;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 8px;
+}
+.app-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+.icon-btn {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-blue);
+  font-size: 20px;
+  transition: background var(--transition);
+}
+.icon-btn:hover { background: var(--color-fill-tertiary); }
+.icon-btn:active { opacity: 0.6; }
+.icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+
+/* Summary Stats Bar */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+.stat-item {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+.stat-value {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-top: 2px;
+}
+
+/* Tab Navigation */
+.tab-nav {
+  display: flex;
+  background: var(--color-fill-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-align: center;
+  transition: all var(--transition);
+  min-height: 36px;
+}
+.tab-btn.active {
+  background: var(--color-bg-card);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.toolbar select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-sm);
+  padding: 8px 32px 8px 12px;
+  font-size: 14px;
+  min-height: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' fill='none' stroke='%238E8E93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.toolbar select:focus-visible { border-color: var(--color-blue); }
+.toolbar-spacer { flex: 1; }
+.btn-add {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--color-blue);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  min-height: 36px;
+  transition: opacity var(--transition);
+}
+.btn-add:hover { opacity: 0.88; }
+.btn-add:active { opacity: 0.72; }
+.btn-add svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* ============================================================
+   Device Cards
+   ============================================================ */
+.device-list { display: flex; flex-direction: column; gap: 10px; }
+.device-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: start;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.device-card:hover { box-shadow: var(--shadow-md); }
+.device-info { min-width: 0; }
+.device-name {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--color-text);
+}
+.device-category {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-blue);
+  background: var(--color-blue-bg);
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+.device-meta {
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+.device-meta span { white-space: nowrap; }
+.device-costs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.cost-item {
+  background: var(--color-fill-tertiary);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  text-align: center;
+}
+.cost-label { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.03em; }
+.cost-value { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; margin-top: 2px; }
+
+/* Warranty Countdown */
+.device-warranty {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+.warranty-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 12px;
+}
+.warranty-badge.safe    { background: var(--color-green-bg); color: var(--color-green); }
+.warranty-badge.warning { background: var(--color-orange-bg); color: var(--color-orange); }
+.warranty-badge.danger  { background: var(--color-red-bg); color: var(--color-red); }
+.warranty-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.warranty-badge.safe    .warranty-dot { background: var(--color-green); }
+.warranty-badge.warning .warranty-dot { background: var(--color-orange); }
+.warranty-badge.danger  .warranty-dot { background: var(--color-red); }
+
+/* Card Actions */
+.card-actions {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.card-action-btn {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+  transition: all var(--transition);
+}
+.card-action-btn:hover { background: var(--color-fill-tertiary); color: var(--color-text); }
+.card-action-btn.danger:hover { background: var(--color-red-bg); color: var(--color-red); }
+.card-action-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* ============================================================
+   Empty State
+   ============================================================ */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 20px; text-align: center;
+}
+.empty-icon {
+  width: 64px; height: 64px;
+  background: var(--color-fill-tertiary);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+.empty-title { font-size: 18px; font-weight: 600; color: var(--color-text); }
+.empty-desc { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; max-width: 260px; }
+
+/* ============================================================
+   Statistics Tab
+   ============================================================ */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.chart-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: -0.022em;
+}
+.chart-wrap { position: relative; width: 100%; max-height: 360px; }
+.chart-wrap canvas { width: 100% !important; }
+
+/* ============================================================
+   Comparison Tab
+   ============================================================ */
+.compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.compare-table th, .compare-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-separator);
+  white-space: nowrap;
+}
+.compare-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--color-fill-tertiary);
+  position: sticky; top: 0;
+}
+.compare-table td { color: var(--color-text); }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   Modal System
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: var(--color-overlay);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn var(--transition-slow);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.hidden { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-sheet {
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 420px;
+  max-height: 85dvh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp var(--transition-slow);
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 0;
+}
+.modal-title { font-size: 17px; font-weight: 600; }
+.modal-body { padding: 16px 20px 20px; }
+.modal-footer {
+  display: flex; gap: 10px;
+  padding: 12px 20px 20px;
+  justify-content: flex-end;
+}
+
+/* Form Fields */
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+.form-input, .form-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-input);
+  color: var(--color-text);
+  font-size: 15px;
+  min-height: 44px;
+  transition: border-color var(--transition);
+}
+.form-input:focus, .form-select:focus { border-color: var(--color-blue); outline: none; }
+.form-input::placeholder { color: var(--color-text-tertiary); }
+.form-hint { font-size: 12px; color: var(--color-text-tertiary); margin-top: 4px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  min-height: 44px;
+  min-width: 44px;
+  transition: all var(--transition);
+  letter-spacing: -0.01em;
+}
+.btn-primary { background: var(--color-blue); color: #FFFFFF; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:active { opacity: 0.75; }
+.btn-secondary { background: var(--color-fill-tertiary); color: var(--color-text); }
+.btn-secondary:hover { opacity: 0.8; }
+.btn-danger { background: var(--color-red); color: #FFFFFF; }
+.btn-danger:hover { opacity: 0.9; }
+.btn-ghost { color: var(--color-blue); }
+.btn-ghost:hover { background: var(--color-blue-bg); }
+.btn-block { width: 100%; }
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.toast-container {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 2000;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--color-bg-elevated);
+  color: var(--color-text);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: toastIn var(--transition-slow);
+  max-width: 320px;
+  text-align: center;
+}
+.toast.error { color: var(--color-red); }
+.toast.success { color: var(--color-green); }
+.toast.removing { animation: toastOut var(--transition-slow) forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-12px); } }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 480px) {
+  .app-title { font-size: 24px; }
+  .device-card { grid-template-columns: 1fr auto; padding: 14px 16px; }
+  .device-costs { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .cost-value { font-size: 15px; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .toolbar { flex-wrap: wrap; }
+  .toolbar select { flex: 1; min-width: 0; }
+  .compare-table th, .compare-table td { padding: 10px 12px; font-size: 13px; }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* CSV Import area */
+.import-area {
+  border: 2px dashed var(--color-separator);
+  border-radius: var(--radius-md);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 16px;
+}
+.import-area:hover { border-color: var(--color-blue); background: var(--color-blue-bg); }
+.import-area svg { width: 32px; height: 32px; fill: var(--color-text-tertiary); margin-bottom: 8px; }
+.import-area p { font-size: 14px; color: var(--color-text-secondary); }
+
+/* File input hidden */
+.file-input-hidden { display: none; }
+
+/* Category manager list */
+.cat-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.cat-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-fill-tertiary);
+  font-size: 14px;
+}
+.cat-row .cat-name { font-weight: 500; }
+.cat-row .cat-preset { font-size: 11px; color: var(--color-text-tertiary); }
+.cat-row button {
+  width: 44px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; color: var(--color-red);
+  font-size: 14px; transition: background var(--transition);
+}
+.cat-row button:hover { background: var(--color-red-bg); }
+
+/* Category add row */
+.cat-add-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.cat-add-row input { flex: 1; }
+
+/* Header action menu */
+.action-menu {
+  position: relative;
+}
+.action-dropdown {
+  position: absolute; right: 0; top: 44px;
+  background: var(--color-bg-elevated);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  min-width: 160px;
+  padding: 6px;
+  z-index: 100;
+  display: none;
+}
+.action-dropdown.open { display: block; }
+.action-dropdown button {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 14px; color: var(--color-text);
+  text-align: left;
+  transition: background var(--transition);
+}
+.action-dropdown button:hover { background: var(--color-fill-tertiary); }
+.action-dropdown button svg { width: 16px; height: 16px; fill: currentColor; }
+.action-dropdown .divider {
+  height: 1px; background: var(--color-separator); margin: 4px 0;
+}
+.action-dropdown button.danger { color: var(--color-red); }
+
+/* Reset confirm double-modal specific */
+.confirm-highlight {
+  font-weight: 600; color: var(--color-red);
+  background: var(--color-red-bg);
+  padding: 4px 10px; border-radius: 6px;
+  display: inline-block; margin: 4px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     App Container
+     ============================================================ -->
+<div class="app-container" id="appRoot">
+
+  <!-- Header -->
+  <header class="app-header">
+    <h1 class="app-title" role="heading" aria-level="1">吃灰计算器</h1>
+    <div class="header-actions">
+      <div class="action-menu" id="actionMenuWrap">
+        <button class="icon-btn" id="btnActionMenu" aria-label="更多操作" aria-haspopup="true" aria-expanded="false" title="更多操作">
+          <svg viewBox="0 0 24 24"><path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
+        </button>
+        <div class="action-dropdown" id="actionDropdown" role="menu" aria-label="操作菜单">
+          <button id="btnExport" role="menuitem" aria-label="导出数据 CSV">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            导出 CSV
+          </button>
+          <button id="btnImport" role="menuitem" aria-label="导入数据 CSV">
+            <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+            导入 CSV
+          </button>
+          <button id="btnCatManager" role="menuitem" aria-label="管理设备分类">
+            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            管理分类
+          </button>
+          <div class="divider" role="separator"></div>
+          <button id="btnReset" class="danger" role="menuitem" aria-label="清空全部数据">
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            清空全部数据
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Summary Stats -->
+  <div class="stats-bar" id="statsBar" aria-live="polite" aria-label="数据概览"></div>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav" role="tablist" aria-label="页面导航">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="list" id="tabList">设备列表</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="stats" id="tabStats">可视化统计</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="compare" id="tabCompare">多设备对比</button>
+  </nav>
+
+  <!-- ============================================================
+       Tab: Device List
+       ============================================================ -->
+  <section role="tabpanel" id="panelList" aria-labelledby="tabList">
+    <div class="toolbar">
+      <select id="filterCategory" aria-label="按分类筛选">
+        <option value="">全部分类</option>
+      </select>
+      <select id="sortBy" aria-label="排序方式">
+        <option value="purchaseDate-desc">购入时间 ↓</option>
+        <option value="purchaseDate-asc">购入时间 ↑</option>
+        <option value="dailyCost-desc">日均损耗 ↓</option>
+        <option value="dailyCost-asc">日均损耗 ↑</option>
+        <option value="totalCost-desc">总闲置成本 ↓</option>
+        <option value="totalCost-asc">总闲置成本 ↑</option>
+        <option value="warrantyEnd-asc">保修到期 ↑</option>
+        <option value="warrantyEnd-desc">保修到期 ↓</option>
+      </select>
+      <div class="toolbar-spacer"></div>
+      <button class="btn-add" id="btnAddDevice" aria-label="添加新设备">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        添加设备
+      </button>
+    </div>
+    <div class="device-list" id="deviceList" aria-label="设备列表"></div>
+    <div class="empty-state hidden" id="emptyState">
+      <div class="empty-icon">📱</div>
+      <div class="empty-title">还没有设备</div>
+      <div class="empty-desc">点击「添加设备」开始追踪闲置成本</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Tab: Statistics
+       ============================================================ -->
+  <section role="tabpanel" id="panelStats" aria-labelledby="tabStats" class="hidden">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">设备闲置天数统计</div>
+        <div class="chart-wrap"><canvas id="chartIdleDays" aria-label="闲置天数柱状图" role="img"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">日均损耗对比（元/天）</div>
+        <div class="chart-wrap"><canvas id="chartDailyCost" aria-label="日均损耗柱状图" role="img"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       Tab: Comparison
+       ============================================================ -->
+  <section role="tabpanel" id="panelCompare" aria-labelledby="tabCompare" class="hidden">
+    <div class="compare-table-wrap">
+      <table class="compare-table" aria-label="多设备对比清单">
+        <thead>
+          <tr>
+            <th>设备名称</th>
+            <th>分类</th>
+            <th>购买日期</th>
+            <th>购买价格</th>
+            <th>闲置天数</th>
+            <th>日均损耗</th>
+            <th>保修剩余</th>
+            <th>延保剩余</th>
+          </tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+    <div class="empty-state hidden" id="compareEmpty">
+      <div class="empty-icon">📊</div>
+      <div class="empty-title">暂无数据对比</div>
+      <div class="empty-desc">添加两台以上设备后可进行对比</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============================================================
+     Toast Container
+     ============================================================ -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ============================================================
+     Modal: Add/Edit Device
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalDevice" role="dialog" aria-modal="true" aria-label="设备表单">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalDeviceTitle">添加设备</h2>
+      <button class="icon-btn" id="btnCloseDevice" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="devName">设备名称</label>
+        <input class="form-input" id="devName" type="text" placeholder="如 iPhone 16 Pro Max" maxlength="60" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="devCategory">设备分类</label>
+        <select class="form-select" id="devCategory" required aria-required="true"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="devPrice">购买开票金额（元）</label>
+        <input class="form-input" id="devPrice" type="text" inputmode="decimal" placeholder="0.00" aria-label="购买金额，仅支持数字和小数点">
+        <div class="form-hint">仅允许输入数字与小数点</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="devPurchaseDate">购买日期</label>
+        <input class="form-input" id="devPurchaseDate" type="date" required aria-required="true">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="devWarrantyEnd">保修截止日期 <span style="font-weight:400;color:var(--color-text-tertiary)">（选填）</span></label>
+        <input class="form-input" id="devWarrantyEnd" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="devAppleCareEnd">AC+ / 延保到期日期 <span style="font-weight:400;color:var(--color-text-tertiary)">（选填）</span></label>
+        <input class="form-input" id="devAppleCareEnd" type="date">
+      </div>
+      <input type="hidden" id="devEditId" value="">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCancelDevice">取消</button>
+      <button class="btn btn-primary" id="btnSaveDevice">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: Delete Confirmation
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalDelete" role="alertdialog" aria-modal="true" aria-label="确认删除">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">确认删除</h2>
+      <button class="icon-btn" id="btnCloseDelete" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>确定要删除「<strong id="deleteDeviceName"></strong>」吗？</p>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-top:4px;">此操作无法撤销。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCancelDelete">取消</button>
+      <button class="btn btn-danger" id="btnConfirmDelete">删除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: Reset All — First Layer
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalReset1" role="alertdialog" aria-modal="true" aria-label="确认清空">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">清空全部数据？</h2>
+      <button class="icon-btn" id="btnCloseReset1" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>这将<span class="confirm-highlight">永久删除</span>所有设备数据，包括分类设置。</p>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-top:4px;">此操作不可恢复，建议先导出备份。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCancelReset1">取消</button>
+      <button class="btn btn-danger" id="btnGoReset2">继续清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: Reset All — Second Layer (Double Confirm)
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalReset2" role="alertdialog" aria-modal="true" aria-label="二次确认清空">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">再次确认</h2>
+      <button class="icon-btn" id="btnCloseReset2" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p>你真的要清空<span class="confirm-highlight">所有数据</span>吗？</p>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-top:4px;">数据将无法恢复。这是最后一次取消的机会。</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCancelReset2">保留数据</button>
+      <button class="btn btn-danger" id="btnConfirmReset">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: Import CSV
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalImport" role="dialog" aria-modal="true" aria-label="导入 CSV">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">导入 CSV 数据</h2>
+      <button class="icon-btn" id="btnCloseImport" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="import-area" id="importArea" role="button" tabindex="0" aria-label="点击或拖拽上传 CSV 文件">
+        <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+        <p>点击选择 CSV 文件</p>
+        <p style="font-size:12px;color:var(--color-text-tertiary);margin-top:4px;">列顺序：名称,分类,价格,购买日期,保修日期,延保日期</p>
+      </div>
+      <input type="file" accept=".csv" class="file-input-hidden" id="csvFileInput" aria-label="选择 CSV 文件">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCancelImport">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: Category Manager
+     ============================================================ -->
+<div class="modal-overlay hidden" id="modalCat" role="dialog" aria-modal="true" aria-label="分类管理">
+  <div class="modal-sheet">
+    <div class="modal-header">
+      <h2 class="modal-title">管理分类</h2>
+      <button class="icon-btn" id="btnCloseCat" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="cat-list" id="catList" aria-label="分类列表"></div>
+      <div class="cat-add-row">
+        <input class="form-input" id="newCatName" type="text" placeholder="新分类名称" maxlength="20" aria-label="新分类名称">
+        <button class="btn btn-primary" id="btnAddCat" style="flex-shrink:0;">添加</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnCloseCatFooter">完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Application Script
+     ============================================================ -->
+<script>
+/* ============================================================
+   Database Layer — IndexedDB
+   ============================================================ */
+const DB_NAME = 'IdleDeviceDB';
+const DB_VERSION = 1;
+let db = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('devices')) {
+        const store = d.createObjectStore('devices', { keyPath: 'id', autoIncrement: true });
+        store.createIndex('category', 'category', { unique: false });
+        store.createIndex('purchaseDate', 'purchaseDate', { unique: false });
+      }
+      if (!d.objectStoreNames.contains('categories')) {
+        const catStore = d.createObjectStore('categories', { keyPath: 'id', autoIncrement: true });
+        catStore.createIndex('name', 'name', { unique: true });
+      }
+    };
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbTx(storeName, mode = 'readonly') {
+  return db.transaction(storeName, mode).objectStore(storeName);
+}
+
+function dbGetAll(storeName) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx(storeName).getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbPut(storeName, item) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx(storeName, 'readwrite').put(item);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbDelete(storeName, id) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx(storeName, 'readwrite').delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function dbClear(storeName) {
+  return new Promise((resolve, reject) => {
+    const req = dbTx(storeName, 'readwrite').clear();
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+/* ============================================================
+   State
+   ============================================================ */
+const PRESET_CATEGORIES = ['手机', '平板', '笔记本电脑', '台式机', '相机', '耳机', '智能手表', '游戏主机', '无人机', '其他'];
+
+let state = {
+  devices: [],
+  categories: [],
+  currentTab: 'list',
+  editId: null,
+  deleteId: null,
+};
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function daysBetween(d1, d2) {
+  return Math.max(0, Math.floor((new Date(d2) - new Date(d1)) / 86400000));
+}
+
+function fmtDate(d) { if (!d) return '—'; return d; }
+
+function fmtPrice(n) {
+  if (isNaN(n) || n === null || n === undefined) return '—';
+  return '¥' + Number(n).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function parsePrice(str) {
+  const cleaned = String(str || '').replace(/[^\d.]/g, '');
+  const parts = cleaned.split('.');
+  if (parts.length > 2) return parseFloat(parts[0] + '.' + parts.slice(1).join('')) || 0;
+  return parseFloat(cleaned) || 0;
+}
+
+function computeDevice(d) {
+  const totalDays = Math.max(1, daysBetween(d.purchaseDate, today()));
+  const dailyCost = d.purchasePrice / totalDays;
+  const totalCost = d.purchasePrice; // idle cost = price (100% idle from purchase)
+  const warrantyRemain = d.warrantyEnd ? daysBetween(today(), d.warrantyEnd) : null;
+  const appleCareRemain = d.appleCareEnd ? daysBetween(today(), d.appleCareEnd) : null;
+
+  return { ...d, totalDays, dailyCost, totalCost, warrantyRemain, appleCareRemain };
+}
+
+function warrantyStatus(days) {
+  if (days === null || days === undefined) return null;
+  if (days > 90) return 'safe';
+  if (days > 30) return 'warning';
+  return 'danger';
+}
+
+function warrantyText(days) {
+  if (days === null || days === undefined) return null;
+  if (days <= 0) return '已过期';
+  if (days <= 30) return `仅剩 ${days} 天`;
+  if (days <= 90) return `剩余 ${days} 天`;
+  const y = Math.floor(days / 365);
+  const m = Math.floor((days % 365) / 30);
+  const dRem = days % 30;
+  let parts = [];
+  if (y > 0) parts.push(`${y}年`);
+  if (m > 0) parts.push(`${m}个月`);
+  if (parts.length === 0 || dRem > 0) parts.push(`${dRem}天`);
+  return parts.join('');
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+function showToast(msg, type = '') {
+  const container = $('#toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  el.setAttribute('role', 'status');
+  container.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('removing');
+    el.addEventListener('animationend', () => el.remove());
+  }, 2400);
+}
+
+/* ============================================================
+   Modal Helpers
+   ============================================================ */
+function openModal(id) { $(id).classList.remove('hidden'); trapFocus(id); }
+function closeModal(id) { $(id).classList.add('hidden'); }
+function closeAllModals() {
+  $$('.modal-overlay').forEach(m => m.classList.add('hidden'));
+}
+
+function trapFocus(modalId) {
+  const modal = $(modalId);
+  if (!modal) return;
+  const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  if (focusable.length > 0) {
+    setTimeout(() => focusable[0].focus(), 100);
+  }
+}
+
+/* ============================================================
+   Category Management
+   ============================================================ */
+async function loadCategories() {
+  let cats = await dbGetAll('categories');
+  if (cats.length === 0) {
+    for (const name of PRESET_CATEGORIES) {
+      await dbPut('categories', { name, isPreset: true });
+    }
+    cats = await dbGetAll('categories');
+  }
+  state.categories = cats;
+}
+
+function getCategoryNames() {
+  return state.categories.map(c => c.name);
+}
+
+async function addCategory(name) {
+  const trimmed = name.trim();
+  if (!trimmed) { showToast('分类名称不能为空', 'error'); return false; }
+  if (trimmed.length > 20) { showToast('分类名称不能超过 20 个字符', 'error'); return false; }
+  const exists = state.categories.some(c => c.name === trimmed);
+  if (exists) { showToast('该分类已存在', 'error'); return false; }
+  await dbPut('categories', { name: trimmed, isPreset: false });
+  await loadCategories();
+  return true;
+}
+
+async function deleteCategory(id) {
+  const cat = state.categories.find(c => c.id === id);
+  if (!cat) return;
+  if (cat.isPreset) { showToast('预设分类不能删除', 'error'); return; }
+  // Check if any device uses this category
+  const devicesUsing = state.devices.filter(d => d.category === cat.name);
+  if (devicesUsing.length > 0) {
+    showToast(`「${cat.name}」有 ${devicesUsing.length} 台设备在使用，无法删除`, 'error');
+    return;
+  }
+  await dbDelete('categories', id);
+  await loadCategories();
+  renderCategoryManager();
+}
+
+function renderCategoryManager() {
+  const list = $('#catList');
+  if (!list) return;
+  list.innerHTML = state.categories.map(c => `
+    <div class="cat-row">
+      <span class="cat-name">${escHtml(c.name)}</span>
+      <span class="cat-preset">${c.isPreset ? '预设' : ''}</span>
+      ${c.isPreset ? '<span style="width:44px"></span>' : `<button onclick="deleteCategory(${c.id})" aria-label="删除分类 ${escHtml(c.name)}">删除</button>`}
+    </div>
+  `).join('');
+}
+
+function renderCategorySelects() {
+  const names = getCategoryNames();
+  const options = names.map(n => `<option value="${escHtml(n)}">${escHtml(n)}</option>`).join('');
+  const selects = ['#devCategory', '#filterCategory'];
+  selects.forEach(sel => {
+    const el = $(sel);
+    if (!el) return;
+    if (sel === '#filterCategory') {
+      el.innerHTML = `<option value="">全部分类</option>${options}`;
+    } else {
+      el.innerHTML = options;
+    }
+  });
+}
+
+/* ============================================================
+   Device CRUD
+   ============================================================ */
+async function loadDevices() {
+  state.devices = await dbGetAll('devices');
+}
+
+function getFilteredDevices() {
+  const catFilter = $('#filterCategory')?.value || '';
+  let list = state.devices.map(computeDevice);
+  if (catFilter) {
+    list = list.filter(d => d.category === catFilter);
+  }
+  const sortVal = $('#sortBy')?.value || 'purchaseDate-desc';
+  const [field, dir] = sortVal.split('-');
+  const multiplier = dir === 'asc' ? 1 : -1;
+  list.sort((a, b) => {
+    let va, vb;
+    switch (field) {
+      case 'purchaseDate': va = a.purchaseDate || ''; vb = b.purchaseDate || ''; break;
+      case 'dailyCost': va = a.dailyCost; vb = b.dailyCost; break;
+      case 'totalCost': va = a.totalCost; vb = b.totalCost; break;
+      case 'warrantyEnd': va = a.warrantyRemain ?? -1; vb = b.warrantyRemain ?? -1; break;
+      default: va = 0; vb = 0;
+    }
+    if (va < vb) return -1 * multiplier;
+    if (va > vb) return 1 * multiplier;
+    return 0;
+  });
+  return list;
+}
+
+function renderStatsBar() {
+  const list = state.devices.map(computeDevice);
+  const totalDevices = list.length;
+  const totalValue = list.reduce((s, d) => s + d.purchasePrice, 0);
+  const avgDaily = list.length > 0 ? list.reduce((s, d) => s + d.dailyCost, 0) / list.length : 0;
+  const expiringSoon = list.filter(d => d.warrantyRemain !== null && d.warrantyRemain >= 0 && d.warrantyRemain <= 30).length;
+
+  $('#statsBar').innerHTML = `
+    <div class="stat-item">
+      <div class="stat-label">设备数量</div>
+      <div class="stat-value">${totalDevices}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">闲置总价值</div>
+      <div class="stat-value">${fmtPrice(totalValue)}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">平均日均损耗</div>
+      <div class="stat-value">${fmtPrice(avgDaily)}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">即将到期保修</div>
+      <div class="stat-value" style="color:${expiringSoon > 0 ? 'var(--color-red)' : 'var(--color-text)'}">${expiringSoon}</div>
+    </div>
+  `;
+}
+
+function renderDeviceList() {
+  const list = getFilteredDevices();
+  const container = $('#deviceList');
+  const emptyEl = $('#emptyState');
+
+  if (list.length === 0) {
+    container.innerHTML = '';
+    emptyEl.classList.remove('hidden');
+  } else {
+    emptyEl.classList.add('hidden');
+    container.innerHTML = list.map(d => {
+      const wStatus = warrantyStatus(d.warrantyRemain);
+      const acStatus = warrantyStatus(d.appleCareRemain);
+      let warrantyHTML = '';
+      if (d.warrantyRemain !== null) {
+        warrantyHTML += `<div class="warranty-badge ${wStatus}" aria-label="保修${warrantyText(d.warrantyRemain)}"><span class="warranty-dot"></span>保修${warrantyText(d.warrantyRemain)}</div>`;
+      }
+      if (d.appleCareRemain !== null) {
+        warrantyHTML += `<div class="warranty-badge ${acStatus}" aria-label="延保${warrantyText(d.appleCareRemain)}"><span class="warranty-dot"></span>AC+/延保${warrantyText(d.appleCareRemain)}</div>`;
+      }
+      return `
+      <div class="device-card" data-id="${d.id}">
+        <div class="device-info">
+          <div class="device-name">${escHtml(d.name)}</div>
+          <span class="device-category">${escHtml(d.category)}</span>
+          <div class="device-meta">
+            <span>购入 ${fmtDate(d.purchaseDate)}</span>
+            <span>金额 ${fmtPrice(d.purchasePrice)}</span>
+          </div>
+          <div class="device-costs">
+            <div class="cost-item">
+              <div class="cost-label">闲置天数</div>
+              <div class="cost-value">${d.totalDays} 天</div>
+            </div>
+            <div class="cost-item">
+              <div class="cost-label">日均损耗</div>
+              <div class="cost-value">${fmtPrice(d.dailyCost)}</div>
+            </div>
+            <div class="cost-item">
+              <div class="cost-label">总闲置成本</div>
+              <div class="cost-value">${fmtPrice(d.totalCost)}</div>
+            </div>
+          </div>
+          ${warrantyHTML ? `<div class="device-warranty">${warrantyHTML}</div>` : ''}
+        </div>
+        <div class="card-actions">
+          <button class="card-action-btn" onclick="openEditDevice(${d.id})" aria-label="编辑 ${escHtml(d.name)}">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+          <button class="card-action-btn danger" onclick="openDeleteDevice(${d.id})" aria-label="删除 ${escHtml(d.name)}">
+            <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+      </div>
+    `}).join('');
+  }
+}
+
+/* ============================================================
+   Add / Edit Device Modal
+   ============================================================ */
+function openAddDevice() {
+  $('#modalDeviceTitle').textContent = '添加设备';
+  $('#devName').value = '';
+  $('#devPrice').value = '';
+  $('#devPurchaseDate').value = '';
+  $('#devWarrantyEnd').value = '';
+  $('#devAppleCareEnd').value = '';
+  $('#devEditId').value = '';
+  renderCategorySelects();
+  openModal('#modalDevice');
+  setTimeout(() => $('#devName').focus(), 150);
+}
+
+function openEditDevice(id) {
+  const d = state.devices.find(d => d.id === id);
+  if (!d) return;
+  state.editId = id;
+  $('#modalDeviceTitle').textContent = '编辑设备';
+  $('#devName').value = d.name || '';
+  $('#devPrice').value = d.purchasePrice ? d.purchasePrice.toFixed(2) : '';
+  $('#devPurchaseDate').value = d.purchaseDate || '';
+  $('#devWarrantyEnd').value = d.warrantyEnd || '';
+  $('#devAppleCareEnd').value = d.appleCareEnd || '';
+  $('#devEditId').value = id;
+  renderCategorySelects();
+  $('#devCategory').value = d.category || '';
+  openModal('#modalDevice');
+  setTimeout(() => $('#devName').focus(), 150);
+}
+
+async function saveDevice() {
+  const name = $('#devName').value.trim();
+  const category = $('#devCategory').value;
+  const priceRaw = $('#devPrice').value;
+  const purchaseDate = $('#devPurchaseDate').value;
+  const warrantyEnd = $('#devWarrantyEnd').value || null;
+  const appleCareEnd = $('#devAppleCareEnd').value || null;
+  const editId = $('#devEditId').value;
+
+  // Validation
+  if (!name) { showToast('请输入设备名称', 'error'); return; }
+  if (!category) { showToast('请选择设备分类', 'error'); return; }
+  const price = parsePrice(priceRaw);
+  if (price <= 0) { showToast('请输入有效的购买金额', 'error'); return; }
+  if (!purchaseDate) { showToast('请选择购买日期', 'error'); return; }
+  if (new Date(purchaseDate) > new Date()) { showToast('购买日期不能晚于今天', 'error'); return; }
+  if (warrantyEnd && warrantyEnd < purchaseDate) { showToast('保修截止日期不能早于购买日期', 'error'); return; }
+  if (appleCareEnd && appleCareEnd < purchaseDate) { showToast('延保到期日期不能早于购买日期', 'error'); return; }
+
+  const device = {
+    name, category, purchasePrice: price, purchaseDate,
+    warrantyEnd, appleCareEnd
+  };
+
+  if (editId) {
+    device.id = parseInt(editId);
+  }
+
+  await dbPut('devices', device);
+  await loadDevices();
+  closeModal('#modalDevice');
+  renderAll();
+  showToast(editId ? '设备已更新' : '设备已添加', 'success');
+}
+
+/* ============================================================
+   Delete Device Modal
+   ============================================================ */
+function openDeleteDevice(id) {
+  const d = state.devices.find(d => d.id === id);
+  if (!d) return;
+  state.deleteId = id;
+  $('#deleteDeviceName').textContent = d.name;
+  openModal('#modalDelete');
+  setTimeout(() => $('#btnCancelDelete').focus(), 100);
+}
+
+async function confirmDelete() {
+  if (state.deleteId === null) return;
+  await dbDelete('devices', state.deleteId);
+  state.deleteId = null;
+  await loadDevices();
+  closeModal('#modalDelete');
+  renderAll();
+  showToast('设备已删除', 'success');
+}
+
+/* ============================================================
+   Reset All
+   ============================================================ */
+function openReset() {
+  closeAllModals();
+  $('#actionDropdown').classList.remove('open');
+  openModal('#modalReset1');
+}
+
+async function confirmReset() {
+  await dbClear('devices');
+  await dbClear('categories');
+  state.devices = [];
+  state.categories = [];
+  // Re-create presets
+  for (const name of PRESET_CATEGORIES) {
+    await dbPut('categories', { name, isPreset: true });
+  }
+  await loadCategories();
+  closeModal('#modalReset2');
+  renderAll();
+  showToast('所有数据已清空', 'success');
+}
+
+/* ============================================================
+   CSV Export / Import
+   ============================================================ */
+function exportCSV() {
+  if (state.devices.length === 0) { showToast('没有数据可导出', 'error'); return; }
+  const headers = ['设备名称', '分类', '购买价格', '购买日期', '保修截止日期', '延保到期日期'];
+  const BOM = '\uFEFF';
+  const rows = state.devices.map(d => [
+    d.name || '',
+    d.category || '',
+    d.purchasePrice || '',
+    d.purchaseDate || '',
+    d.warrantyEnd || '',
+    d.appleCareEnd || ''
+  ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+  const csv = BOM + headers.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `吃灰计算器_导出_${today()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  closeAllModals();
+  $('#actionDropdown').classList.remove('open');
+  showToast('数据已导出', 'success');
+}
+
+function openImport() {
+  closeAllModals();
+  $('#actionDropdown').classList.remove('open');
+  openModal('#modalImport');
+}
+
+async function handleCSVImport(file) {
+  try {
+    const text = await file.text();
+    const lines = text.split('\n').filter(l => l.trim());
+    if (lines.length < 2) { showToast('CSV 文件为空或只有标题行', 'error'); return; }
+
+    const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+    const idxName = headers.indexOf('设备名称');
+    const idxCat = headers.indexOf('分类');
+    const idxPrice = headers.indexOf('购买价格');
+    const idxPurch = headers.indexOf('购买日期');
+    const idxWarr = headers.indexOf('保修截止日期');
+    const idxAC = headers.indexOf('延保到期日期');
+
+    if (idxName < 0 || idxPrice < 0 || idxPurch < 0) {
+      showToast('CSV 缺少必要列（设备名称、购买价格、购买日期）', 'error');
+      return;
+    }
+
+    let imported = 0;
+    let errors = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+      const name = cols[idxName];
+      const category = idxCat >= 0 ? cols[idxCat] : '其他';
+      const price = parsePrice(cols[idxPrice]);
+      const purchaseDate = cols[idxPurch];
+      const warrantyEnd = (idxWarr >= 0 && cols[idxWarr]) ? cols[idxWarr] : null;
+      const appleCareEnd = (idxAC >= 0 && cols[idxAC]) ? cols[idxAC] : null;
+
+      if (!name || isNaN(price) || price <= 0 || !/^\d{4}-\d{2}-\d{2}$/.test(purchaseDate)) {
+        errors.push(`第 ${i + 1} 行数据格式错误`);
+        continue;
+      }
+
+      // Ensure category exists
+      const catNames = getCategoryNames();
+      if (!catNames.includes(category)) {
+        await addCategory(category);
+      }
+
+      await dbPut('devices', {
+        name, category, purchasePrice: price, purchaseDate,
+        warrantyEnd: warrantyEnd && /^\d{4}-\d{2}-\d{2}$/.test(warrantyEnd) ? warrantyEnd : null,
+        appleCareEnd: appleCareEnd && /^\d{4}-\d{2}-\d{2}$/.test(appleCareEnd) ? appleCareEnd : null
+      });
+      imported++;
+    }
+
+    await loadDevices();
+    closeModal('#modalImport');
+    renderAll();
+    if (errors.length > 0) {
+      showToast(`导入完成：成功 ${imported} 条，跳过 ${errors.length} 条`, 'error');
+    } else {
+      showToast(`成功导入 ${imported} 台设备`, 'success');
+    }
+  } catch (e) {
+    showToast('CSV 文件解析失败，请检查文件格式', 'error');
+  }
+}
+
+/* ============================================================
+   Charts
+   ============================================================ */
+let chartIdle = null;
+let chartCost = null;
+
+function getChartColors() {
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return {
+    text: isDark ? '#98989D' : '#6E6E73',
+    grid: isDark ? '#38383A' : '#E5E5EA',
+    bars: [
+      isDark ? '#0A84FF' : '#007AFF',
+      isDark ? '#BF5AF2' : '#AF52DE',
+      isDark ? '#30D158' : '#34C759',
+      isDark ? '#FF9F0A' : '#FF9500',
+      isDark ? '#FF453A' : '#FF3B30',
+      isDark ? '#64D2FF' : '#5AC8FA',
+    ]
+  };
+}
+
+function renderCharts() {
+  const list = state.devices.map(computeDevice);
+  if (list.length === 0) return;
+
+  const colors = getChartColors();
+  const labels = list.map(d => d.name.length > 8 ? d.name.slice(0, 8) + '…' : d.name);
+  const idleData = list.map(d => d.totalDays);
+  const costData = list.map(d => d.dailyCost);
+
+  const barColors = list.map((_, i) => colors.bars[i % colors.bars.length]);
+
+  // Idle days chart
+  if (chartIdle) chartIdle.destroy();
+  const ctx1 = $('#chartIdleDays')?.getContext('2d');
+  if (ctx1) {
+    chartIdle = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: '闲置天数',
+          data: idleData,
+          backgroundColor: barColors,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `闲置 ${ctx.raw} 天` } }
+        },
+        scales: {
+          x: {
+            ticks: { color: colors.text, font: { family: '-apple-system' }, maxRotation: 45 },
+            grid: { color: colors.grid }
+          },
+          y: {
+            ticks: { color: colors.text, font: { family: '-apple-system' }, callback: v => v + ' 天' },
+            grid: { color: colors.grid }
+          }
+        }
+      }
+    });
+  }
+
+  // Daily cost chart
+  if (chartCost) chartCost.destroy();
+  const ctx2 = $('#chartDailyCost')?.getContext('2d');
+  if (ctx2) {
+    chartCost = new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: '日均损耗',
+          data: costData,
+          backgroundColor: barColors,
+          borderRadius: 6,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `日均 ¥${Number(ctx.raw).toFixed(2)}` } }
+        },
+        scales: {
+          x: {
+            ticks: { color: colors.text, font: { family: '-apple-system' }, maxRotation: 45 },
+            grid: { color: colors.grid }
+          },
+          y: {
+            ticks: { color: colors.text, font: { family: '-apple-system' }, callback: v => '¥' + v },
+            grid: { color: colors.grid }
+          }
+        }
+      }
+    });
+  }
+}
+
+/* ============================================================
+   Comparison Table
+   ============================================================ */
+function renderComparison() {
+  const list = state.devices.map(computeDevice);
+  const body = $('#compareBody');
+  const emptyEl = $('#compareEmpty');
+
+  if (list.length === 0) {
+    body.innerHTML = '';
+    emptyEl.classList.remove('hidden');
+    return;
+  }
+  emptyEl.classList.add('hidden');
+
+  body.innerHTML = list.map(d => {
+    const wText = d.warrantyRemain !== null ? warrantyText(d.warrantyRemain) : '—';
+    const acText = d.appleCareRemain !== null ? warrantyText(d.appleCareRemain) : '—';
+    const wStatus = warrantyStatus(d.warrantyRemain);
+    const acStatus = warrantyStatus(d.appleCareRemain);
+    const wColor = wStatus === 'danger' ? 'color:var(--color-red)' : wStatus === 'warning' ? 'color:var(--color-orange)' : '';
+    const acColor = acStatus === 'danger' ? 'color:var(--color-red)' : acStatus === 'warning' ? 'color:var(--color-orange)' : '';
+
+    return `
+    <tr>
+      <td><strong>${escHtml(d.name)}</strong></td>
+      <td>${escHtml(d.category)}</td>
+      <td>${fmtDate(d.purchaseDate)}</td>
+      <td class="num">${fmtPrice(d.purchasePrice)}</td>
+      <td class="num">${d.totalDays} 天</td>
+      <td class="num">${fmtPrice(d.dailyCost)}</td>
+      <td class="num" style="${wColor}">${wText}</td>
+      <td class="num" style="${acColor}">${acText}</td>
+    </tr>
+    `;
+  }).join('');
+}
+
+/* ============================================================
+   Tab Navigation
+   ============================================================ */
+function switchTab(tab) {
+  state.currentTab = tab;
+  $$('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+    b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false');
+  });
+  $('#panelList').classList.toggle('hidden', tab !== 'list');
+  $('#panelStats').classList.toggle('hidden', tab !== 'stats');
+  $('#panelCompare').classList.toggle('hidden', tab !== 'compare');
+
+  if (tab === 'stats') {
+    setTimeout(renderCharts, 100);
+  }
+  if (tab === 'compare') {
+    renderComparison();
+  }
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ============================================================
+   Render All
+   ============================================================ */
+function renderAll() {
+  renderStatsBar();
+  renderCategorySelects();
+  if (state.currentTab === 'list') {
+    renderDeviceList();
+  } else if (state.currentTab === 'stats') {
+    renderCharts();
+  } else if (state.currentTab === 'compare') {
+    renderComparison();
+  }
+}
+
+/* ============================================================
+   Price Input Sanitization
+   ============================================================ */
+function sanitizePriceInput(e) {
+  const input = e.target;
+  let val = input.value;
+  // Allow only digits, decimal point, backspace, arrows
+  val = val.replace(/[^\d.]/g, '');
+  // Only one decimal point
+  const parts = val.split('.');
+  if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+  // Max 2 decimal places
+  if (parts.length === 2 && parts[1].length > 2) {
+    val = parts[0] + '.' + parts[1].slice(0, 2);
+  }
+  input.value = val;
+}
+
+/* ============================================================
+   Theme Detection
+   ============================================================ */
+function updateThemeMeta() {
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#000000' : '#F2F2F7';
+}
+
+/* ============================================================
+   Event Bindings
+   ============================================================ */
+function bindEvents() {
+  // Tabs
+  $$('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // Add device
+  $('#btnAddDevice').addEventListener('click', openAddDevice);
+
+  // Device modal
+  $('#btnCloseDevice').addEventListener('click', () => closeModal('#modalDevice'));
+  $('#btnCancelDevice').addEventListener('click', () => closeModal('#modalDevice'));
+  $('#btnSaveDevice').addEventListener('click', saveDevice);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !$('#modalDevice').classList.contains('hidden') && document.activeElement?.tagName !== 'TEXTAREA') {
+      e.preventDefault();
+      saveDevice();
+    }
+  });
+
+  // Price input sanitization
+  $('#devPrice').addEventListener('input', sanitizePriceInput);
+
+  // Delete modal
+  $('#btnCloseDelete').addEventListener('click', () => closeModal('#modalDelete'));
+  $('#btnCancelDelete').addEventListener('click', () => closeModal('#modalDelete'));
+  $('#btnConfirmDelete').addEventListener('click', confirmDelete);
+
+  // Reset flow
+  $('#btnReset').addEventListener('click', openReset);
+  $('#btnCloseReset1').addEventListener('click', () => closeModal('#modalReset1'));
+  $('#btnCancelReset1').addEventListener('click', () => closeModal('#modalReset1'));
+  $('#btnGoReset2').addEventListener('click', () => {
+    closeModal('#modalReset1');
+    openModal('#modalReset2');
+    setTimeout(() => $('#btnCancelReset2').focus(), 100);
+  });
+  $('#btnCloseReset2').addEventListener('click', () => closeModal('#modalReset2'));
+  $('#btnCancelReset2').addEventListener('click', () => closeModal('#modalReset2'));
+  $('#btnConfirmReset').addEventListener('click', confirmReset);
+
+  // Export
+  $('#btnExport').addEventListener('click', exportCSV);
+
+  // Import
+  $('#btnImport').addEventListener('click', openImport);
+  $('#btnCloseImport').addEventListener('click', () => closeModal('#modalImport'));
+  $('#btnCancelImport').addEventListener('click', () => closeModal('#modalImport'));
+  $('#importArea').addEventListener('click', () => $('#csvFileInput').click());
+  $('#importArea').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#csvFileInput').click(); }
+  });
+  $('#csvFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleCSVImport(file);
+    e.target.value = '';
+  });
+
+  // Category manager
+  $('#btnCatManager').addEventListener('click', () => {
+    closeAllModals();
+    $('#actionDropdown').classList.remove('open');
+    renderCategoryManager();
+    openModal('#modalCat');
+  });
+  $('#btnCloseCat').addEventListener('click', () => closeModal('#modalCat'));
+  $('#btnCloseCatFooter').addEventListener('click', () => {
+    closeModal('#modalCat');
+    renderCategorySelects();
+    renderDeviceList();
+  });
+  $('#btnAddCat').addEventListener('click', async () => {
+    const name = $('#newCatName').value;
+    const ok = await addCategory(name);
+    if (ok) {
+      $('#newCatName').value = '';
+      renderCategoryManager();
+      renderCategorySelects();
+    }
+  });
+  $('#newCatName').addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter') {
+      const name = $('#newCatName').value;
+      const ok = await addCategory(name);
+      if (ok) {
+        $('#newCatName').value = '';
+        renderCategoryManager();
+        renderCategorySelects();
+      }
+    }
+  });
+
+  // Filter / Sort
+  $('#filterCategory').addEventListener('change', renderDeviceList);
+  $('#sortBy').addEventListener('change', renderDeviceList);
+
+  // Action menu
+  $('#btnActionMenu').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const dd = $('#actionDropdown');
+    dd.classList.toggle('open');
+    $('#btnActionMenu').setAttribute('aria-expanded', dd.classList.contains('open'));
+  });
+  document.addEventListener('click', (e) => {
+    if (!$('#actionMenuWrap').contains(e.target)) {
+      $('#actionDropdown').classList.remove('open');
+      $('#btnActionMenu').setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Close modals on overlay click
+  $$('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.add('hidden');
+      }
+    });
+  });
+
+  // Close modals on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      $$('.modal-overlay').forEach(m => {
+        if (!m.classList.contains('hidden')) m.classList.add('hidden');
+      });
+    }
+  });
+
+  // Theme change listener
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    updateThemeMeta();
+    if (state.currentTab === 'stats') renderCharts();
+  });
+
+  // Periodic refresh for warranty countdown (every 60s)
+  setInterval(() => {
+    if (state.currentTab === 'list') renderDeviceList();
+    if (state.currentTab === 'compare') renderComparison();
+    renderStatsBar();
+  }, 60000);
+}
+
+/* ============================================================
+   Init
+   ============================================================ */
+async function init() {
+  await openDB();
+  await loadCategories();
+  await loadDevices();
+  bindEvents();
+  renderAll();
+  updateThemeMeta();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
