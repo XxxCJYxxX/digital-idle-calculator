@@ -36,16 +36,23 @@
   --color-purple:          #AF52DE;
   --color-teal:            #5AC8FA;
   /* Liquid Glass */
+  --glass-rgb:        255, 255, 255;
+  --glass-alpha:       0.68;
+  --glass-alpha-strong: 0.85;
+  --glass-alpha-subtle: 0.50;
   --glass-bg:        rgba(var(--glass-rgb), var(--glass-alpha));
   --glass-bg-strong: rgba(var(--glass-rgb), var(--glass-alpha-strong));
   --glass-bg-subtle: rgba(var(--glass-rgb), var(--glass-alpha-subtle));
-  --glass-border:    rgba(255,255,255,0.50);
-  --glass-rgb:        255, 255, 255;
-  --glass-alpha:       0.68;
-  --glass-alpha-strong: 0.84;
-  --glass-alpha-subtle: 0.50;
-  --glass-blur:      20px;
-  --glass-saturate:  180%;
+  --glass-blur:      28px;
+  --glass-saturate:  190%;
+  --glass-brightness: 1.06;
+  --glass-border:        rgba(255,255,255,0.50);
+  --glass-border-bottom: rgba(0,0,0,0.05);
+  --glass-sheen:         rgba(255,255,255,0.28);
+  --glass-shadow:        0 1px 2px rgba(0,0,0,0.04),
+                         0 6px 20px rgba(0,0,0,0.07),
+                         0 16px 48px rgba(0,0,0,0.09);
+  --glass-shadow-inner:  inset 0 1px 0 rgba(255,255,255,0.75);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -89,8 +96,15 @@
   --glass-bg-strong: rgba(28,28,30,var(--glass-alpha-strong));
   --glass-bg-subtle: rgba(44,44,46,var(--glass-alpha-subtle));
   --glass-border:    rgba(255,255,255,0.07);
-  --glass-blur:      24px;
-  --glass-saturate:  200%;
+  --glass-blur:            30px;
+  --glass-saturate:        210%;
+  --glass-brightness:      1.12;
+  --glass-border-bottom:   rgba(0,0,0,0.15);
+  --glass-sheen:           rgba(255,255,255,0.06);
+  --glass-shadow:          0 1px 2px rgba(0,0,0,0.25),
+                           0 6px 20px rgba(0,0,0,0.30),
+                           0 16px 48px rgba(0,0,0,0.35);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.10)
 }
 [data-theme="dark"] body {
   background:
@@ -144,8 +158,11 @@
   --glass-alpha-strong:    0.82;
   --glass-alpha-subtle:    0.44;
   --glass-border:          rgba(168, 213, 200, 0.32);
-  --glass-blur:            22px;
-  --glass-saturate:        170%;
+  --glass-blur:            28px;
+  --glass-saturate:        190%;
+  --glass-brightness:      1.06;
+  --glass-sheen:           rgba(254,252,246,0.25);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.7);
 
   /* ── 金铜徽章阴影 ── */
   --shadow-sm:  0 1px 3px rgba(44,44,53,0.05);
@@ -205,8 +222,11 @@
   --glass-alpha-strong:    0.82;
   --glass-alpha-subtle:    0.46;
   --glass-border:          rgba(245, 165, 77, 0.15);
-  --glass-blur:            24px;
-  --glass-saturate:        195%;
+  --glass-blur:            30px;
+  --glass-saturate:        210%;
+  --glass-brightness:      1.12;
+  --glass-sheen:           rgba(255,255,255,0.05);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.08);
 
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.45);
   --shadow-md:  0 4px 16px rgba(0,0,0,0.40);
@@ -430,11 +450,11 @@ a { color: var(--color-blue); text-decoration: none; }
 .sub-toolbar select:focus-visible { border-color: var(--color-blue); }
 .sub-toolbar .toolbar-spacer { flex: 1; }
 .sub-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-.sub-overview-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; text-align: center; }
+.sub-overview-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; text-align: center; }
 .sub-overview-card .soc-value { font-size: 1.35em; font-weight: 700; color: var(--color-text); }
 .sub-overview-card .soc-label { font-size: 0.8em; color: var(--color-text-secondary); margin-top: 4px; }
 .sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.sub-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; position: relative; overflow: hidden; }
+.sub-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; position: relative; overflow: hidden; }
 .sub-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .sub-card-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--color-blue-bg); display: flex; align-items: center; justify-content: center; font-size: 1.25em; flex-shrink: 0; }
 .sub-card-info { flex: 1; min-width: 0; }
@@ -521,8 +541,8 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .stat-item {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: 14px 16px;
@@ -711,8 +731,8 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .device-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 18px 20px;
@@ -829,8 +849,8 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .chart-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 20px;
@@ -844,8 +864,8 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .ring-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   padding: 16px 12px 12px;
@@ -937,8 +957,8 @@ a { color: var(--color-blue); text-decoration: none; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-sheet {
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(28px) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(28px) saturate(var(--glass-saturate));
+  backdrop-filter: blur(28px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(28px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-xl);
   width: 100%;
@@ -1019,8 +1039,8 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .toast {
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturate));
+  backdrop-filter: blur(20px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   color: var(--color-text);
   padding: 12px 20px;
@@ -1126,6 +1146,55 @@ a { color: var(--color-blue); text-decoration: none; }
   cursor: pointer;
 }
 .dropdown-theme-select:focus-visible { border-color: var(--color-blue); outline: none; }
+
+/* Global liquid glass grain / edge / sheen */
+.glass-card,
+.device-card,
+.stat-item,
+.ring-card,
+.chart-card,
+.sub-card,
+.sub-overview-card,
+.modal-sheet,
+.toast,
+.action-dropdown {
+  --gb: var(--glass-border);
+  border: 1px solid var(--gb);
+  border-bottom-color: var(--glass-border-bottom, var(--gb));
+  box-shadow: var(--glass-shadow), var(--glass-shadow-inner);
+}
+.glass-card::after,
+.device-card::after,
+.stat-item::after,
+.ring-card::after,
+.chart-card::after,
+.sub-card::after,
+.sub-overview-card::after,
+.modal-sheet::after,
+.toast::after,
+.action-dropdown::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, var(--glass-sheen, rgba(255,255,255,0.25)) 0%, transparent 35%, transparent 70%, rgba(0,0,0,0.02) 100%);
+  opacity: 0.85;
+}
+/* Elements that need relative positioning for ::after */
+.device-card,
+.stat-item,
+.ring-card,
+.chart-card,
+.sub-card,
+.sub-overview-card,
+.modal-sheet,
+.toast,
+.action-dropdown {
+  position: relative;
+}
 
 /* Custom background support */
 #customBgLayer {
@@ -1247,8 +1316,8 @@ body.has-custom-bg::before {
 .action-dropdown {
   position: absolute; right: 0; top: 44px;
   background: var(--glass-bg-strong);
-  backdrop-filter: blur(20px) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturate));
+  backdrop-filter: blur(20px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
@@ -1322,8 +1391,8 @@ body.has-custom-bg::before {
   border: 1px solid var(--color-separator);
   border-radius: var(--radius-md);
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   overflow: hidden;
   margin-bottom: 8px;
 }
@@ -1410,6 +1479,14 @@ body.has-custom-bg::before {
 </style>
 </head>
 <body>
+
+<!-- SVG noise filter for liquid glass grain texture -->
+<svg style="display:none" aria-hidden="true">
+  <filter id="glassNoise">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+</svg>
 
 <!-- Custom background layer (blur applied here, not on body) -->
 <div id="customBgLayer"></div>
