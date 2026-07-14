@@ -15,39 +15,94 @@
    CSS Custom Properties — Apple HIG Color System
    ============================================================ */
 :root {
-  color-scheme: light dark;
-  --color-bg:              light-dark(#F2F2F7, #000000);
-  --color-bg-card:         light-dark(#FFFFFF, #1C1C1E);
-  --color-bg-elevated:     light-dark(#FFFFFF, #2C2C2E);
-  --color-bg-input:        light-dark(#F2F2F7, #1C1C1E);
-  --color-text:            light-dark(#1D1D1F, #F5F5F7);
-  --color-text-secondary:  light-dark(#6E6E73, #98989D);
-  --color-text-tertiary:   light-dark(#8E8E93, #636366);
-  --color-separator:       light-dark(#E5E5EA, #38383A);
-  --color-fill-tertiary:   light-dark(#E8E8ED, #3A3A3C);
-  --color-overlay:         light-dark(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
-  /* Accent — Apple system colors */
-  --color-blue:            light-dark(#007AFF, #0A84FF);
-  --color-blue-bg:         light-dark(#E5F0FF, #1A2A44);
-  --color-red:             light-dark(#FF3B30, #FF453A);
-  --color-red-bg:          light-dark(#FFEEED, #3A1C1C);
-  --color-orange:          light-dark(#FF9500, #FF9F0A);
-  --color-orange-bg:       light-dark(#FFF4E5, #3A2C1A);
-  --color-green:           light-dark(#34C759, #30D158);
-  --color-green-bg:        light-dark(#E9F7ED, #1A3320);
-  --color-purple:          light-dark(#AF52DE, #BF5AF2);
-  --color-teal:            light-dark(#5AC8FA, #64D2FF);
+  color-scheme: light;
+  --color-bg:              #F2F2F7;
+  --color-bg-card:         #FFFFFF;
+  --color-bg-elevated:     #FFFFFF;
+  --color-bg-input:        #F2F2F7;
+  --color-text:            #1D1D1F;
+  --color-text-secondary:  #6E6E73;
+  --color-text-tertiary:   #8E8E93;
+  --color-separator:       #E5E5EA;
+  --color-fill-tertiary:   #E8E8ED;
+  --color-overlay:         rgba(0,0,0,0.4);
+  --color-blue:            #007AFF;
+  --color-blue-bg:         #E5F0FF;
+  --color-red:             #FF3B30;
+  --color-red-bg:          #FFEEED;
+  --color-orange:          #FF9500;
+  --color-orange-bg:       #FFF4E5;
+  --color-green:           #34C759;
+  --color-green-bg:        #E9F7ED;
+  --color-purple:          #AF52DE;
+  --color-teal:            #5AC8FA;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
-  --shadow-sm:  light-dark(0 1px 3px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.5));
-  --shadow-md:  light-dark(0 4px 16px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.4));
-  --shadow-lg:  light-dark(0 8px 32px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.5));
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
   --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "PingFang SC", "Noto Sans SC", sans-serif;
   --font-mono:  "SF Mono", "Menlo", "Consolas", monospace;
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Dark theme */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg:              #000000;
+  --color-bg-card:         #1C1C1E;
+  --color-bg-elevated:     #2C2C2E;
+  --color-bg-input:        #1C1C1E;
+  --color-text:            #F5F5F7;
+  --color-text-secondary:  #98989D;
+  --color-text-tertiary:   #636366;
+  --color-separator:       #38383A;
+  --color-fill-tertiary:   #3A3A3C;
+  --color-overlay:         rgba(0,0,0,0.6);
+  --color-blue:            #0A84FF;
+  --color-blue-bg:         #1A2A44;
+  --color-red:             #FF453A;
+  --color-red-bg:          #3A1C1C;
+  --color-orange:          #FF9F0A;
+  --color-orange-bg:       #3A2C1A;
+  --color-green:           #30D158;
+  --color-green-bg:        #1A3320;
+  --color-purple:          #BF5AF2;
+  --color-teal:            #64D2FF;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+}
+/* System preference when no manual override */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-bg:              #000000;
+    --color-bg-card:         #1C1C1E;
+    --color-bg-elevated:     #2C2C2E;
+    --color-bg-input:        #1C1C1E;
+    --color-text:            #F5F5F7;
+    --color-text-secondary:  #98989D;
+    --color-text-tertiary:   #636366;
+    --color-separator:       #38383A;
+    --color-fill-tertiary:   #3A3A3C;
+    --color-overlay:         rgba(0,0,0,0.6);
+    --color-blue:            #0A84FF;
+    --color-blue-bg:         #1A2A44;
+    --color-red:             #FF453A;
+    --color-red-bg:          #3A1C1C;
+    --color-orange:          #FF9F0A;
+    --color-orange-bg:       #3A2C1A;
+    --color-green:           #30D158;
+    --color-green-bg:        #1A3320;
+    --color-purple:          #BF5AF2;
+    --color-teal:            #64D2FF;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+    --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
+  }
 }
 
 /* ============================================================
@@ -553,6 +608,39 @@ a { color: var(--color-blue); text-decoration: none; }
 .action-menu {
   position: relative;
 }
+
+/* Theme toggle button */
+.theme-toggle {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-blue);
+  transition: background var(--transition);
+  margin-right: 4px;
+}
+.theme-toggle:hover { background: var(--color-fill-tertiary); }
+.theme-toggle:active { opacity: 0.6; }
+.theme-toggle svg { width: 22px; height: 22px; fill: currentColor; }
+
+/* Custom background support */
+body.has-custom-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+body.has-custom-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  opacity: 0.75;
+  z-index: -1;
+}
+[data-theme="dark"] body.has-custom-bg::before { opacity: 0.82; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) body.has-custom-bg::before { opacity: 0.82; }
+}
 .action-dropdown {
   position: absolute; right: 0; top: 44px;
   background: var(--color-bg-elevated);
@@ -599,6 +687,10 @@ a { color: var(--color-blue); text-decoration: none; }
   <header class="app-header">
     <h1 class="app-title" role="heading" aria-level="1">吃灰计算器</h1>
     <div class="header-actions">
+      <button class="theme-toggle" id="btnThemeToggle" aria-label="切换日夜模式" title="切换日夜模式">
+        <svg id="iconMoon" viewBox="0 0 24 24" style="display:none"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+        <svg id="iconSun" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+      </button>
       <div class="action-menu" id="actionMenuWrap">
         <button class="icon-btn" id="btnActionMenu" aria-label="更多操作" aria-haspopup="true" aria-expanded="false" title="更多操作">
           <svg viewBox="0 0 24 24"><path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
@@ -615,6 +707,14 @@ a { color: var(--color-blue); text-decoration: none; }
           <button id="btnCatManager" role="menuitem" aria-label="管理设备分类">
             <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
             管理分类
+          </button>
+          <button id="btnSetBg" role="menuitem" aria-label="上传背景图">
+            <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            设置背景图
+          </button>
+          <button id="btnClearBg" role="menuitem" aria-label="清除背景图">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            清除背景图
           </button>
           <div class="divider" role="separator"></div>
           <button id="btnReset" class="danger" role="menuitem" aria-label="清空全部数据">
@@ -713,6 +813,9 @@ a { color: var(--color-blue); text-decoration: none; }
   </section>
 
 </div>
+
+<!-- Hidden file input for background image -->
+<input type="file" accept="image/*" class="file-input-hidden" id="bgFileInput" aria-label="选择背景图片">
 
 <!-- ============================================================
      Toast Container
@@ -1449,7 +1552,8 @@ let chartIdle = null;
 let chartCost = null;
 
 function getChartColors() {
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (!document.documentElement.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
   return {
     text: isDark ? '#98989D' : '#6E6E73',
     grid: isDark ? '#38383A' : '#E5E5EA',
@@ -1654,8 +1758,85 @@ function sanitizePriceInput(e) {
    Theme Detection
    ============================================================ */
 function updateThemeMeta() {
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (!document.documentElement.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.querySelector('meta[name="theme-color"]').content = isDark ? '#000000' : '#F2F2F7';
+}
+
+/* ============================================================
+   Theme Toggle
+   ============================================================ */
+function getEffectiveTheme() {
+  if (document.documentElement.hasAttribute('data-theme')) {
+    return document.documentElement.getAttribute('data-theme');
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyThemeIcon() {
+  const current = getEffectiveTheme();
+  $('#iconMoon').style.display = current === 'light' ? 'none' : 'block';
+  $('#iconSun').style.display = current === 'light' ? 'block' : 'none';
+}
+
+function toggleTheme() {
+  const current = getEffectiveTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  applyThemeIcon();
+  updateThemeMeta();
+  if (state.currentTab === 'stats') renderCharts();
+  showToast(next === 'dark' ? '已切换到夜间模式' : '已切换到日间模式');
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', saved);
+  }
+  applyThemeIcon();
+  updateThemeMeta();
+}
+
+/* ============================================================
+   Custom Background
+   ============================================================ */
+function applyCustomBg() {
+  const bg = localStorage.getItem('customBg');
+  if (bg) {
+    document.body.classList.add('has-custom-bg');
+    document.body.style.backgroundImage = `url(${bg})`;
+  } else {
+    document.body.classList.remove('has-custom-bg');
+    document.body.style.backgroundImage = '';
+  }
+}
+
+function handleBgUpload(file) {
+  if (!file) return;
+  if (!file.type.startsWith('image/')) {
+    showToast('请选择图片文件', 'error');
+    return;
+  }
+  if (file.size > 4 * 1024 * 1024) {
+    showToast('图片不能超过 4MB', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    localStorage.setItem('customBg', e.target.result);
+    applyCustomBg();
+    showToast('背景图已设置', 'success');
+  };
+  reader.onerror = () => showToast('图片读取失败', 'error');
+  reader.readAsDataURL(file);
+}
+
+function clearCustomBg() {
+  localStorage.removeItem('customBg');
+  applyCustomBg();
+  showToast('背景图已清除', 'success');
 }
 
 /* ============================================================
@@ -1791,8 +1972,31 @@ function bindEvents() {
 
   // Theme change listener
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    updateThemeMeta();
+    if (!document.documentElement.hasAttribute('data-theme')) {
+      applyThemeIcon();
+      updateThemeMeta();
+    }
     if (state.currentTab === 'stats') renderCharts();
+  });
+
+  // Theme toggle button
+  $('#btnThemeToggle').addEventListener('click', toggleTheme);
+
+  // Custom background
+  $('#btnSetBg').addEventListener('click', () => {
+    closeAllModals();
+    $('#actionDropdown').classList.remove('open');
+    $('#bgFileInput').click();
+  });
+  $('#btnClearBg').addEventListener('click', () => {
+    closeAllModals();
+    $('#actionDropdown').classList.remove('open');
+    clearCustomBg();
+  });
+  $('#bgFileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) handleBgUpload(file);
+    e.target.value = '';
   });
 
   // Periodic refresh for warranty countdown (every 60s)
@@ -1807,12 +2011,13 @@ function bindEvents() {
    Init
    ============================================================ */
 async function init() {
+  initTheme();
+  applyCustomBg();
   await openDB();
   await loadCategories();
   await loadDevices();
   bindEvents();
   renderAll();
-  updateThemeMeta();
 }
 
 document.addEventListener('DOMContentLoaded', init);
