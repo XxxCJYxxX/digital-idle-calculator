@@ -26,15 +26,15 @@
   --color-separator:       light-dark(#E5E5EA, #38383A);
   --color-fill-tertiary:   light-dark(#E8E8ED, #3A3A3C);
   --color-overlay:         light-dark(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
-  /* ── Liquid Glass ── */
-  --glass-bg-card:       light-dark(rgba(255,255,255,0.72), rgba(28,28,30,0.75));
-  --glass-bg-popup:      light-dark(rgba(255,255,255,0.86), rgba(28,28,30,0.88));
-  --glass-bg-input:      light-dark(rgba(242,242,247,0.60), rgba(44,44,46,0.55));
-  --glass-bg-nav:        light-dark(rgba(242,242,247,0.72), rgba(28,28,30,0.72));
-  --glass-bg-hover:      light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.06));
-  --glass-bg-header:     light-dark(rgba(242,242,247,0.68), rgba(0,0,0,0.65));
-  --glass-border:        light-dark(rgba(255,255,255,0.55), rgba(255,255,255,0.07));
-  --glass-border-strong: light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.10));
+  /* ── Liquid Glass (light mode defaults) ── */
+  --glass-bg-card:       rgba(255,255,255,0.72);
+  --glass-bg-popup:      rgba(255,255,255,0.86);
+  --glass-bg-input:      rgba(242,242,247,0.60);
+  --glass-bg-nav:        rgba(242,242,247,0.72);
+  --glass-bg-hover:      rgba(0,0,0,0.04);
+  --glass-bg-header:     rgba(242,242,247,0.68);
+  --glass-border:        rgba(255,255,255,0.55);
+  --glass-border-strong: rgba(0,0,0,0.06);
   --glass-blur:          20px;
   --glass-blur-strong:   40px;
   --glass-saturate:      180%;
@@ -62,6 +62,20 @@
   --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Liquid Glass dark mode overrides ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-bg-card:       rgba(28,28,30,0.75);
+    --glass-bg-popup:      rgba(28,28,30,0.88);
+    --glass-bg-input:      rgba(44,44,46,0.55);
+    --glass-bg-nav:        rgba(28,28,30,0.72);
+    --glass-bg-hover:      rgba(255,255,255,0.06);
+    --glass-bg-header:     rgba(0,0,0,0.65);
+    --glass-border:        rgba(255,255,255,0.07);
+    --glass-border-strong: rgba(255,255,255,0.10);
+  }
+}
+
 /* ============================================================
    Reset & Base
    ============================================================ */
@@ -75,11 +89,24 @@ body {
   font-size: 15px;
   min-height: 100dvh;
   letter-spacing: -0.022em;
-  /* Liquid Glass 背景纹理 */
+  /* Liquid Glass 背景纹理 — 需要丰富的色彩层次让 backdrop-filter 有效果 */
+  background-color: #F2F2F7;
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, light-dark(rgba(120,160,255,0.08), rgba(60,100,255,0.10)), transparent),
-    radial-gradient(ellipse 50% 40% at 90% 80%, light-dark(rgba(255,140,100,0.05), rgba(255,100,60,0.06)), transparent);
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(100,180,255,0.25), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 20%, rgba(255,150,200,0.18), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 75% 85%, rgba(255,200,100,0.20), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 20% 80%, rgba(150,100,255,0.18), transparent 55%);
   background-attachment: fixed;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #000000;
+    background-image:
+      radial-gradient(ellipse 60% 50% at 15% 10%, rgba(40,80,200,0.35), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 20%, rgba(180,40,120,0.22), transparent 55%),
+      radial-gradient(ellipse 60% 50% at 75% 85%, rgba(200,140,30,0.18), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 20% 80%, rgba(90,50,180,0.22), transparent 55%);
+  }
 }
 input, select, button, textarea {
   font-family: inherit; font-size: inherit; color: inherit;
