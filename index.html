@@ -1394,173 +1394,357 @@ function dbClear(storeName) {
    releaseDate = default purchase date suggestion (YYYY-MM-DD)
    msrp = suggested retail price in CNY
    ============================================================ */
+/* ============================================================
+   Device Presets Library v2
+   Grade: 大类 > 品牌 > 产品线 > 配置
+   Source: 京东/天猫/ZOL/太平洋/华强北 2025-2026 行情
+   ============================================================ */
 const PRESET_DEVICES = [
-  // ── 手机 ──
-  { name:'iPhone 17 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:9999 },
-  { name:'iPhone 17 Pro',            category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:7999 },
-  { name:'iPhone 17',                category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:5999 },
-  { name:'iPhone 17 Air',            category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:6999 },
-  { name:'iPhone 16 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:9999 },
-  { name:'iPhone 16 Pro',            category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:7999 },
-  { name:'iPhone 16 Plus',           category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:6999 },
-  { name:'iPhone 16',                category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:5999 },
-  { name:'iPhone 16e',               category:'手机', brand:'Apple',   releaseDate:'2025-02-28', msrp:4499 },
-  { name:'iPhone 15 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:9999 },
-  { name:'iPhone 15 Pro',            category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:7999 },
-  { name:'iPhone 15 Plus',           category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:6999 },
-  { name:'iPhone 15',                category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:5999 },
-  { name:'iPhone 14 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:8999 },
-  { name:'iPhone 14 Pro',            category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:7999 },
-  { name:'iPhone 14',                category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:5999 },
-  { name:'iPhone SE 4',              category:'手机', brand:'Apple',   releaseDate:'2025-02-28', msrp:3499 },
-  { name:'Samsung Galaxy S25 Ultra', category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:10999 },
-  { name:'Samsung Galaxy S25+',      category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:7999 },
-  { name:'Samsung Galaxy S25',       category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:6499 },
-  { name:'Samsung Galaxy S24 Ultra', category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:10999 },
-  { name:'Samsung Galaxy S24+',      category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:7499 },
-  { name:'Samsung Galaxy S24',       category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:5999 },
-  { name:'Samsung Galaxy Z Fold 6',  category:'手机', brand:'Samsung', releaseDate:'2024-07-24', msrp:15999 },
-  { name:'Samsung Galaxy Z Flip 6',  category:'手机', brand:'Samsung', releaseDate:'2024-07-24', msrp:8499 },
-  { name:'Xiaomi 16',                category:'手机', brand:'Xiaomi',  releaseDate:'2025-10-29', msrp:4499 },
-  { name:'Xiaomi 15 Ultra',          category:'手机', brand:'Xiaomi',  releaseDate:'2025-02-27', msrp:6499 },
-  { name:'Xiaomi 15 Pro',            category:'手机', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:5299 },
-  { name:'Xiaomi 15',                category:'手机', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:4499 },
-  { name:'Xiaomi 14 Ultra',          category:'手机', brand:'Xiaomi',  releaseDate:'2024-02-22', msrp:5999 },
-  { name:'Redmi K80 Pro',            category:'手机', brand:'Xiaomi',  releaseDate:'2024-11-27', msrp:3299 },
-  { name:'Redmi K80',                category:'手机', brand:'Xiaomi',  releaseDate:'2024-11-27', msrp:2299 },
-  { name:'Huawei Mate 70 Pro+',      category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:8999 },
-  { name:'Huawei Mate 70 Pro',       category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:6499 },
-  { name:'Huawei Mate 70',           category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:5499 },
-  { name:'Huawei Pura 80 Ultra',     category:'手机', brand:'Huawei',  releaseDate:'2025-04-18', msrp:9999 },
-  { name:'Huawei Pura 80 Pro',       category:'手机', brand:'Huawei',  releaseDate:'2025-04-18', msrp:6999 },
-  { name:'Huawei Mate XT Ultimate',  category:'手机', brand:'Huawei',  releaseDate:'2024-09-20', msrp:19999 },
-  { name:'OPPO Find X9 Pro',         category:'手机', brand:'OPPO',    releaseDate:'2025-10-24', msrp:5999 },
-  { name:'OPPO Find X8 Pro',         category:'手机', brand:'OPPO',    releaseDate:'2024-10-24', msrp:5299 },
-  { name:'vivo X200 Pro',            category:'手机', brand:'vivo',    releaseDate:'2024-10-14', msrp:5299 },
-  { name:'OnePlus 13',               category:'手机', brand:'OnePlus', releaseDate:'2024-11-01', msrp:4499 },
-  { name:'Google Pixel 10 Pro',      category:'手机', brand:'Google',  releaseDate:'2025-08-20', msrp:7999 },
-  { name:'Google Pixel 9 Pro',       category:'手机', brand:'Google',  releaseDate:'2024-08-22', msrp:7499 },
-  { name:'Nothing Phone (3)',        category:'手机', brand:'Nothing', releaseDate:'2025-03-04', msrp:4599 },
-  // ── 平板 ──
-  { name:'iPad Pro 13" M5',          category:'平板', brand:'Apple',   releaseDate:'2025-05-15', msrp:8999 },
-  { name:'iPad Pro 11" M5',          category:'平板', brand:'Apple',   releaseDate:'2025-05-15', msrp:6499 },
-  { name:'iPad Pro 13" M4',          category:'平板', brand:'Apple',   releaseDate:'2024-05-15', msrp:8999 },
-  { name:'iPad Pro 11" M4',          category:'平板', brand:'Apple',   releaseDate:'2024-05-15', msrp:6499 },
-  { name:'iPad Air 13" M3',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:5699 },
-  { name:'iPad Air 11" M3',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:4399 },
-  { name:'iPad (11th gen)',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:2999 },
-  { name:'iPad mini (A17 Pro)',      category:'平板', brand:'Apple',   releaseDate:'2024-10-23', msrp:3999 },
-  { name:'Samsung Galaxy Tab S10 Ultra', category:'平板', brand:'Samsung', releaseDate:'2024-10-03', msrp:10999 },
-  { name:'Samsung Galaxy Tab S10+',  category:'平板', brand:'Samsung', releaseDate:'2024-10-03', msrp:7999 },
-  { name:'Samsung Galaxy Tab S9 FE', category:'平板', brand:'Samsung', releaseDate:'2023-10-04', msrp:2999 },
-  { name:'Xiaomi Pad 7 Pro',         category:'平板', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:2999 },
-  { name:'Xiaomi Pad 7',             category:'平板', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:1999 },
-  { name:'Huawei MatePad Pro 13.2"', category:'平板', brand:'Huawei',  releaseDate:'2024-11-26', msrp:5999 },
-  { name:'Huawei MatePad 11.5"S',    category:'平板', brand:'Huawei',  releaseDate:'2024-05-15', msrp:2599 },
-  { name:'OPPO Pad 3 Pro',           category:'平板', brand:'OPPO',    releaseDate:'2024-10-24', msrp:2999 },
-  { name:'vivo Pad 3 Pro',           category:'平板', brand:'vivo',    releaseDate:'2024-03-26', msrp:2999 },
-  // ── 笔记本电脑 ──
-  { name:'MacBook Pro 16" M5 Max',   category:'笔记本电脑', brand:'Apple', releaseDate:'2025-10-30', msrp:27999 },
-  { name:'MacBook Pro 14" M5 Pro',   category:'笔记本电脑', brand:'Apple', releaseDate:'2025-10-30', msrp:16999 },
-  { name:'MacBook Pro 16" M4 Max',   category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:27999 },
-  { name:'MacBook Pro 14" M4 Pro',   category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:16999 },
-  { name:'MacBook Pro 14" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:12999 },
-  { name:'MacBook Air 15" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2025-03-12', msrp:10499 },
-  { name:'MacBook Air 13" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2025-03-12', msrp:8999 },
-  { name:'MacBook Air 15" M3',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-03-08', msrp:10499 },
-  { name:'MacBook Air 13" M3',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-03-08', msrp:8999 },
-  { name:'ThinkPad X1 Carbon Gen 13',category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2025-01-07', msrp:12999 },
-  { name:'ThinkPad X1 Carbon Gen 12',category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2024-03-15', msrp:12999 },
-  { name:'ThinkPad T14s Gen 6',      category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2024-09-03', msrp:8999 },
-  { name:'Dell XPS 14 (2024)',       category:'笔记本电脑', brand:'Dell',    releaseDate:'2024-03-14', msrp:10999 },
-  { name:'Dell XPS 16 (2024)',       category:'笔记本电脑', brand:'Dell',    releaseDate:'2024-03-14', msrp:13999 },
-  { name:'Huawei MateBook X Pro 2024', category:'笔记本电脑', brand:'Huawei', releaseDate:'2024-04-11', msrp:9999 },
-  { name:'Huawei MateBook 14 2024',  category:'笔记本电脑', brand:'Huawei',  releaseDate:'2024-05-15', msrp:5999 },
-  { name:'Xiaomi Book Pro 16 2024',  category:'笔记本电脑', brand:'Xiaomi',  releaseDate:'2024-07-19', msrp:6999 },
-  { name:'ASUS ROG Zephyrus G16 2024', category:'笔记本电脑', brand:'ASUS', releaseDate:'2024-04-09', msrp:12999 },
-  { name:'ASUS ZenBook S 14',        category:'笔记本电脑', brand:'ASUS',    releaseDate:'2024-09-04', msrp:8999 },
-  { name:'Surface Laptop 7',         category:'笔记本电脑', brand:'Microsoft', releaseDate:'2024-06-18', msrp:9699 },
-  // ── 台式机 ──
-  { name:'iMac 24" M4',              category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:10999 },
-  { name:'Mac mini M4 Pro',          category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:10999 },
-  { name:'Mac mini M4',              category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:4499 },
-  { name:'Mac Studio M4 Max',        category:'台式机', brand:'Apple',   releaseDate:'2025-06-11', msrp:16499 },
-  { name:'Mac Studio M3 Ultra',      category:'台式机', brand:'Apple',   releaseDate:'2025-03-12', msrp:32999 },
-  { name:'Mac Pro M2 Ultra',         category:'台式机', brand:'Apple',   releaseDate:'2023-06-13', msrp:55999 },
-  { name:'ROG NUC 970',              category:'台式机', brand:'ASUS',    releaseDate:'2024-06-03', msrp:12999 },
-  // ── 相机 ──
-  { name:'Sony A1 II',               category:'相机', brand:'Sony',     releaseDate:'2024-11-19', msrp:47999 },
-  { name:'Sony A7R V',               category:'相机', brand:'Sony',     releaseDate:'2022-12-09', msrp:25999 },
-  { name:'Sony A7 IV',               category:'相机', brand:'Sony',     releaseDate:'2021-12-23', msrp:16999 },
-  { name:'Sony A7C II',              category:'相机', brand:'Sony',     releaseDate:'2023-09-12', msrp:13999 },
-  { name:'Sony ZV-E10 II',           category:'相机', brand:'Sony',     releaseDate:'2024-07-10', msrp:5999 },
-  { name:'Canon EOS R5 Mark II',     category:'相机', brand:'Canon',    releaseDate:'2024-07-17', msrp:26999 },
-  { name:'Canon EOS R6 Mark II',     category:'相机', brand:'Canon',    releaseDate:'2022-11-29', msrp:15999 },
-  { name:'Canon EOS R8',             category:'相机', brand:'Canon',    releaseDate:'2023-04-18', msrp:10499 },
-  { name:'Nikon Z6 III',             category:'相机', brand:'Nikon',    releaseDate:'2024-06-17', msrp:18999 },
-  { name:'Nikon Z8',                 category:'相机', brand:'Nikon',    releaseDate:'2023-05-26', msrp:27999 },
-  { name:'Nikon Zf',                 category:'相机', brand:'Nikon',    releaseDate:'2023-10-12', msrp:13799 },
-  { name:'Fujifilm X-T5',            category:'相机', brand:'Fujifilm', releaseDate:'2022-11-25', msrp:11990 },
-  { name:'Fujifilm X100VI',          category:'相机', brand:'Fujifilm', releaseDate:'2024-03-14', msrp:9790 },
-  { name:'DJI Osmo Pocket 3',        category:'相机', brand:'DJI',      releaseDate:'2023-10-25', msrp:3499 },
-  { name:'GoPro Hero 13 Black',      category:'相机', brand:'GoPro',    releaseDate:'2024-09-04', msrp:3298 },
-  { name:'Insta360 X4',              category:'相机', brand:'Insta360', releaseDate:'2024-04-16', msrp:3499 },
-  // ── 耳机 ──
-  { name:'AirPods Pro 3',            category:'耳机', brand:'Apple',    releaseDate:'2025-09-20', msrp:1899 },
-  { name:'AirPods Pro 2',            category:'耳机', brand:'Apple',    releaseDate:'2022-09-23', msrp:1899 },
-  { name:'AirPods 4 (ANC)',          category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:1399 },
-  { name:'AirPods 4',                category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:999 },
-  { name:'AirPods Max (USB-C)',      category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:3999 },
-  { name:'Sony WH-1000XM6',          category:'耳机', brand:'Sony',     releaseDate:'2025-05-15', msrp:2999 },
-  { name:'Sony WH-1000XM5',          category:'耳机', brand:'Sony',     releaseDate:'2022-05-20', msrp:2499 },
-  { name:'Sony WF-1000XM5',          category:'耳机', brand:'Sony',     releaseDate:'2023-07-27', msrp:1999 },
-  { name:'Sony WH-1000XM4',          category:'耳机', brand:'Sony',     releaseDate:'2020-08-07', msrp:1799 },
-  { name:'Bose QC Ultra Headphones', category:'耳机', brand:'Bose',     releaseDate:'2023-10-10', msrp:3599 },
-  { name:'Bose QC Ultra Earbuds',    category:'耳机', brand:'Bose',     releaseDate:'2023-10-10', msrp:2499 },
-  { name:'Sennheiser Momentum 4',    category:'耳机', brand:'Sennheiser', releaseDate:'2022-08-23', msrp:2999 },
-  { name:'Samsung Galaxy Buds3 Pro', category:'耳机', brand:'Samsung',  releaseDate:'2024-07-24', msrp:1599 },
-  { name:'Xiaomi Buds 5 Pro',        category:'耳机', brand:'Xiaomi',   releaseDate:'2025-02-27', msrp:1299 },
-  // ── 智能手表 ──
-  { name:'Apple Watch Ultra 3',      category:'智能手表', brand:'Apple',  releaseDate:'2025-09-20', msrp:6299 },
-  { name:'Apple Watch Ultra 2',      category:'智能手表', brand:'Apple',  releaseDate:'2023-09-22', msrp:6299 },
-  { name:'Apple Watch Series 10',    category:'智能手表', brand:'Apple',  releaseDate:'2024-09-20', msrp:3199 },
-  { name:'Apple Watch SE 3',         category:'智能手表', brand:'Apple',  releaseDate:'2025-09-20', msrp:2199 },
-  { name:'Samsung Galaxy Watch Ultra', category:'智能手表', brand:'Samsung', releaseDate:'2024-07-24', msrp:4999 },
-  { name:'Samsung Galaxy Watch7',    category:'智能手表', brand:'Samsung', releaseDate:'2024-07-24', msrp:2399 },
-  { name:'Huawei Watch GT 5 Pro',    category:'智能手表', brand:'Huawei',  releaseDate:'2024-09-19', msrp:2488 },
-  { name:'Huawei Watch D2',          category:'智能手表', brand:'Huawei',  releaseDate:'2024-09-19', msrp:2988 },
-  { name:'Xiaomi Watch S4',          category:'智能手表', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:999 },
-  // ── 游戏主机 ──
-  { name:'Nintendo Switch 2',        category:'游戏主机', brand:'Nintendo',  releaseDate:'2025-06-05', msrp:2699 },
-  { name:'Nintendo Switch OLED',     category:'游戏主机', brand:'Nintendo',  releaseDate:'2021-10-08', msrp:2199 },
-  { name:'Nintendo Switch Lite',     category:'游戏主机', brand:'Nintendo',  releaseDate:'2019-09-20', msrp:999 },
-  { name:'PlayStation 5 Pro',        category:'游戏主机', brand:'Sony',      releaseDate:'2024-11-07', msrp:4999 },
-  { name:'PlayStation 5 Slim',       category:'游戏主机', brand:'Sony',      releaseDate:'2023-11-10', msrp:2999 },
-  { name:'Xbox Series X (2TB)',      category:'游戏主机', brand:'Microsoft', releaseDate:'2024-10-15', msrp:3899 },
-  { name:'Xbox Series S (1TB)',      category:'游戏主机', brand:'Microsoft', releaseDate:'2023-09-01', msrp:2399 },
-  { name:'Steam Deck OLED (1TB)',    category:'游戏主机', brand:'Valve',     releaseDate:'2023-11-16', msrp:4399 },
-  { name:'ROG Ally X',               category:'游戏主机', brand:'ASUS',      releaseDate:'2024-07-22', msrp:5199 },
-  { name:'Lenovo Legion Go',         category:'游戏主机', brand:'Lenovo',    releaseDate:'2023-10-31', msrp:4999 },
-  // ── 无人机 ──
-  { name:'DJI Mavic 4 Pro',          category:'无人机', brand:'DJI', releaseDate:'2025-04-24', msrp:10999 },
-  { name:'DJI Mavic 3 Pro',          category:'无人机', brand:'DJI', releaseDate:'2023-04-25', msrp:12888 },
-  { name:'DJI Air 3S',               category:'无人机', brand:'DJI', releaseDate:'2024-10-15', msrp:6988 },
-  { name:'DJI Air 3',                category:'无人机', brand:'DJI', releaseDate:'2023-07-25', msrp:6488 },
-  { name:'DJI Mini 4 Pro',           category:'无人机', brand:'DJI', releaseDate:'2023-09-25', msrp:4788 },
-  { name:'DJI Mini 3 Pro',           category:'无人机', brand:'DJI', releaseDate:'2022-05-10', msrp:3499 },
-  { name:'DJI Neo',                  category:'无人机', brand:'DJI', releaseDate:'2024-09-05', msrp:1299 },
-  { name:'DJI Avata 2',              category:'无人机', brand:'DJI', releaseDate:'2024-04-11', msrp:5288 },
-  // ── 其他 ──
-  { name:'Apple Vision Pro',         category:'其他', brand:'Apple',     releaseDate:'2024-06-28', msrp:29999 },
-  { name:'Meta Quest 3 (512GB)',     category:'其他', brand:'Meta',      releaseDate:'2023-10-10', msrp:4499 },
-  { name:'Meta Quest 3S',            category:'其他', brand:'Meta',      releaseDate:'2024-10-15', msrp:2099 },
-  { name:'Kindle Scribe (2024)',     category:'其他', brand:'Amazon',    releaseDate:'2024-12-04', msrp:2699 },
-  { name:'Kindle Paperwhite 6',      category:'其他', brand:'Amazon',    releaseDate:'2024-10-16', msrp:1299 },
-  { name:'reMarkable Paper Pro',     category:'其他', brand:'reMarkable', releaseDate:'2024-09-18', msrp:4999 },
-  { name:'DJI Osmo Action 5 Pro',    category:'其他', brand:'DJI',       releaseDate:'2024-09-19', msrp:2699 },
-  { name:'Apple TV 4K (3rd gen)',    category:'其他', brand:'Apple',     releaseDate:'2022-11-04', msrp:1199 },
-  { name:'Raspberry Pi 5 (8GB)',     category:'其他', brand:'Raspberry Pi', releaseDate:'2023-10-23', msrp:475 },
+  /* ═══════════════════════════════════════════════════════════
+     手机 — Apple iPhone
+     ═══════════════════════════════════════════════════════════ */
+  { name:'iPhone 17 Pro Max',       config:'256GB', category:'手机', brand:'Apple', line:'iPhone 17 Pro Max', releaseDate:'2025-09-20', msrp:8999 },
+  { name:'iPhone 17 Pro Max',       config:'512GB', category:'手机', brand:'Apple', line:'iPhone 17 Pro Max', releaseDate:'2025-09-20', msrp:9999 },
+  { name:'iPhone 17 Pro Max',       config:'1TB',   category:'手机', brand:'Apple', line:'iPhone 17 Pro Max', releaseDate:'2025-09-20', msrp:11999 },
+  { name:'iPhone 17 Pro',           config:'256GB', category:'手机', brand:'Apple', line:'iPhone 17 Pro',     releaseDate:'2025-09-20', msrp:7999 },
+  { name:'iPhone 17 Pro',           config:'512GB', category:'手机', brand:'Apple', line:'iPhone 17 Pro',     releaseDate:'2025-09-20', msrp:8999 },
+  { name:'iPhone 17 Pro',           config:'1TB',   category:'手机', brand:'Apple', line:'iPhone 17 Pro',     releaseDate:'2025-09-20', msrp:10999 },
+  { name:'iPhone 17',               config:'128GB', category:'手机', brand:'Apple', line:'iPhone 17',         releaseDate:'2025-09-20', msrp:5999 },
+  { name:'iPhone 17',               config:'256GB', category:'手机', brand:'Apple', line:'iPhone 17',         releaseDate:'2025-09-20', msrp:6999 },
+  { name:'iPhone 17',               config:'512GB', category:'手机', brand:'Apple', line:'iPhone 17',         releaseDate:'2025-09-20', msrp:7999 },
+  { name:'iPhone 17 Air',           config:'256GB', category:'手机', brand:'Apple', line:'iPhone 17 Air',     releaseDate:'2025-09-20', msrp:6999 },
+  { name:'iPhone 17 Air',           config:'512GB', category:'手机', brand:'Apple', line:'iPhone 17 Air',     releaseDate:'2025-09-20', msrp:7999 },
+  { name:'iPhone 16 Pro Max',       config:'256GB', category:'手机', brand:'Apple', line:'iPhone 16 Pro Max', releaseDate:'2024-09-20', msrp:9999 },
+  { name:'iPhone 16 Pro Max',       config:'512GB', category:'手机', brand:'Apple', line:'iPhone 16 Pro Max', releaseDate:'2024-09-20', msrp:10999 },
+  { name:'iPhone 16 Pro Max',       config:'1TB',   category:'手机', brand:'Apple', line:'iPhone 16 Pro Max', releaseDate:'2024-09-20', msrp:12999 },
+  { name:'iPhone 16 Pro',           config:'128GB', category:'手机', brand:'Apple', line:'iPhone 16 Pro',     releaseDate:'2024-09-20', msrp:7999 },
+  { name:'iPhone 16 Pro',           config:'256GB', category:'手机', brand:'Apple', line:'iPhone 16 Pro',     releaseDate:'2024-09-20', msrp:8999 },
+  { name:'iPhone 16 Pro',           config:'512GB', category:'手机', brand:'Apple', line:'iPhone 16 Pro',     releaseDate:'2024-09-20', msrp:10999 },
+  { name:'iPhone 16 Plus',          config:'128GB', category:'手机', brand:'Apple', line:'iPhone 16 Plus',    releaseDate:'2024-09-20', msrp:6999 },
+  { name:'iPhone 16 Plus',          config:'256GB', category:'手机', brand:'Apple', line:'iPhone 16 Plus',    releaseDate:'2024-09-20', msrp:7999 },
+  { name:'iPhone 16',               config:'128GB', category:'手机', brand:'Apple', line:'iPhone 16',         releaseDate:'2024-09-20', msrp:5999 },
+  { name:'iPhone 16',               config:'256GB', category:'手机', brand:'Apple', line:'iPhone 16',         releaseDate:'2024-09-20', msrp:6999 },
+  { name:'iPhone 16e',              config:'128GB', category:'手机', brand:'Apple', line:'iPhone 16e',        releaseDate:'2025-02-28', msrp:4499 },
+  { name:'iPhone 16e',              config:'256GB', category:'手机', brand:'Apple', line:'iPhone 16e',        releaseDate:'2025-02-28', msrp:5499 },
+  { name:'iPhone 15 Pro Max',       config:'256GB', category:'手机', brand:'Apple', line:'iPhone 15 Pro Max', releaseDate:'2023-09-22', msrp:9999 },
+  { name:'iPhone 15 Pro',           config:'128GB', category:'手机', brand:'Apple', line:'iPhone 15 Pro',     releaseDate:'2023-09-22', msrp:7999 },
+  { name:'iPhone 15',               config:'128GB', category:'手机', brand:'Apple', line:'iPhone 15',         releaseDate:'2023-09-22', msrp:5999 },
+  { name:'iPhone 14 Pro Max',       config:'128GB', category:'手机', brand:'Apple', line:'iPhone 14 Pro Max', releaseDate:'2022-09-16', msrp:8999 },
+  { name:'iPhone 14 Pro',           config:'128GB', category:'手机', brand:'Apple', line:'iPhone 14 Pro',     releaseDate:'2022-09-16', msrp:7999 },
+  { name:'iPhone 14',               config:'128GB', category:'手机', brand:'Apple', line:'iPhone 14',         releaseDate:'2022-09-16', msrp:5999 },
+  { name:'iPhone SE 4',             config:'128GB', category:'手机', brand:'Apple', line:'iPhone SE 4',       releaseDate:'2025-02-28', msrp:3499 },
+  { name:'iPhone SE 4',             config:'256GB', category:'手机', brand:'Apple', line:'iPhone SE 4',       releaseDate:'2025-02-28', msrp:4299 },
+  { name:'iPhone SE 4',             config:'512GB', category:'手机', brand:'Apple', line:'iPhone SE 4',       releaseDate:'2025-02-28', msrp:5299 },
+
+  /* ═══════════════════════════════════════════════════════════
+     手机 — Samsung Galaxy
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Samsung Galaxy S26 Ultra',   config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S26 Ultra',  releaseDate:'2026-01-22', msrp:10999 },
+  { name:'Samsung Galaxy S26 Ultra',   config:'512GB',  category:'手机', brand:'Samsung', line:'Galaxy S26 Ultra',  releaseDate:'2026-01-22', msrp:11999 },
+  { name:'Samsung Galaxy S26+',        config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S26+',       releaseDate:'2026-01-22', msrp:7999 },
+  { name:'Samsung Galaxy S26',         config:'128GB',  category:'手机', brand:'Samsung', line:'Galaxy S26',        releaseDate:'2026-01-22', msrp:6499 },
+  { name:'Samsung Galaxy S26',         config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S26',        releaseDate:'2026-01-22', msrp:6999 },
+  { name:'Samsung Galaxy S25 Ultra',   config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S25 Ultra',  releaseDate:'2025-01-31', msrp:10999 },
+  { name:'Samsung Galaxy S25 Ultra',   config:'512GB',  category:'手机', brand:'Samsung', line:'Galaxy S25 Ultra',  releaseDate:'2025-01-31', msrp:11999 },
+  { name:'Samsung Galaxy S25+',        config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S25+',       releaseDate:'2025-01-31', msrp:7999 },
+  { name:'Samsung Galaxy S25',         config:'128GB',  category:'手机', brand:'Samsung', line:'Galaxy S25',        releaseDate:'2025-01-31', msrp:6499 },
+  { name:'Samsung Galaxy S25',         config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S25',        releaseDate:'2025-01-31', msrp:6999 },
+  { name:'Samsung Galaxy S24 Ultra',   config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S24 Ultra',  releaseDate:'2024-01-31', msrp:10999 },
+  { name:'Samsung Galaxy S24+',        config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S24+',       releaseDate:'2024-01-31', msrp:7499 },
+  { name:'Samsung Galaxy S24',         config:'128GB',  category:'手机', brand:'Samsung', line:'Galaxy S24',        releaseDate:'2024-01-31', msrp:5999 },
+  { name:'Samsung Galaxy Z Fold 7',    config:'512GB',  category:'手机', brand:'Samsung', line:'Galaxy Z Fold',     releaseDate:'2025-07-23', msrp:15999 },
+  { name:'Samsung Galaxy Z Fold 6',    config:'512GB',  category:'手机', brand:'Samsung', line:'Galaxy Z Fold',     releaseDate:'2024-07-24', msrp:15999 },
+  { name:'Samsung Galaxy Z Flip 7',    config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy Z Flip',     releaseDate:'2025-07-23', msrp:8499 },
+  { name:'Samsung Galaxy Z Flip 6',    config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy Z Flip',     releaseDate:'2024-07-24', msrp:8499 },
+  { name:'Samsung Galaxy S25 Edge',    config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S25 Edge',   releaseDate:'2025-04-15', msrp:7999 },
+  { name:'Samsung Galaxy S25 FE',      config:'256GB',  category:'手机', brand:'Samsung', line:'Galaxy S25 FE',     releaseDate:'2025-09-15', msrp:5699 },
+
+  /* ═══════════════════════════════════════════════════════════
+     手机 — Huawei
+     ═══════════════════════════════════════════════════════════ */
+  { name:'HUAWEI Mate 80 RS',       config:'512GB',  category:'手机', brand:'Huawei', line:'Mate 80 RS',       releaseDate:'2025-11-28', msrp:11999 },
+  { name:'HUAWEI Mate 80 RS',       config:'1TB',    category:'手机', brand:'Huawei', line:'Mate 80 RS',       releaseDate:'2025-11-28', msrp:13999 },
+  { name:'HUAWEI Mate 80 Pro Max',  config:'512GB',  category:'手机', brand:'Huawei', line:'Mate 80 Pro Max',  releaseDate:'2025-11-28', msrp:8999 },
+  { name:'HUAWEI Mate 80 Pro',      config:'256GB',  category:'手机', brand:'Huawei', line:'Mate 80 Pro',      releaseDate:'2025-11-28', msrp:6499 },
+  { name:'HUAWEI Mate 80 Pro',      config:'512GB',  category:'手机', brand:'Huawei', line:'Mate 80 Pro',      releaseDate:'2025-11-28', msrp:7499 },
+  { name:'HUAWEI Mate 80',          config:'256GB',  category:'手机', brand:'Huawei', line:'Mate 80',          releaseDate:'2025-11-28', msrp:5499 },
+  { name:'HUAWEI Mate X7',          config:'512GB',  category:'手机', brand:'Huawei', line:'Mate X 折叠屏',     releaseDate:'2025-11-25', msrp:12999 },
+  { name:'HUAWEI Mate 70 Pro+',     config:'512GB',  category:'手机', brand:'Huawei', line:'Mate 70 Pro+',     releaseDate:'2024-11-26', msrp:8999 },
+  { name:'HUAWEI Mate 70 Pro+',     config:'1TB',    category:'手机', brand:'Huawei', line:'Mate 70 Pro+',     releaseDate:'2024-11-26', msrp:9999 },
+  { name:'HUAWEI Mate 70 Pro',      config:'256GB',  category:'手机', brand:'Huawei', line:'Mate 70 Pro',      releaseDate:'2024-11-26', msrp:6499 },
+  { name:'HUAWEI Mate 70 Pro',      config:'512GB',  category:'手机', brand:'Huawei', line:'Mate 70 Pro',      releaseDate:'2024-11-26', msrp:6999 },
+  { name:'HUAWEI Mate 70',          config:'256GB',  category:'手机', brand:'Huawei', line:'Mate 70',          releaseDate:'2024-11-26', msrp:5499 },
+  { name:'HUAWEI Pura 90 Pro Max',  config:'512GB',  category:'手机', brand:'Huawei', line:'Pura 90 Pro Max',  releaseDate:'2026-04-18', msrp:8999 },
+  { name:'HUAWEI Pura 90 Pro',      config:'256GB',  category:'手机', brand:'Huawei', line:'Pura 90 Pro',      releaseDate:'2026-04-18', msrp:6999 },
+  { name:'HUAWEI Pura 80 Ultra',    config:'512GB',  category:'手机', brand:'Huawei', line:'Pura 80 Ultra',    releaseDate:'2025-04-18', msrp:9999 },
+  { name:'HUAWEI Pura 80 Pro',      config:'256GB',  category:'手机', brand:'Huawei', line:'Pura 80 Pro',      releaseDate:'2025-04-18', msrp:6999 },
+  { name:'HUAWEI Mate XT 非凡大师',  config:'512GB',  category:'手机', brand:'Huawei', line:'Mate XT 非凡大师',  releaseDate:'2024-09-20', msrp:19999 },
+  { name:'HUAWEI Mate XT 非凡大师',  config:'1TB',    category:'手机', brand:'Huawei', line:'Mate XT 非凡大师',  releaseDate:'2024-09-20', msrp:23999 },
+  { name:'HUAWEI Mate X6',          config:'512GB',  category:'手机', brand:'Huawei', line:'Mate X 折叠屏',     releaseDate:'2024-11-26', msrp:12999 },
+
+  /* ═══════════════════════════════════════════════════════════
+     手机 — Xiaomi / Redmi
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Xiaomi 16',               config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2025-10-29', msrp:4499 },
+  { name:'Xiaomi 16',               config:'12+512GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2025-10-29', msrp:4999 },
+  { name:'Xiaomi 16 Pro',           config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2025-10-29', msrp:5299 },
+  { name:'Xiaomi 16 Pro',           config:'16+512GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2025-10-29', msrp:5999 },
+  { name:'Xiaomi 15 Ultra',         config:'16+512GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2025-02-27', msrp:6499 },
+  { name:'Xiaomi 15 Pro',           config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2024-10-29', msrp:5299 },
+  { name:'Xiaomi 15',               config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2024-10-29', msrp:4499 },
+  { name:'Xiaomi 14 Ultra',         config:'16+512GB', category:'手机', brand:'Xiaomi', line:'Xiaomi 数字系列', releaseDate:'2024-02-22', msrp:5999 },
+  { name:'Redmi K80 Pro',           config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Redmi K 系列',     releaseDate:'2024-11-27', msrp:3299 },
+  { name:'Redmi K80 Pro',           config:'16+512GB', category:'手机', brand:'Xiaomi', line:'Redmi K 系列',     releaseDate:'2024-11-27', msrp:3999 },
+  { name:'Redmi K80',               config:'12+256GB', category:'手机', brand:'Xiaomi', line:'Redmi K 系列',     releaseDate:'2024-11-27', msrp:2299 },
+
+  /* ═══════════════════════════════════════════════════════════
+     手机 — OPPO / OnePlus / vivo / iQOO / 荣耀 / 真我
+     ═══════════════════════════════════════════════════════════ */
+  { name:'OPPO Find X9 Pro',        config:'12+256GB', category:'手机', brand:'OPPO',    line:'Find X 系列',    releaseDate:'2025-10-24', msrp:5999 },
+  { name:'OPPO Find X9',            config:'12+256GB', category:'手机', brand:'OPPO',    line:'Find X 系列',    releaseDate:'2025-10-24', msrp:4399 },
+  { name:'OPPO Find X8 Pro',        config:'12+256GB', category:'手机', brand:'OPPO',    line:'Find X 系列',    releaseDate:'2024-10-24', msrp:5299 },
+  { name:'OPPO Find X8',            config:'12+256GB', category:'手机', brand:'OPPO',    line:'Find X 系列',    releaseDate:'2024-10-24', msrp:3999 },
+  { name:'OnePlus 13',              config:'12+256GB', category:'手机', brand:'OnePlus', line:'一加数字系列',    releaseDate:'2024-11-01', msrp:4499 },
+  { name:'OnePlus 13',              config:'16+512GB', category:'手机', brand:'OnePlus', line:'一加数字系列',    releaseDate:'2024-11-01', msrp:4999 },
+  { name:'OnePlus Ace 6 至尊版',     config:'12+256GB', category:'手机', brand:'OnePlus', line:'一加 Ace 系列',    releaseDate:'2025-06-15', msrp:3499 },
+  { name:'vivo X200 Pro',           config:'16+512GB', category:'手机', brand:'vivo',    line:'X 系列',          releaseDate:'2024-10-14', msrp:5299 },
+  { name:'vivo X200',               config:'12+256GB', category:'手机', brand:'vivo',    line:'X 系列',          releaseDate:'2024-10-14', msrp:4299 },
+  { name:'iQOO 13',                 config:'12+256GB', category:'手机', brand:'iQOO',    line:'iQOO 数字系列',   releaseDate:'2024-11-07', msrp:3999 },
+  { name:'iQOO Z10 Turbo+',         config:'12+256GB', category:'手机', brand:'iQOO',    line:'iQOO Z 系列',     releaseDate:'2025-04-10', msrp:1999 },
+  { name:'荣耀 500 Pro',            config:'12+256GB', category:'手机', brand:'荣耀',     line:'荣耀数字系列',     releaseDate:'2025-03-20', msrp:3599 },
+  { name:'荣耀 Magic V4',           config:'16+512GB', category:'手机', brand:'荣耀',     line:'荣耀 Magic 折叠',  releaseDate:'2025-06-12', msrp:8999 },
+  { name:'真我 GT 7 Pro',           config:'12+256GB', category:'手机', brand:'真我',     line:'真我 GT 系列',     releaseDate:'2024-11-04', msrp:3599 },
+  { name:'Google Pixel 10 Pro',     config:'128GB',    category:'手机', brand:'Google',  line:'Pixel 10 Pro',    releaseDate:'2025-08-20', msrp:7999 },
+  { name:'Google Pixel 10',         config:'128GB',    category:'手机', brand:'Google',  line:'Pixel 10',        releaseDate:'2025-08-20', msrp:5999 },
+  { name:'Nothing Phone (3)',       config:'12+256GB', category:'手机', brand:'Nothing', line:'Phone (3)',       releaseDate:'2025-03-04', msrp:4599 },
+  { name:'Sony Xperia 1 VII',       config:'512GB',    category:'手机', brand:'Sony',    line:'Xperia 1',        releaseDate:'2025-05-15', msrp:8999 },
+  { name:'ASUS ROG Phone 9',        config:'16+512GB', category:'手机', brand:'ASUS',    line:'ROG Phone',       releaseDate:'2024-11-20', msrp:5999 },
+
+  /* ═══════════════════════════════════════════════════════════
+     平板 — Apple iPad
+     ═══════════════════════════════════════════════════════════ */
+  { name:'iPad Pro 13" M5',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2025-05-15', msrp:8999 },
+  { name:'iPad Pro 13" M5',         config:'512GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2025-05-15', msrp:10499 },
+  { name:'iPad Pro 13" M5',         config:'1TB Wi-Fi',   category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2025-05-15', msrp:12999 },
+  { name:'iPad Pro 11" M5',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2025-05-15', msrp:6499 },
+  { name:'iPad Pro 11" M5',         config:'512GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2025-05-15', msrp:7999 },
+  { name:'iPad Pro 13" M4',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2024-05-15', msrp:8999 },
+  { name:'iPad Pro 13" M4',         config:'512GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2024-05-15', msrp:10499 },
+  { name:'iPad Pro 11" M4',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2024-05-15', msrp:6499 },
+  { name:'iPad Pro 11" M4',         config:'512GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Pro',    releaseDate:'2024-05-15', msrp:7999 },
+  { name:'iPad Air 13" M3',         config:'128GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Air',    releaseDate:'2025-03-12', msrp:5699 },
+  { name:'iPad Air 13" M3',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Air',    releaseDate:'2025-03-12', msrp:6499 },
+  { name:'iPad Air 11" M3',         config:'128GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Air',    releaseDate:'2025-03-12', msrp:4399 },
+  { name:'iPad Air 11" M3',         config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad Air',    releaseDate:'2025-03-12', msrp:5199 },
+  { name:'iPad (11th gen)',         config:'128GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad',        releaseDate:'2025-03-12', msrp:2999 },
+  { name:'iPad mini (A17 Pro)',     config:'128GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad mini',   releaseDate:'2024-10-23', msrp:3999 },
+  { name:'iPad mini (A17 Pro)',     config:'256GB Wi-Fi', category:'平板', brand:'Apple', line:'iPad mini',   releaseDate:'2024-10-23', msrp:4799 },
+
+  /* ═══════════════════════════════════════════════════════════
+     平板 — Samsung / Huawei / Xiaomi / OPPO / vivo
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Samsung Galaxy Tab S10 Ultra', config:'256GB Wi-Fi',  category:'平板', brand:'Samsung', line:'Galaxy Tab S', releaseDate:'2024-10-03', msrp:10999 },
+  { name:'Samsung Galaxy Tab S10+',      config:'256GB Wi-Fi',  category:'平板', brand:'Samsung', line:'Galaxy Tab S', releaseDate:'2024-10-03', msrp:7999 },
+  { name:'Samsung Galaxy Tab S10',       config:'128GB Wi-Fi',  category:'平板', brand:'Samsung', line:'Galaxy Tab S', releaseDate:'2024-10-03', msrp:5499 },
+  { name:'Samsung Galaxy Tab S9 FE',     config:'128GB Wi-Fi',  category:'平板', brand:'Samsung', line:'Galaxy Tab S', releaseDate:'2023-10-04', msrp:2999 },
+  { name:'Xiaomi Pad 7 Pro',             config:'8+256GB Wi-Fi', category:'平板', brand:'Xiaomi',  line:'Xiaomi Pad',   releaseDate:'2024-10-29', msrp:2999 },
+  { name:'Xiaomi Pad 7',                 config:'8+128GB Wi-Fi', category:'平板', brand:'Xiaomi',  line:'Xiaomi Pad',   releaseDate:'2024-10-29', msrp:1999 },
+  { name:'Huawei MatePad Pro 13.2"',     config:'12+256GB Wi-Fi',category:'平板', brand:'Huawei',  line:'MatePad Pro',  releaseDate:'2024-11-26', msrp:5999 },
+  { name:'Huawei MatePad Pro 13.2"',     config:'12+512GB Wi-Fi',category:'平板', brand:'Huawei',  line:'MatePad Pro',  releaseDate:'2024-11-26', msrp:6999 },
+  { name:'Huawei MatePad 11.5"S',        config:'8+256GB Wi-Fi', category:'平板', brand:'Huawei',  line:'MatePad',      releaseDate:'2024-05-15', msrp:2599 },
+  { name:'Huawei MatePad Air 2',         config:'8+256GB Wi-Fi', category:'平板', brand:'Huawei',  line:'MatePad',      releaseDate:'2025-03-20', msrp:2999 },
+  { name:'OPPO Pad 3 Pro',               config:'8+256GB Wi-Fi', category:'平板', brand:'OPPO',    line:'OPPO Pad',      releaseDate:'2024-10-24', msrp:2999 },
+  { name:'vivo Pad 3 Pro',               config:'8+256GB Wi-Fi', category:'平板', brand:'vivo',    line:'vivo Pad',      releaseDate:'2024-03-26', msrp:2999 },
+  { name:'联想 小新 Pad Pro 12.7"',       config:'8+256GB Wi-Fi', category:'平板', brand:'Lenovo',  line:'小新 Pad',       releaseDate:'2024-07-27', msrp:1999 },
+
+  /* ═══════════════════════════════════════════════════════════
+     笔记本电脑 — Apple MacBook
+     ═══════════════════════════════════════════════════════════ */
+  { name:'MacBook Pro 16" M5 Max',      config:'36GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 16',  releaseDate:'2025-10-30', msrp:27999 },
+  { name:'MacBook Pro 16" M5 Max',      config:'48GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 16',  releaseDate:'2025-10-30', msrp:31999 },
+  { name:'MacBook Pro 14" M5 Pro',      config:'24GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2025-10-30', msrp:16999 },
+  { name:'MacBook Pro 14" M5 Pro',      config:'24GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2025-10-30', msrp:18999 },
+  { name:'MacBook Pro 16" M4 Max',      config:'36GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 16',  releaseDate:'2024-10-30', msrp:27999 },
+  { name:'MacBook Pro 16" M4 Max',      config:'48GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 16',  releaseDate:'2024-10-30', msrp:31999 },
+  { name:'MacBook Pro 14" M4 Pro',      config:'24GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2024-10-30', msrp:16999 },
+  { name:'MacBook Pro 14" M4 Pro',      config:'24GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2024-10-30', msrp:18999 },
+  { name:'MacBook Pro 14" M4',          config:'16GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2024-10-30', msrp:12999 },
+  { name:'MacBook Pro 14" M4',          config:'24GB/1TB',    category:'笔记本电脑', brand:'Apple', line:'MacBook Pro 14',  releaseDate:'2024-10-30', msrp:14999 },
+  { name:'MacBook Air 15" M5',          config:'16GB/256GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 15',  releaseDate:'2025-03-12', msrp:10499 },
+  { name:'MacBook Air 15" M5',          config:'24GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 15',  releaseDate:'2025-03-12', msrp:11999 },
+  { name:'MacBook Air 13" M5',          config:'16GB/256GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 13',  releaseDate:'2025-03-12', msrp:8999 },
+  { name:'MacBook Air 13" M5',          config:'16GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 13',  releaseDate:'2025-03-12', msrp:10499 },
+  { name:'MacBook Air 15" M4',          config:'16GB/256GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 15',  releaseDate:'2024-03-08', msrp:10499 },
+  { name:'MacBook Air 13" M4',          config:'16GB/256GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 13',  releaseDate:'2024-03-08', msrp:8999 },
+  { name:'MacBook Air 13" M4',          config:'16GB/512GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Air 13',  releaseDate:'2024-03-08', msrp:10499 },
+  { name:'MacBook Neo',                 config:'16GB/256GB',  category:'笔记本电脑', brand:'Apple', line:'MacBook Neo',     releaseDate:'2025-05-15', msrp:4999 },
+
+  /* ═══════════════════════════════════════════════════════════
+     笔记本电脑 — ThinkPad (Lenovo)
+     ═══════════════════════════════════════════════════════════ */
+  { name:'ThinkPad X1 Carbon Aura 2026', config:'16GB/512GB', category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad X1 Carbon', releaseDate:'2026-02-15', msrp:12999 },
+  { name:'ThinkPad X1 Carbon Aura 2026', config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad X1 Carbon', releaseDate:'2026-02-15', msrp:15999 },
+  { name:'ThinkPad X1 Carbon Gen 12',    config:'16GB/512GB', category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad X1 Carbon', releaseDate:'2024-03-15', msrp:12999 },
+  { name:'ThinkPad T14p AI 2025',        config:'16GB/512GB', category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad T',        releaseDate:'2025-06-01', msrp:7999 },
+  { name:'ThinkPad T14s Gen 6',          config:'16GB/512GB', category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad T',        releaseDate:'2024-09-03', msrp:8999 },
+  { name:'ThinkPad P14s 2026',           config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad P 工作站',  releaseDate:'2026-06-15', msrp:17999 },
+  { name:'ThinkPad P14s 2025 (3K)',      config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad P 工作站',  releaseDate:'2025-09-22', msrp:13599 },
+  { name:'ThinkPad P14s 2025',           config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad P 工作站',  releaseDate:'2025-09-22', msrp:11999 },
+  { name:'ThinkPad E14 2026 超能版',      config:'16GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkPad E',        releaseDate:'2026-02-27', msrp:5399 },
+  { name:'ThinkBook 16 2025 锐龙版',      config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'ThinkBook',         releaseDate:'2025-06-01', msrp:6499 },
+  { name:'联想 小新 Pro 16 GT 2026',      config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'小新 Pro',           releaseDate:'2026-03-18', msrp:8199 },
+  { name:'联想 小新 Pro 14 GT 2026',      config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'小新 Pro',           releaseDate:'2026-03-18', msrp:7999 },
+  { name:'联想 拯救者 R9000P 2025',       config:'32GB/1TB',   category:'笔记本电脑', brand:'Lenovo', line:'拯救者',             releaseDate:'2025-06-15', msrp:11149 },
+  { name:'联想 YOGA Pro 14s 2025',       config:'16GB/512GB', category:'笔记本电脑', brand:'Lenovo', line:'YOGA',              releaseDate:'2025-05-08', msrp:7699 },
+
+  /* ═══════════════════════════════════════════════════════════
+     笔记本电脑 — Dell / ASUS / HP / Huawei / Xiaomi / Microsoft
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Dell XPS 14 (2024)',          config:'16GB/512GB', category:'笔记本电脑', brand:'Dell',      line:'XPS',             releaseDate:'2024-03-14', msrp:10999 },
+  { name:'Dell XPS 16 (2024)',          config:'16GB/512GB', category:'笔记本电脑', brand:'Dell',      line:'XPS',             releaseDate:'2024-03-14', msrp:13999 },
+  { name:'ASUS ROG Zephyrus G16 2024',  config:'16GB/1TB',   category:'笔记本电脑', brand:'ASUS',      line:'ROG 玩家国度',      releaseDate:'2024-04-09', msrp:12999 },
+  { name:'ASUS Zenbook S 14',           config:'16GB/512GB', category:'笔记本电脑', brand:'ASUS',      line:'Zenbook 灵耀',     releaseDate:'2024-09-04', msrp:8999 },
+  { name:'ASUS 天选6 Pro 酷睿版',         config:'16GB/1TB',   category:'笔记本电脑', brand:'ASUS',      line:'天选',             releaseDate:'2025-05-20', msrp:9449 },
+  { name:'ASUS 无畏 14SE 2026',          config:'16GB/512GB', category:'笔记本电脑', brand:'ASUS',      line:'无畏',             releaseDate:'2026-03-01', msrp:4499 },
+  { name:'HP 星 Book Plus 14',          config:'16GB/512GB', category:'笔记本电脑', brand:'HP',        line:'星 Book',         releaseDate:'2025-06-01', msrp:4999 },
+  { name:'Huawei MateBook X Pro 2024',  config:'16GB/1TB',   category:'笔记本电脑', brand:'Huawei',    line:'MateBook X Pro',  releaseDate:'2024-04-11', msrp:9999 },
+  { name:'Huawei MateBook X Pro 2024',  config:'32GB/2TB',   category:'笔记本电脑', brand:'Huawei',    line:'MateBook X Pro',  releaseDate:'2024-04-11', msrp:12999 },
+  { name:'Huawei MateBook 14 2025',     config:'16GB/512GB', category:'笔记本电脑', brand:'Huawei',    line:'MateBook 14',     releaseDate:'2025-05-15', msrp:5999 },
+  { name:'Xiaomi Book Pro 16 2024',     config:'16GB/1TB',   category:'笔记本电脑', brand:'Xiaomi',    line:'Xiaomi Book Pro', releaseDate:'2024-07-19', msrp:6999 },
+  { name:'Xiaomi Book Pro 16 2024',     config:'32GB/1TB',   category:'笔记本电脑', brand:'Xiaomi',    line:'Xiaomi Book Pro', releaseDate:'2024-07-19', msrp:7999 },
+  { name:'Surface Laptop 7',            config:'16GB/512GB', category:'笔记本电脑', brand:'Microsoft', line:'Surface Laptop',  releaseDate:'2024-06-18', msrp:9699 },
+  { name:'Surface Pro 11',              config:'16GB/512GB', category:'笔记本电脑', brand:'Microsoft', line:'Surface Pro',     releaseDate:'2024-06-18', msrp:9699 },
+
+  /* ═══════════════════════════════════════════════════════════
+     台式机 — Apple Mac
+     ═══════════════════════════════════════════════════════════ */
+  { name:'iMac 24" M4',          config:'16GB/256GB',   category:'台式机', brand:'Apple', line:'iMac 24',       releaseDate:'2024-10-30', msrp:10999 },
+  { name:'iMac 24" M4',          config:'24GB/512GB',   category:'台式机', brand:'Apple', line:'iMac 24',       releaseDate:'2024-10-30', msrp:12999 },
+  { name:'Mac mini M4 Pro',      config:'24GB/512GB',   category:'台式机', brand:'Apple', line:'Mac mini',      releaseDate:'2024-10-30', msrp:10999 },
+  { name:'Mac mini M4',          config:'16GB/256GB',   category:'台式机', brand:'Apple', line:'Mac mini',      releaseDate:'2024-10-30', msrp:4499 },
+  { name:'Mac mini M4',          config:'24GB/512GB',   category:'台式机', brand:'Apple', line:'Mac mini',      releaseDate:'2024-10-30', msrp:5999 },
+  { name:'Mac Studio M4 Max',    config:'36GB/512GB',   category:'台式机', brand:'Apple', line:'Mac Studio',    releaseDate:'2025-06-11', msrp:16499 },
+  { name:'Mac Studio M4 Max',    config:'128GB/4TB',    category:'台式机', brand:'Apple', line:'Mac Studio',    releaseDate:'2025-06-11', msrp:34999 },
+  { name:'Mac Studio M3 Ultra',  config:'96GB/1TB',     category:'台式机', brand:'Apple', line:'Mac Studio',    releaseDate:'2025-03-12', msrp:32999 },
+
+  /* ═══════════════════════════════════════════════════════════
+     相机 — Sony / Canon / Nikon / Fujifilm / 运动相机
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Sony A1 II',              config:'单机身',   category:'相机', brand:'Sony',     line:'Alpha 1',         releaseDate:'2024-11-19', msrp:47999 },
+  { name:'Sony A7R V',              config:'单机身',   category:'相机', brand:'Sony',     line:'Alpha 7R',        releaseDate:'2022-12-09', msrp:25999 },
+  { name:'Sony A7R VI',             config:'单机身',   category:'相机', brand:'Sony',     line:'Alpha 7R',        releaseDate:'2025-06-10', msrp:26999 },
+  { name:'Sony A7 V',               config:'单机身',   category:'相机', brand:'Sony',     line:'Alpha 7',         releaseDate:'2025-03-15', msrp:17999 },
+  { name:'Sony A7C II',             config:'单机身',   category:'相机', brand:'Sony',     line:'Alpha 7C',        releaseDate:'2023-09-12', msrp:13999 },
+  { name:'Sony ZV-E10 II',          config:'单机身',   category:'相机', brand:'Sony',     line:'ZV-E',            releaseDate:'2024-07-10', msrp:5999 },
+  { name:'Canon EOS R5 Mark II',    config:'单机身',   category:'相机', brand:'Canon',    line:'EOS R5',          releaseDate:'2024-07-17', msrp:26999 },
+  { name:'Canon EOS R6 Mark III',   config:'单机身',   category:'相机', brand:'Canon',    line:'EOS R6',          releaseDate:'2025-05-15', msrp:16999 },
+  { name:'Canon EOS R6 Mark II',    config:'单机身',   category:'相机', brand:'Canon',    line:'EOS R6',          releaseDate:'2022-11-29', msrp:15999 },
+  { name:'Canon EOS R8',            config:'单机身',   category:'相机', brand:'Canon',    line:'EOS R',           releaseDate:'2023-04-18', msrp:10499 },
+  { name:'Nikon Z8',                config:'单机身',   category:'相机', brand:'Nikon',    line:'Z 8',             releaseDate:'2023-05-26', msrp:27999 },
+  { name:'Nikon Z6 III',            config:'单机身',   category:'相机', brand:'Nikon',    line:'Z 6',             releaseDate:'2024-06-17', msrp:18999 },
+  { name:'Nikon Zf',                config:'单机身',   category:'相机', brand:'Nikon',    line:'Z f',             releaseDate:'2023-10-12', msrp:13799 },
+  { name:'Fujifilm X-T5',           config:'单机身',   category:'相机', brand:'Fujifilm', line:'X-T',             releaseDate:'2022-11-25', msrp:11990 },
+  { name:'Fujifilm X-T50',          config:'单机身',   category:'相机', brand:'Fujifilm', line:'X-T',             releaseDate:'2024-05-16', msrp:9990 },
+  { name:'Fujifilm X100VI',         config:'固定镜头',  category:'相机', brand:'Fujifilm', line:'X100',            releaseDate:'2024-03-14', msrp:9790 },
+  { name:'DJI Osmo Pocket 3',       config:'标准版',   category:'相机', brand:'DJI',      line:'Osmo Pocket',     releaseDate:'2023-10-25', msrp:3499 },
+  { name:'GoPro Hero 13 Black',     config:'标准版',   category:'相机', brand:'GoPro',    line:'Hero',            releaseDate:'2024-09-04', msrp:3298 },
+  { name:'Insta360 X5',             config:'标准版',   category:'相机', brand:'Insta360', line:'X 全景相机',       releaseDate:'2025-04-16', msrp:3699 },
+
+  /* ═══════════════════════════════════════════════════════════
+     耳机 — Apple / Sony / Bose / Sennheiser / Samsung / Xiaomi
+     ═══════════════════════════════════════════════════════════ */
+  { name:'AirPods Pro 3',             config:'标准版',  category:'耳机', brand:'Apple',      line:'AirPods Pro',     releaseDate:'2025-09-20', msrp:1899 },
+  { name:'AirPods Pro 2',             config:'标准版',  category:'耳机', brand:'Apple',      line:'AirPods Pro',     releaseDate:'2022-09-23', msrp:1899 },
+  { name:'AirPods 4 (主动降噪)',       config:'标准版',  category:'耳机', brand:'Apple',      line:'AirPods',         releaseDate:'2024-09-20', msrp:1399 },
+  { name:'AirPods 4',                 config:'标准版',  category:'耳机', brand:'Apple',      line:'AirPods',         releaseDate:'2024-09-20', msrp:999 },
+  { name:'AirPods Max (USB-C)',       config:'标准版',  category:'耳机', brand:'Apple',      line:'AirPods Max',     releaseDate:'2024-09-20', msrp:3999 },
+  { name:'Sony WH-1000XM6',           config:'标准版',  category:'耳机', brand:'Sony',       line:'WH-1000X',        releaseDate:'2025-05-15', msrp:2999 },
+  { name:'Sony WH-1000XM5',           config:'标准版',  category:'耳机', brand:'Sony',       line:'WH-1000X',        releaseDate:'2022-05-20', msrp:2499 },
+  { name:'Sony WH-1000XM4',           config:'标准版',  category:'耳机', brand:'Sony',       line:'WH-1000X',        releaseDate:'2020-08-07', msrp:1799 },
+  { name:'Sony WF-1000XM5',           config:'标准版',  category:'耳机', brand:'Sony',       line:'WF-1000X',        releaseDate:'2023-07-27', msrp:1999 },
+  { name:'Sony WF-1000XM6',           config:'标准版',  category:'耳机', brand:'Sony',       line:'WF-1000X',        releaseDate:'2025-09-01', msrp:2299 },
+  { name:'Bose QC Ultra Headphones',  config:'标准版',  category:'耳机', brand:'Bose',       line:'QuietComfort',    releaseDate:'2023-10-10', msrp:3599 },
+  { name:'Bose QC Ultra Earbuds',     config:'标准版',  category:'耳机', brand:'Bose',       line:'QuietComfort',    releaseDate:'2023-10-10', msrp:2499 },
+  { name:'Sennheiser Momentum 4',     config:'标准版',  category:'耳机', brand:'Sennheiser', line:'Momentum',        releaseDate:'2022-08-23', msrp:2999 },
+  { name:'Sennheiser Momentum TW 4',  config:'标准版',  category:'耳机', brand:'Sennheiser', line:'Momentum',        releaseDate:'2024-02-13', msrp:2299 },
+  { name:'Samsung Galaxy Buds3 Pro',  config:'标准版',  category:'耳机', brand:'Samsung',    line:'Galaxy Buds',     releaseDate:'2024-07-24', msrp:1599 },
+  { name:'Samsung Galaxy Buds3',      config:'标准版',  category:'耳机', brand:'Samsung',    line:'Galaxy Buds',     releaseDate:'2024-07-24', msrp:999 },
+  { name:'Xiaomi Buds 5 Pro',         config:'标准版',  category:'耳机', brand:'Xiaomi',     line:'Xiaomi Buds',     releaseDate:'2025-02-27', msrp:1299 },
+  { name:'Xiaomi Buds 5',             config:'标准版',  category:'耳机', brand:'Xiaomi',     line:'Xiaomi Buds',     releaseDate:'2024-10-29', msrp:699 },
+
+  /* ═══════════════════════════════════════════════════════════
+     智能手表 — Apple / Samsung / Huawei / Xiaomi
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Apple Watch Ultra 3',      config:'GPS+蜂窝 49mm', category:'智能手表', brand:'Apple',   line:'Apple Watch Ultra',  releaseDate:'2025-09-20', msrp:6299 },
+  { name:'Apple Watch Ultra 2',      config:'GPS+蜂窝 49mm', category:'智能手表', brand:'Apple',   line:'Apple Watch Ultra',  releaseDate:'2023-09-22', msrp:6299 },
+  { name:'Apple Watch Series 10',    config:'GPS 46mm',      category:'智能手表', brand:'Apple',   line:'Apple Watch',        releaseDate:'2024-09-20', msrp:3199 },
+  { name:'Apple Watch Series 10',    config:'GPS 42mm',      category:'智能手表', brand:'Apple',   line:'Apple Watch',        releaseDate:'2024-09-20', msrp:2999 },
+  { name:'Apple Watch SE 3',         config:'GPS 44mm',      category:'智能手表', brand:'Apple',   line:'Apple Watch SE',     releaseDate:'2025-09-20', msrp:2199 },
+  { name:'Samsung Galaxy Watch Ultra', config:'47mm',        category:'智能手表', brand:'Samsung', line:'Galaxy Watch',        releaseDate:'2024-07-24', msrp:4999 },
+  { name:'Samsung Galaxy Watch 8',   config:'44mm',          category:'智能手表', brand:'Samsung', line:'Galaxy Watch',        releaseDate:'2025-07-24', msrp:2399 },
+  { name:'Huawei Watch GT 5 Pro',    config:'46mm',          category:'智能手表', brand:'Huawei',  line:'Watch GT',            releaseDate:'2024-09-19', msrp:2488 },
+  { name:'Huawei Watch D2',          config:'标准版',         category:'智能手表', brand:'Huawei',  line:'Watch D',             releaseDate:'2024-09-19', msrp:2988 },
+  { name:'Huawei Watch Ultimate 2',  config:'标准版',         category:'智能手表', brand:'Huawei',  line:'Watch Ultimate',     releaseDate:'2025-03-15', msrp:5999 },
+  { name:'Xiaomi Watch S4',          config:'标准版',         category:'智能手表', brand:'Xiaomi',  line:'Watch S',             releaseDate:'2024-10-29', msrp:999 },
+  { name:'Xiaomi Watch S4 Pro',      config:'标准版',         category:'智能手表', brand:'Xiaomi',  line:'Watch S',             releaseDate:'2025-03-01', msrp:1499 },
+
+  /* ═══════════════════════════════════════════════════════════
+     游戏主机 — Nintendo / Sony / Microsoft / Valve / ASUS
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Nintendo Switch 2',        config:'标准版',   category:'游戏主机', brand:'Nintendo',  line:'Switch',        releaseDate:'2025-06-05', msrp:2699 },
+  { name:'Nintendo Switch OLED',     config:'标准版',   category:'游戏主机', brand:'Nintendo',  line:'Switch',        releaseDate:'2021-10-08', msrp:2199 },
+  { name:'Nintendo Switch Lite',     config:'标准版',   category:'游戏主机', brand:'Nintendo',  line:'Switch',        releaseDate:'2019-09-20', msrp:999 },
+  { name:'PlayStation 5 Pro',        config:'标准版',   category:'游戏主机', brand:'Sony',      line:'PlayStation',   releaseDate:'2024-11-07', msrp:4999 },
+  { name:'PlayStation 5 Slim 数字版', config:'标准版',   category:'游戏主机', brand:'Sony',      line:'PlayStation',   releaseDate:'2023-11-10', msrp:2999 },
+  { name:'PlayStation 5 Slim 光驱版', config:'标准版',   category:'游戏主机', brand:'Sony',      line:'PlayStation',   releaseDate:'2023-11-10', msrp:3599 },
+  { name:'PS Portal Remote Player',  config:'标准版',   category:'游戏主机', brand:'Sony',      line:'PlayStation',   releaseDate:'2023-11-15', msrp:1399 },
+  { name:'Xbox Series X 2TB 银河黑',  config:'标准版',   category:'游戏主机', brand:'Microsoft', line:'Xbox',           releaseDate:'2024-10-15', msrp:3899 },
+  { name:'Xbox Series S 1TB',        config:'标准版',   category:'游戏主机', brand:'Microsoft', line:'Xbox',           releaseDate:'2023-09-01', msrp:2399 },
+  { name:'Steam Deck OLED 1TB',      config:'1TB',      category:'游戏主机', brand:'Valve',     line:'Steam Deck',    releaseDate:'2023-11-16', msrp:4399 },
+  { name:'Steam Deck OLED 512GB',    config:'512GB',    category:'游戏主机', brand:'Valve',     line:'Steam Deck',    releaseDate:'2023-11-16', msrp:3499 },
+  { name:'ROG Ally X',               config:'1TB',      category:'游戏主机', brand:'ASUS',      line:'ROG Ally',      releaseDate:'2024-07-22', msrp:5199 },
+  { name:'ROG Ally 2',               config:'1TB',      category:'游戏主机', brand:'ASUS',      line:'ROG Ally',      releaseDate:'2025-06-01', msrp:5499 },
+  { name:'Lenovo Legion Go',         config:'512GB',    category:'游戏主机', brand:'Lenovo',    line:'Legion Go',     releaseDate:'2023-10-31', msrp:4999 },
+  { name:'Lenovo Legion Go 2',       config:'1TB',      category:'游戏主机', brand:'Lenovo',    line:'Legion Go',     releaseDate:'2025-05-15', msrp:5499 },
+
+  /* ═══════════════════════════════════════════════════════════
+     无人机 — DJI
+     ═══════════════════════════════════════════════════════════ */
+  { name:'DJI Mavic 4 Pro',          config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Mavic',    releaseDate:'2025-04-24', msrp:10999 },
+  { name:'DJI Mavic 4 Pro',          config:'单机版',     category:'无人机', brand:'DJI', line:'Mavic',    releaseDate:'2025-04-24', msrp:8488 },
+  { name:'DJI Mavic 3 Pro',          config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Mavic',    releaseDate:'2023-04-25', msrp:12888 },
+  { name:'DJI Air 3S',               config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Air',      releaseDate:'2024-10-15', msrp:6988 },
+  { name:'DJI Air 3S',               config:'单机版',     category:'无人机', brand:'DJI', line:'Air',      releaseDate:'2024-10-15', msrp:5988 },
+  { name:'DJI Air 3',                config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Air',      releaseDate:'2023-07-25', msrp:6488 },
+  { name:'DJI Mini 4 Pro',           config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Mini',     releaseDate:'2023-09-25', msrp:4788 },
+  { name:'DJI Mini 5 Pro',           config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Mini',     releaseDate:'2025-06-10', msrp:5288 },
+  { name:'DJI Mini 3 Pro',           config:'单机版',     category:'无人机', brand:'DJI', line:'Mini',     releaseDate:'2022-05-10', msrp:3499 },
+  { name:'DJI Neo',                  config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Neo',      releaseDate:'2024-09-05', msrp:1299 },
+  { name:'DJI Neo',                  config:'单机版',     category:'无人机', brand:'DJI', line:'Neo',      releaseDate:'2024-09-05', msrp:959 },
+  { name:'DJI Avata 2',              config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Avata',    releaseDate:'2024-04-11', msrp:5288 },
+  { name:'DJI Flip',                 config:'畅飞套装',   category:'无人机', brand:'DJI', line:'Flip',     releaseDate:'2025-01-14', msrp:2788 },
+
+  /* ═══════════════════════════════════════════════════════════
+     其他 — 智能眼镜 / VR / 阅读器 / 电视盒子
+     ═══════════════════════════════════════════════════════════ */
+  { name:'Apple Vision Pro',          config:'256GB',      category:'其他', brand:'Apple',      line:'Vision Pro',        releaseDate:'2024-06-28', msrp:29999 },
+  { name:'Apple Vision Pro',          config:'512GB',      category:'其他', brand:'Apple',      line:'Vision Pro',        releaseDate:'2024-06-28', msrp:31999 },
+  { name:'Meta Quest 3 512GB',        config:'512GB',      category:'其他', brand:'Meta',       line:'Quest',             releaseDate:'2023-10-10', msrp:4499 },
+  { name:'Meta Quest 3S',             config:'128GB',      category:'其他', brand:'Meta',       line:'Quest',             releaseDate:'2024-10-15', msrp:2099 },
+  { name:'Kindle Scribe (2024)',      config:'64GB',       category:'其他', brand:'Amazon',     line:'Kindle Scribe',     releaseDate:'2024-12-04', msrp:2699 },
+  { name:'Kindle Paperwhite 6',       config:'16GB',       category:'其他', brand:'Amazon',     line:'Kindle Paperwhite', releaseDate:'2024-10-16', msrp:1299 },
+  { name:'Kindle 2024',               config:'16GB',       category:'其他', brand:'Amazon',     line:'Kindle',            releaseDate:'2024-10-16', msrp:799 },
+  { name:'reMarkable Paper Pro',      config:'标准版',      category:'其他', brand:'reMarkable', line:'Paper Pro',        releaseDate:'2024-09-18', msrp:4999 },
+  { name:'DJI Osmo Action 5 Pro',     config:'标准套装',    category:'其他', brand:'DJI',        line:'Osmo Action',      releaseDate:'2024-09-19', msrp:2699 },
+  { name:'Apple TV 4K (3rd gen)',     config:'128GB',      category:'其他', brand:'Apple',      line:'Apple TV',          releaseDate:'2022-11-04', msrp:1199 },
+  { name:'Raspberry Pi 5 8GB',        config:'8GB',        category:'其他', brand:'Raspberry Pi', line:'Raspberry Pi 5', releaseDate:'2023-10-23', msrp:475 },
+  { name:'Raspberry Pi 5 16GB',       config:'16GB',       category:'其他', brand:'Raspberry Pi', line:'Raspberry Pi 5', releaseDate:'2024-10-01', msrp:618 },
 ];
+
+// Build lookup indices for fast filtering
+const PRESET_CATEGORIES = [...new Set(PRESET_DEVICES.map(p => p.category))].sort();
+const PRESET_BRANDS     = [...new Set(PRESET_DEVICES.map(p => p.brand))].sort();
+
 
 /* ============================================================
    State
@@ -2011,7 +2195,7 @@ function renderPresetList() {
   }
   if (presetFilterText) {
     const q = presetFilterText.toLowerCase();
-    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.line.toLowerCase().includes(q) || p.config.toLowerCase().includes(q));
   }
   const list = $('#presetList');
   if (filtered.length === 0) {
@@ -2019,6 +2203,17 @@ function renderPresetList() {
     return;
   }
   list.innerHTML = filtered.map(p => `
+    <div class="preset-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
+      <div class="preset-item-left">
+        <div class="preset-item-name">${p.name} <span style="font-size:11px;color:var(--color-text-tertiary);font-weight:400">${p.config}</span></div>
+        <div class="preset-item-brand">${p.brand} · ${p.line}</div>
+      </div>
+      <div class="preset-item-right">
+        <div class="preset-item-price">¥${p.msrp.toLocaleString()}</div>
+        <div class="preset-item-date">${p.releaseDate}</div>
+      </div>
+    </div>
+  `).join('');
     <div class="preset-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
       <div class="preset-item-left">
         <div class="preset-item-name">${p.name}</div>
