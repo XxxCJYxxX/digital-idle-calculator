@@ -172,7 +172,41 @@ a { color: var(--color-blue); text-decoration: none; }
 /* Wide screen breakpoints */
 @media (min-width: 768px) {
   .app-container { max-width: 1200px; padding: 0 24px 32px; }
-  .stats-bar { grid-template-columns: repeat(4, 1fr); }
+  
+/* Subscription Panel */
+.sub-toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.sub-toolbar select { min-width: 140px; }
+.sub-toolbar .toolbar-spacer { flex: 1; }
+.sub-overview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.sub-overview-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; text-align: center; }
+.sub-overview-card .soc-value { font-size: 1.35em; font-weight: 700; color: var(--color-text); }
+.sub-overview-card .soc-label { font-size: 0.8em; color: var(--color-text-secondary); margin-top: 4px; }
+.sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.sub-card { background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 14px 16px; position: relative; overflow: hidden; }
+.sub-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sub-card-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--color-blue-bg); display: flex; align-items: center; justify-content: center; font-size: 1.25em; flex-shrink: 0; }
+.sub-card-info { flex: 1; min-width: 0; }
+.sub-card-name { font-weight: 600; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sub-card-cat { font-size: 0.75em; color: var(--color-text-secondary); }
+.sub-card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.sub-card-field { font-size: 0.78em; }
+.sub-card-field .scf-label { color: var(--color-text-tertiary); }
+.sub-card-field .scf-value { color: var(--color-text); font-weight: 500; }
+.sub-card .sub-status { position: absolute; top: 0; right: 0; padding: 4px 10px; font-size: 0.72em; font-weight: 600; border-radius: 0 var(--radius-md) 0 var(--radius-sm); }
+.sub-card .sub-status.expired { background: rgba(255, 59, 48, 0.15); color: #FF3B30; }
+.sub-card .sub-status.expiring { background: rgba(255, 149, 0, 0.15); color: #FF9500; }
+.sub-card .sub-status.active { background: rgba(52, 199, 89, 0.15); color: #34C759; }
+.sub-card .sub-actions { display: flex; gap: 8px; margin-top: 10px; }
+.sub-card .sub-actions button { flex: 1; padding: 5px 0; border-radius: var(--radius-sm); border: 1px solid var(--color-border, #e0e0e0); background: transparent; font-size: 0.75em; cursor: pointer; color: var(--color-text); transition: all .15s; }
+.sub-card .sub-actions button:hover { background: var(--glass-bg-strong); }
+.sub-card .sub-actions button.danger:hover { color: #FF3B30; border-color: rgba(255, 59, 48, 0.3); }
+.sub-preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; max-height: 260px; overflow-y: auto; margin-top: 8px; }
+.sub-preset-item { padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--color-separator); background: var(--glass-bg); cursor: pointer; font-size: 0.82em; transition: all .15s; }
+.sub-preset-item:hover { border-color: var(--color-blue); background: var(--color-blue-bg); }
+.sub-preset-cat-tabs { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.sub-preset-cat-tab { padding: 4px 10px; border-radius: 20px; border: 1px solid var(--color-separator); background: transparent; cursor: pointer; font-size: 0.78em; color: var(--color-text-secondary); transition: all .15s; }
+.sub-preset-cat-tab.active { background: var(--color-blue); color: #fff; border-color: var(--color-blue); }
+.stats-bar { grid-template-columns: repeat(4, 1fr); }
   /* Device list: 2 columns on tablet */
   .device-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .charts-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1054,6 +1088,7 @@ body.has-custom-bg::before {
     <button class="tab-btn active" role="tab" aria-selected="true" data-tab="list" id="tabList">设备列表</button>
     <button class="tab-btn" role="tab" aria-selected="false" data-tab="stats" id="tabStats">可视化统计</button>
     <button class="tab-btn" role="tab" aria-selected="false" data-tab="compare" id="tabCompare">多设备对比</button>
+    <button class="tab-btn" role="tab" aria-selected="false" data-tab="subscriptions" id="tabSubs">订阅管理</button>
   </nav>
 
   <!-- ============================================================
@@ -1131,6 +1166,34 @@ body.has-custom-bg::before {
       <div class="empty-desc">添加两台以上设备后可进行对比</div>
     </div>
   </section>
+
+  <!-- ============================================================
+       Tab: Subscription Manager
+       ============================================================ -->
+  <section role="tabpanel" id="panelSubs" aria-labelledby="tabSubs" class="hidden">
+    <div class="sub-overview" id="subOverview"></div>
+    <div class="sub-toolbar">
+      <select id="subFilterCat" aria-label="按分类筛选"><option value="">全部订阅</option></select>
+      <select id="subFilterStatus" aria-label="按状态筛选">
+        <option value="">全部状态</option>
+        <option value="active">有效中</option>
+        <option value="expiring">即将到期</option>
+        <option value="expired">已过期</option>
+      </select>
+      <div class="toolbar-spacer"></div>
+      <button class="btn-add" id="btnAddSub" aria-label="添加订阅">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        添加订阅
+      </button>
+    </div>
+    <div class="sub-grid" id="subGrid"></div>
+    <div class="empty-state hidden" id="subEmpty">
+      <div class="empty-icon">💳</div>
+      <div class="empty-title">还没有订阅</div>
+      <div class="empty-desc">点击「添加订阅」追踪各类APP会员</div>
+    </div>
+  </section>
+
 
 </div>
 
@@ -1388,6 +1451,71 @@ body.has-custom-bg::before {
   </div>
 </div>
 
+
+<div class="modal-overlay hidden" id="modalSub" role="dialog" aria-modal="true" aria-label="订阅表单">
+  <div class="modal-sheet" style="max-width: 480px;">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalSubTitle">添加订阅</h2>
+      <button class="icon-btn" id="btnCloseSub" aria-label="关闭"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <button type="button" class="preset-toggle" id="btnToggleSubPresets" aria-expanded="false">📦 从预设库选择 <span class="preset-toggle-arrow">▾</span></button>
+      <div class="preset-picker hidden" id="subPresetPicker">
+        <div class="preset-search-bar"><input class="form-input" id="subPresetSearch" type="text" placeholder="搜索会员..."></div>
+        <div class="sub-preset-cat-tabs" id="subPresetCatTabs"></div>
+        <div class="sub-preset-grid" id="subPresetGrid"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subName">订阅名称</label>
+        <input class="form-input" id="subName" type="text" placeholder="如 QQ音乐绿钻" maxlength="80" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="subCategory">分类</label>
+          <select class="form-select" id="subCategory" required></select>
+        </div>
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="subIcon">图标 Emoji</label>
+          <input class="form-input" id="subIcon" type="text" placeholder="🎵" maxlength="4" style="text-align:center;font-size:1.2em">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="subPrice">金额/周期（元）</label>
+          <input class="form-input" id="subPrice" type="text" inputmode="decimal" placeholder="18.00">
+        </div>
+        <div class="form-group" style="flex:1">
+          <label class="form-label" for="subCycle">周期</label>
+          <select class="form-select" id="subCycle">
+            <option value="monthly">月付</option>
+            <option value="quarterly">季付</option>
+            <option value="yearly">年付</option>
+            <option value="lifetime">永久</option>
+            <option value="weekly">周付</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subStartDate">开始日期</label>
+        <input class="form-input" id="subStartDate" type="date" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subNextPayment">下次续费日期 <span style="font-weight:400;color:var(--color-text-tertiary)">（选填）</span></label>
+        <input class="form-input" id="subNextPayment" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subNotes">备注 <span style="font-weight:400;color:var(--color-text-tertiary)">（选填）</span></label>
+        <input class="form-input" id="subNotes" type="text" placeholder="如：家庭共享、自动续费" maxlength="200">
+      </div>
+      <input type="hidden" id="subEditId" value="">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="btnCancelSub">取消</button>
+      <button class="btn-primary btn" id="btnSaveSub">保存</button>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================
      Application Script
      ============================================================ -->
@@ -1396,7 +1524,7 @@ body.has-custom-bg::before {
    Database Layer — IndexedDB
    ============================================================ */
 const DB_NAME = 'IdleDeviceDB';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 let db = null;
 
 function openDB() {
@@ -2109,10 +2237,200 @@ const PRESET_DEVICES = [
    ============================================================ */
 const PRESET_CATEGORIES = ['手机', '平板', '笔记本', '手表', '耳机', '游戏机', '相机', '无人机', 'VR/AR', '外设', '音箱'];
 
+
+const SUBSCRIPTION_PRESETS = {
+  '视频': [
+    {name:'爱奇艺黄金VIP',icon:'📺',price:25,cycle:'monthly'},
+    {name:'爱奇艺白金VIP',icon:'📺',price:35,cycle:'monthly'},
+    {name:'爱奇艺星钻VIP',icon:'📺',price:45,cycle:'monthly'},
+    {name:'腾讯视频VIP',icon:'▶️',price:25,cycle:'monthly'},
+    {name:'腾讯视频SVIP',icon:'▶️',price:35,cycle:'monthly'},
+    {name:'优酷酷喵VIP',icon:'🎬',price:25,cycle:'monthly'},
+    {name:'优酷SVIP',icon:'🎬',price:35,cycle:'monthly'},
+    {name:'芒果TV会员',icon:'🥭',price:18,cycle:'monthly'},
+    {name:'B站大会员',icon:'🅱️',price:25,cycle:'monthly'},
+    {name:'B站电视大会员',icon:'🅱️',price:35,cycle:'monthly'},
+    {name:'Netflix Basic',icon:'🎬',price:72,cycle:'monthly'},
+    {name:'Netflix Standard',icon:'🎬',price:108,cycle:'monthly'},
+    {name:'Netflix Premium',icon:'🎬',price:140,cycle:'monthly'},
+    {name:'Disney+',icon:'🐭',price:73,cycle:'monthly'},
+    {name:'HBO Max',icon:'📺',price:108,cycle:'monthly'},
+    {name:'YouTube Premium',icon:'▶️',price:26,cycle:'monthly'},
+    {name:'YouTube Premium 家庭',icon:'▶️',price:47,cycle:'monthly'},
+    {name:'Apple TV+',icon:'🍎',price:50,cycle:'monthly'},
+    {name:'Prime Video',icon:'📦',price:45,cycle:'monthly'},
+    {name:'西瓜视频会员',icon:'🍉',price:15,cycle:'monthly'},
+    {name:'埋堆堆会员',icon:'📺',price:25,cycle:'monthly'},
+    {name:'咪咕视频会员',icon:'⚽',price:25,cycle:'monthly'},
+    {name:'搜狐视频会员',icon:'🦊',price:18,cycle:'monthly'},
+  ],
+  '音乐': [
+    {name:'QQ音乐绿钻',icon:'🎵',price:18,cycle:'monthly'},
+    {name:'QQ音乐超级会员',icon:'🎵',price:28,cycle:'monthly'},
+    {name:'网易云音乐黑胶VIP',icon:'🎧',price:18,cycle:'monthly'},
+    {name:'网易云音乐SVIP',icon:'🎧',price:28,cycle:'monthly'},
+    {name:'酷狗音乐豪华VIP',icon:'🎶',price:15,cycle:'monthly'},
+    {name:'酷我音乐会员',icon:'🎤',price:15,cycle:'monthly'},
+    {name:'Apple Music 个人',icon:'🍎',price:11,cycle:'monthly'},
+    {name:'Apple Music 家庭',icon:'🍎',price:17,cycle:'monthly'},
+    {name:'Spotify Premium',icon:'🟢',price:50,cycle:'monthly'},
+    {name:'Spotify Family',icon:'🟢',price:79,cycle:'monthly'},
+    {name:'汽水音乐会员',icon:'🥤',price:10,cycle:'monthly'},
+    {name:'Tidal HiFi',icon:'🌊',price:79,cycle:'monthly'},
+  ],
+  '云存储': [
+    {name:'iCloud+ 50GB',icon:'☁️',price:6,cycle:'monthly'},
+    {name:'iCloud+ 200GB',icon:'☁️',price:21,cycle:'monthly'},
+    {name:'iCloud+ 2TB',icon:'☁️',price:68,cycle:'monthly'},
+    {name:'iCloud+ 6TB',icon:'☁️',price:198,cycle:'monthly'},
+    {name:'百度网盘SVIP',icon:'☁️',price:25,cycle:'monthly'},
+    {name:'百度网盘VIP',icon:'☁️',price:15,cycle:'monthly'},
+    {name:'阿里云盘SVIP',icon:'☁️',price:20,cycle:'monthly'},
+    {name:'夸克网盘SVIP',icon:'☁️',price:15,cycle:'monthly'},
+    {name:'115网盘年费',icon:'☁️',price:500,cycle:'yearly'},
+    {name:'OneDrive 100GB',icon:'💾',price:15,cycle:'monthly'},
+    {name:'Microsoft 365 个人版',icon:'💾',price:39,cycle:'monthly'},
+    {name:'Microsoft 365 家庭版',icon:'💾',price:50,cycle:'monthly'},
+    {name:'Google One 100GB',icon:'🔤',price:15,cycle:'monthly'},
+    {name:'Google One 2TB',icon:'🔤',price:75,cycle:'monthly'},
+    {name:'迅雷超级会员',icon:'⚡',price:25,cycle:'monthly'},
+  ],
+  '办公效率': [
+    {name:'WPS超级会员',icon:'📝',price:25,cycle:'monthly'},
+    {name:'WPS AI会员',icon:'📝',price:35,cycle:'monthly'},
+    {name:'Office 365 个人版',icon:'📎',price:39,cycle:'monthly'},
+    {name:'Notion Plus',icon:'📋',price:73,cycle:'monthly'},
+    {name:'飞书专业版',icon:'🐦',price:25,cycle:'monthly'},
+    {name:'钉钉专业版',icon:'📌',price:30,cycle:'monthly'},
+    {name:'Evernote 个人版',icon:'🐘',price:58,cycle:'monthly'},
+    {name:'幕布高级版',icon:'🧠',price:9,cycle:'monthly'},
+    {name:'ProcessOn 个人版',icon:'🔄',price:25,cycle:'monthly'},
+    {name:'Canva Pro',icon:'🎨',price:85,cycle:'monthly'},
+    {name:'XMind Pro',icon:'🗺️',price:258,cycle:'yearly'},
+    {name:'石墨文档高级版',icon:'📄',price:18,cycle:'monthly'},
+    {name:'语雀会员',icon:'🐜',price:15,cycle:'monthly'},
+    {name:'滴答清单高级版',icon:'✅',price:14,cycle:'monthly'},
+    {name:'Todoist Pro',icon:'✅',price:36,cycle:'monthly'},
+    {name:'Inoreader Pro',icon:'📰',price:58,cycle:'monthly'},
+  ],
+  '设计创意': [
+    {name:'Adobe CC 全家桶',icon:'🎨',price:448,cycle:'monthly'},
+    {name:'Adobe Photoshop',icon:'🖼️',price:158,cycle:'monthly'},
+    {name:'Adobe Lightroom',icon:'📸',price:68,cycle:'monthly'},
+    {name:'Figma Professional',icon:'🎯',price:100,cycle:'monthly'},
+    {name:'Figma Organization',icon:'🎯',price:300,cycle:'monthly'},
+    {name:'Sketch',icon:'✏️',price:73,cycle:'monthly'},
+    {name:'Final Cut Pro',icon:'🎞️',price:1998,cycle:'lifetime'},
+    {name:'DaVinci Resolve Studio',icon:'🎬',price:2195,cycle:'lifetime'},
+    {name:'Affinity V2 全家桶',icon:'🖌️',price:628,cycle:'lifetime'},
+    {name:'Procreate',icon:'🎨',price:88,cycle:'lifetime'},
+    {name:'Notability',icon:'📝',price:83,cycle:'yearly'},
+    {name:'GoodNotes 6',icon:'📓',price:73,cycle:'yearly'},
+  ],
+  '游戏': [
+    {name:'Xbox Game Pass Ultimate',icon:'🎮',price:79,cycle:'monthly'},
+    {name:'Xbox Game Pass Core',icon:'🎮',price:49,cycle:'monthly'},
+    {name:'PlayStation Plus 高级',icon:'🎮',price:75,cycle:'monthly'},
+    {name:'PlayStation Plus 升级',icon:'🎮',price:60,cycle:'monthly'},
+    {name:'PlayStation Plus 基本',icon:'🎮',price:44,cycle:'monthly'},
+    {name:'Nintendo Switch Online',icon:'🎮',price:25,cycle:'monthly'},
+    {name:'Nintendo Online + 扩展包',icon:'🎮',price:49,cycle:'monthly'},
+    {name:'EA Play Pro',icon:'🎮',price:79,cycle:'monthly'},
+    {name:'Ubisoft+',icon:'🎮',price:108,cycle:'monthly'},
+    {name:'Steam Deck 认证',icon:'🎮',price:0,cycle:'lifetime'},
+    {name:'Epic Games 通行证',icon:'🎮',price:0,cycle:'lifetime'},
+  ],
+  '阅读': [
+    {name:'微信读书会员',icon:'📚',price:19,cycle:'monthly'},
+    {name:'得到电子书会员',icon:'📖',price:35,cycle:'monthly'},
+    {name:'得到听书会员',icon:'📖',price:48,cycle:'monthly'},
+    {name:'樊登读书',icon:'🎙️',price:388,cycle:'yearly'},
+    {name:'京东读书VIP',icon:'📕',price:18,cycle:'monthly'},
+    {name:'掌阅VIP',icon:'📱',price:15,cycle:'monthly'},
+    {name:'Kindle Unlimited',icon:'📚',price:88,cycle:'monthly'},
+    {name:'知乎盐选会员',icon:'🧂',price:19,cycle:'monthly'},
+    {name:'豆瓣阅读会员',icon:'📗',price:12,cycle:'monthly'},
+    {name:'喜马拉雅VIP',icon:'🎧',price:25,cycle:'monthly'},
+    {name:'少年得到',icon:'🧒',price:198,cycle:'yearly'},
+  ],
+  '购物': [
+    {name:'京东PLUS会员',icon:'🛒',price:99,cycle:'yearly'},
+    {name:'淘宝88VIP',icon:'🛍️',price:88,cycle:'yearly'},
+    {name:'山姆会员',icon:'🏪',price:260,cycle:'yearly'},
+    {name:'Costco会员',icon:'🏬',price:299,cycle:'yearly'},
+    {name:'盒马X会员',icon:'🛒',price:258,cycle:'yearly'},
+    {name:'拼多多省钱卡',icon:'💸',price:5.9,cycle:'monthly'},
+    {name:'唯品会超级VIP',icon:'🛍️',price:79,cycle:'yearly'},
+    {name:'网易严选Pro',icon:'📦',price:149,cycle:'yearly'},
+    {name:'美团会员',icon:'🍔',price:15,cycle:'monthly'},
+    {name:'饿了么超级吃货卡',icon:'🛵',price:10,cycle:'monthly'},
+    {name:'星巴克星享卡',icon:'☕',price:98,cycle:'yearly'},
+    {name:'瑞幸自由卡',icon:'☕',price:19.9,cycle:'monthly'},
+  ],
+  '出行': [
+    {name:'滴滴PLUS会员',icon:'🚗',price:15,cycle:'monthly'},
+    {name:'携程超级会员',icon:'✈️',price:88,cycle:'yearly'},
+    {name:'同程黑鲸会员',icon:'🐳',price:99,cycle:'yearly'},
+    {name:'航旅纵横Pro',icon:'🛫',price:53,cycle:'yearly'},
+    {name:'哈啰单车月卡',icon:'🚲',price:16.8,cycle:'monthly'},
+    {name:'美团单车月卡',icon:'🚲',price:15,cycle:'monthly'},
+    {name:'高德打车会员',icon:'🗺️',price:12,cycle:'monthly'},
+    {name:'青桔单车月卡',icon:'🟢',price:12,cycle:'monthly'},
+  ],
+  'AI工具': [
+    {name:'ChatGPT Plus',icon:'🤖',price:145,cycle:'monthly'},
+    {name:'ChatGPT Pro',icon:'🤖',price:1450,cycle:'monthly'},
+    {name:'Claude Pro',icon:'🧠',price:145,cycle:'monthly'},
+    {name:'Claude Max',icon:'🧠',price:725,cycle:'monthly'},
+    {name:'GitHub Copilot',icon:'💻',price:73,cycle:'monthly'},
+    {name:'Cursor Pro',icon:'🖱️',price:145,cycle:'monthly'},
+    {name:'Midjourney Basic',icon:'🖼️',price:73,cycle:'monthly'},
+    {name:'Midjourney Pro',icon:'🖼️',price:218,cycle:'monthly'},
+    {name:'Notion AI',icon:'📋',price:73,cycle:'monthly'},
+    {name:'Perplexity Pro',icon:'🔍',price:145,cycle:'monthly'},
+    {name:'Gemini Advanced',icon:'🔮',price:145,cycle:'monthly'},
+    {name:'通义千问Plus',icon:'💬',price:20,cycle:'monthly'},
+    {name:'文心一言专业版',icon:'📝',price:60,cycle:'monthly'},
+    {name:'Kimi 打赏会员',icon:'🤖',price:50,cycle:'monthly'},
+    {name:'DeepSeek API充值',icon:'🧠',price:50,cycle:'monthly'},
+  ],
+  '网络': [
+    {name:'Clash机场A',icon:'🌐',price:20,cycle:'monthly'},
+    {name:'ExpressVPN',icon:'🔐',price:87,cycle:'monthly'},
+    {name:'NordVPN',icon:'🔐',price:89,cycle:'monthly'},
+    {name:'Surfshark',icon:'🦈',price:43,cycle:'monthly'},
+    {name:'1Password',icon:'🔑',price:25,cycle:'monthly'},
+    {name:'Bitwarden Premium',icon:'🔒',price:73,cycle:'yearly'},
+  ],
+  '运动健康': [
+    {name:'Keep会员',icon:'🏃',price:25,cycle:'monthly'},
+    {name:'Keep畅练卡',icon:'🏃',price:38,cycle:'monthly'},
+    {name:'悦跑圈会员',icon:'🏃',price:18,cycle:'monthly'},
+    {name:'咕咚会员',icon:'🏃',price:12,cycle:'monthly'},
+    {name:'Apple Fitness+',icon:'🍎',price:68,cycle:'monthly'},
+    {name:'Peloton App',icon:'🚴',price:94,cycle:'monthly'},
+    {name:'薄荷健康会员',icon:'🌿',price:25,cycle:'monthly'},
+    {name:'潮汐 Plus',icon:'🌊',price:18,cycle:'monthly'},
+  ],
+  '知识付费': [
+    {name:'知识星球',icon:'⭐',price:50,cycle:'yearly'},
+    {name:'极客时间超级会员',icon:'⏰',price:365,cycle:'yearly'},
+    {name:'混沌学园',icon:'🏛️',price:1198,cycle:'yearly'},
+    {name:'三联中读',icon:'📰',price:298,cycle:'yearly'},
+    {name:'财新通',icon:'📊',price:498,cycle:'yearly'},
+    {name:'第一财经杂志',icon:'📈',price:188,cycle:'yearly'},
+    {name:'少数派会员',icon:'🔬',price:199,cycle:'yearly'},
+    {name:'小宇宙会员',icon:'🎙️',price:12,cycle:'monthly'},
+  ],
+};
+
+const SUB_CATEGORIES = ['视频','音乐','云存储','办公效率','设计创意','游戏','阅读','购物','出行','AI工具','网络','运动健康','知识付费'];
+
 let state = {
   devices: [],
   categories: [],
   currentTab: 'list',
+  subscriptions: [],
   editId: null,
   deleteId: null,
 };
@@ -2287,6 +2605,7 @@ function renderCategorySelects() {
    ============================================================ */
 async function loadDevices() {
   state.devices = await dbGetAll('devices');
+  state.subscriptions = await dbGetAll('subscriptions');
 }
 
 function getFilteredDevices() {
@@ -2906,6 +3225,284 @@ function renderComparison() {
 /* ============================================================
    Tab Navigation
    ============================================================ */
+
+/* ============================================================
+   Subscription Manager
+   ============================================================ */
+const SUB_COLORS = {
+  '视频': '#FF6B6B', '音乐': '#4ECDC4', '云存储': '#45B7D1',
+  '办公效率': '#96CEB4', '设计创意': '#FFEAA7', '游戏': '#DDA0DD',
+  '阅读': '#F0B27A', '购物': '#F8C471', '出行': '#82E0AA',
+  'AI工具': '#BB8FCE', '网络': '#85C1E9', '运动健康': '#58D68D',
+  '知识付费': '#F1948A'
+};
+
+function getSubStatus(sub) {
+  if (!sub.nextPayment) return 'active';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const np = new Date(sub.nextPayment); np.setHours(0,0,0,0);
+  const days = Math.floor((np - today) / 86400000);
+  if (days < 0) return 'expired';
+  if (days <= 7) return 'expiring';
+  return 'active';
+}
+
+function subStatusLabel(s) {
+  if (s === 'expired') return '已过期';
+  if (s === 'expiring') return '即将到期';
+  return '有效中';
+}
+
+function subCycleLabel(c) {
+  const map = { weekly: '周', monthly: '月', quarterly: '季', yearly: '年', lifetime: '永久' };
+  return map[c] || c;
+}
+
+function cycleDays(c) {
+  const map = { weekly: 7, monthly: 30, quarterly: 90, yearly: 365 };
+  return map[c] || 0;
+}
+
+function renderSubOverview() {
+  const list = state.subscriptions;
+  const total = list.length;
+  const monthlyTotal = list.reduce((s, sub) => {
+    const d = cycleDays(sub.cycle);
+    if (d === 0) return s;
+    return s + (sub.price || 0) * 30 / d;
+  }, 0);
+  const expired = list.filter(s => getSubStatus(s) === 'expired').length;
+  const expiring = list.filter(s => getSubStatus(s) === 'expiring').length;
+
+  $('#subOverview').innerHTML = `
+    <div class="sub-overview-card"><div class="soc-value">${total}</div><div class="soc-label">订阅总数</div></div>
+    <div class="sub-overview-card"><div class="soc-value">${fmtPrice(monthlyTotal)}</div><div class="soc-label">月均支出</div></div>
+    <div class="sub-overview-card"><div class="soc-value" style="color:${expiring>0?'var(--color-red)':''}">${expiring}</div><div class="soc-label">即将到期</div></div>
+    <div class="sub-overview-card"><div class="soc-value">${expired}</div><div class="soc-label">已过期</div></div>
+  `;
+}
+
+function renderSubGrid() {
+  const cat = $('#subFilterCat')?.value || '';
+  const status = $('#subFilterStatus')?.value || '';
+
+  let list = state.subscriptions;
+  if (cat) list = list.filter(s => s.category === cat);
+  if (status) list = list.filter(s => getSubStatus(s) === status);
+
+  // Sort: expiring first, then active, then expired
+  const order = { expiring: 0, active: 1, expired: 2 };
+  list.sort((a, b) => order[getSubStatus(a)] - order[getSubStatus(b)]);
+
+  const grid = $('#subGrid');
+  const empty = $('#subEmpty');
+
+  if (list.length === 0) {
+    grid.innerHTML = '';
+    empty.classList.remove('hidden');
+  } else {
+    empty.classList.add('hidden');
+    grid.innerHTML = list.map(s => {
+      const st = getSubStatus(s);
+      const color = SUB_COLORS[s.category] || '#999';
+      return `
+      <div class="sub-card" data-id="${s.id}">
+        <div class="sub-status ${st}">${subStatusLabel(st)}</div>
+        <div class="sub-card-header">
+          <div class="sub-card-icon" style="background:${color}22;color:${color}">${s.icon||'📌'}</div>
+          <div class="sub-card-info">
+            <div class="sub-card-name">${escHtml(s.name)}</div>
+            <div class="sub-card-cat">${escHtml(s.category)}</div>
+          </div>
+        </div>
+        <div class="sub-card-body">
+          <div class="sub-card-field"><span class="scf-label">费用</span><br><span class="scf-value">${s.price ? fmtPrice(s.price) + '/' + subCycleLabel(s.cycle) : '—'}</span></div>
+          <div class="sub-card-field"><span class="scf-label">开始</span><br><span class="scf-value">${fmtDate(s.startDate)}</span></div>
+          <div class="sub-card-field"><span class="scf-label">下次续费</span><br><span class="scf-value" style="color:${st==='expired'?'var(--color-red)':st==='expiring'?'var(--color-orange,#FF9500)':''}">${s.nextPayment || '—'}</span></div>
+          <div class="sub-card-field"><span class="scf-label">备注</span><br><span class="scf-value">${escHtml(s.notes||'—')}</span></div>
+        </div>
+        <div class="sub-actions">
+          <button class="sub-edit" data-id="${s.id}">✏️ 编辑</button>
+          <button class="sub-delete danger" data-id="${s.id}">🗑 删除</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Bind events
+    grid.querySelectorAll('.sub-edit').forEach(btn => {
+      btn.addEventListener('click', () => openEditSub(btn.dataset.id));
+    });
+    grid.querySelectorAll('.sub-delete').forEach(btn => {
+      btn.addEventListener('click', () => deleteSub(btn.dataset.id));
+    });
+  }
+}
+
+function openAddSub() {
+  $('#modalSubTitle').textContent = '添加订阅';
+  $('#subName').value = '';
+  $('#subCategory').value = '';
+  $('#subIcon').value = '';
+  $('#subPrice').value = '';
+  $('#subCycle').value = 'monthly';
+  $('#subStartDate').value = today();
+  $('#subNextPayment').value = '';
+  $('#subNotes').value = '';
+  $('#subEditId').value = '';
+  renderSubCategorySelect();
+  resetSubPresetPicker();
+  openModal('#modalSub');
+  setTimeout(() => $('#subName').focus(), 150);
+}
+
+function openEditSub(id) {
+  const s = state.subscriptions.find(s => s.id === id);
+  if (!s) return;
+  $('#modalSubTitle').textContent = '编辑订阅';
+  $('#subName').value = s.name;
+  $('#subCategory').value = s.category;
+  $('#subIcon').value = s.icon || '';
+  $('#subPrice').value = s.price || '';
+  $('#subCycle').value = s.cycle || 'monthly';
+  $('#subStartDate').value = s.startDate || '';
+  $('#subNextPayment').value = s.nextPayment || '';
+  $('#subNotes').value = s.notes || '';
+  $('#subEditId').value = id;
+  renderSubCategorySelect();
+  resetSubPresetPicker();
+  openModal('#modalSub');
+}
+
+async function saveSub() {
+  const id = $('#subEditId').value;
+  const name = $('#subName').value.trim();
+  const category = $('#subCategory').value;
+  const icon = $('#subIcon').value.trim() || '📌';
+  const price = parsePrice($('#subPrice').value);
+  const cycle = $('#subCycle').value;
+  const startDate = $('#subStartDate').value;
+  const nextPayment = $('#subNextPayment').value || null;
+  const notes = $('#subNotes').value.trim();
+
+  if (!name) { showToast('请输入订阅名称', 'error'); return; }
+  if (!category) { showToast('请选择分类', 'error'); return; }
+  if (!startDate) { showToast('请选择开始日期', 'error'); return; }
+  if (cycle !== 'lifetime' && !nextPayment) {
+    showToast('非永久订阅请填写下次续费日期', 'error'); return;
+  }
+
+  const sub = { name, category, icon: icon.substring(0, 2), price: price || 0, cycle, startDate, nextPayment, notes };
+
+  if (id) {
+    sub.id = parseInt(id);
+    await dbPut('subscriptions', sub);
+    showToast('订阅已更新');
+  } else {
+    sub.id = Date.now();
+    await dbPut('subscriptions', sub);
+    showToast('订阅已添加');
+  }
+
+  closeModal('#modalSub');
+  await loadSubscriptions();
+  refreshSubscriptionUI();
+}
+
+async function deleteSub(id) {
+  if (!confirm('确定删除这条订阅记录？')) return;
+  await dbDelete('subscriptions', parseInt(id));
+  await loadSubscriptions();
+  refreshSubscriptionUI();
+  showToast('订阅已删除');
+}
+
+async function loadSubscriptions() {
+  state.subscriptions = await dbGetAll('subscriptions');
+}
+
+function renderSubCategorySelect() {
+  const sel = $('#subCategory');
+  sel.innerHTML = '<option value="">选择分类</option>' + SUB_CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function renderSubFilterCat() {
+  const sel = $('#subFilterCat');
+  const cats = [...new Set(state.subscriptions.map(s => s.category))].sort();
+  sel.innerHTML = '<option value="">全部订阅</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+}
+
+function refreshSubscriptionUI() {
+  renderSubOverview();
+  renderSubFilterCat();
+  renderSubGrid();
+}
+
+/* --- Subscription Preset Picker --- */
+function renderSubPresetPicker(filterCat) {
+  const search = ($('#subPresetSearch')?.value || '').toLowerCase();
+  const grid = $('#subPresetGrid');
+
+  let cats = SUB_CATEGORIES;
+  if (filterCat) cats = [filterCat];
+
+  let items = [];
+  for (const cat of cats) {
+    const presets = SUBSCRIPTION_PRESETS[cat] || [];
+    for (const p of presets) {
+      if (search && !p.name.toLowerCase().includes(search)) continue;
+      items.push({ ...p, category: cat });
+    }
+  }
+
+  grid.innerHTML = items.map((p, i) => `
+    <div class="sub-preset-item" data-idx="${i}" data-name="${escHtml(p.name)}" data-icon="${p.icon}" data-price="${p.price}" data-cycle="${p.cycle}">
+      ${p.icon} ${escHtml(p.name)} <span style="color:var(--color-text-tertiary);font-size:0.85em">${fmtPrice(p.price)}/${subCycleLabel(p.cycle)}</span>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.sub-preset-item').forEach(el => {
+    el.addEventListener('click', () => {
+      $('#subName').value = el.dataset.name;
+      $('#subCategory').value = items[parseInt(el.dataset.idx)].category;
+      $('#subIcon').value = el.dataset.icon;
+      $('#subPrice').value = parseFloat(el.dataset.price) || '';
+      $('#subCycle').value = el.dataset.cycle;
+      $('#subNextPayment').value = el.dataset.cycle !== 'lifetime' ? today() : '';
+    });
+  });
+}
+
+function renderSubPresetCatTabs(activeCat) {
+  const tabs = $('#subPresetCatTabs');
+  tabs.innerHTML = SUB_CATEGORIES.map(c => `
+    <button class="sub-preset-cat-tab${c === activeCat ? ' active' : ''}" data-cat="${c}">${c}</button>
+  `).join('');
+  tabs.querySelectorAll('.sub-preset-cat-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.querySelectorAll('.sub-preset-cat-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSubPresetPicker(btn.dataset.cat);
+    });
+  });
+}
+
+function resetSubPresetPicker() {
+  $('#subPresetPicker').classList.add('hidden');
+  $('#btnToggleSubPresets').setAttribute('aria-expanded', 'false');
+  renderSubPresetCatTabs('视频');
+  renderSubPresetPicker('视频');
+}
+
+function initSubPresetPicker() {
+  resetSubPresetPicker();
+  $('#btnToggleSubPresets').addEventListener('click', () => {
+    const picker = $('#subPresetPicker');
+    const expanded = picker.classList.toggle('hidden');
+    $('#btnToggleSubPresets').setAttribute('aria-expanded', !expanded);
+  });
+  $('#subPresetSearch').addEventListener('input', () => renderSubPresetPicker());
+}
+
 function switchTab(tab) {
   state.currentTab = tab;
   $$('.tab-btn').forEach(b => {
@@ -2915,12 +3512,16 @@ function switchTab(tab) {
   $('#panelList').classList.toggle('hidden', tab !== 'list');
   $('#panelStats').classList.toggle('hidden', tab !== 'stats');
   $('#panelCompare').classList.toggle('hidden', tab !== 'compare');
+  $('#panelSubs').classList.toggle('hidden', tab !== 'subscriptions');
 
   if (tab === 'stats') {
     setTimeout(renderCharts, 100);
   }
   if (tab === 'compare') {
     renderComparison();
+  }
+  if (tab === 'subscriptions') {
+    refreshSubscriptionUI();
   }
 }
 
@@ -2944,6 +3545,8 @@ function renderAll() {
     renderCharts();
   } else if (state.currentTab === 'compare') {
     renderComparison();
+  } else if (state.currentTab === 'subscriptions') {
+    refreshSubscriptionUI();
   }
 }
 
@@ -3363,6 +3966,15 @@ function bindEvents() {
     closeModal('#modalBgSettings');
   });
   $('#btnApplyBgSettings').addEventListener('click', confirmBgSettings);
+
+  // Subscription modal
+  $('#btnAddSub').addEventListener('click', openAddSub);
+  $('#btnCloseSub').addEventListener('click', () => closeModal('#modalSub'));
+  $('#btnCancelSub').addEventListener('click', () => closeModal('#modalSub'));
+  $('#btnSaveSub').addEventListener('click', saveSub);
+  initSubPresetPicker();
+  $('#subFilterCat').addEventListener('change', renderSubGrid);
+  $('#subFilterStatus').addEventListener('change', renderSubGrid);
 
   // --- Icon Picker ---
   const WEB_ICONS = [
