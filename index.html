@@ -871,7 +871,63 @@ body.has-custom-bg::before {
   background: var(--color-blue);
   border: none;
   cursor: pointer;
-}</style>
+}
+/* Preset picker */
+.preset-toggle {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 6px 0;
+  font-size: 13px; color: var(--color-blue);
+  transition: color var(--transition);
+}
+.preset-toggle:hover { color: var(--color-text); }
+.preset-toggle-arrow { font-size: 10px; transition: transform var(--transition); }
+.preset-toggle.expanded .preset-toggle-arrow { transform: rotate(180deg); }
+.preset-picker {
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.preset-picker.hidden { display: none; }
+.preset-search-bar { padding: 8px 10px; border-bottom: 1px solid var(--color-separator); }
+.preset-category-tabs {
+  display: flex; overflow-x: auto; gap: 4px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-separator);
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.preset-category-tabs::-webkit-scrollbar { display: none; }
+.preset-cat-tab {
+  flex-shrink: 0; padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px; font-weight: 500;
+  color: var(--color-text-secondary);
+  background: var(--color-fill-tertiary);
+  transition: all var(--transition);
+}
+.preset-cat-tab.active { background: var(--color-blue); color: #fff; }
+.preset-list { max-height: 240px; overflow-y: auto; padding: 6px 0; }
+.preset-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; gap: 10px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.preset-item:hover { background: var(--color-fill-tertiary); }
+.preset-item-left { min-width: 0; flex: 1; }
+.preset-item-name { font-size: 14px; font-weight: 500; color: var(--color-text); }
+.preset-item-brand { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.preset-item-right { text-align: right; flex-shrink: 0; }
+.preset-item-price { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.preset-item-date { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.preset-item-none {
+  padding: 20px; text-align: center;
+  font-size: 13px; color: var(--color-text-tertiary);
+}
+</style>
 </head>
 <body>
 
@@ -1040,6 +1096,19 @@ body.has-custom-bg::before {
       <div class="form-group">
         <label class="form-label" for="devName">设备名称</label>
         <input class="form-input" id="devName" type="text" placeholder="如 iPhone 16 Pro Max" maxlength="60" required aria-required="true">
+      </div>
+
+      <div id="presetSection">
+        <button type="button" class="preset-toggle" id="btnTogglePresets" aria-expanded="false">
+          📦 从预设库选择 <span class="preset-toggle-arrow">▾</span>
+        </button>
+        <div class="preset-picker hidden" id="presetPicker">
+          <div class="preset-search-bar">
+            <input class="form-input" id="presetSearch" type="text" placeholder="搜索型号...">
+          </div>
+          <div class="preset-category-tabs" id="presetCatTabs"></div>
+          <div class="preset-list" id="presetList"></div>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label" for="devCategory">设备分类</label>
@@ -1316,6 +1385,182 @@ function dbClear(storeName) {
     req.onerror = () => reject(req.error);
   });
 }
+
+/* ============================================================
+   Device Presets Library
+   Each entry: { name, category, brand, releaseDate, msrp }
+   name = model display name
+   category = matches category dropdown values
+   releaseDate = default purchase date suggestion (YYYY-MM-DD)
+   msrp = suggested retail price in CNY
+   ============================================================ */
+const PRESET_DEVICES = [
+  // ── 手机 ──
+  { name:'iPhone 17 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:9999 },
+  { name:'iPhone 17 Pro',            category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:7999 },
+  { name:'iPhone 17',                category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:5999 },
+  { name:'iPhone 17 Air',            category:'手机', brand:'Apple',   releaseDate:'2025-09-20', msrp:6999 },
+  { name:'iPhone 16 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:9999 },
+  { name:'iPhone 16 Pro',            category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:7999 },
+  { name:'iPhone 16 Plus',           category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:6999 },
+  { name:'iPhone 16',                category:'手机', brand:'Apple',   releaseDate:'2024-09-20', msrp:5999 },
+  { name:'iPhone 16e',               category:'手机', brand:'Apple',   releaseDate:'2025-02-28', msrp:4499 },
+  { name:'iPhone 15 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:9999 },
+  { name:'iPhone 15 Pro',            category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:7999 },
+  { name:'iPhone 15 Plus',           category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:6999 },
+  { name:'iPhone 15',                category:'手机', brand:'Apple',   releaseDate:'2023-09-22', msrp:5999 },
+  { name:'iPhone 14 Pro Max',        category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:8999 },
+  { name:'iPhone 14 Pro',            category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:7999 },
+  { name:'iPhone 14',                category:'手机', brand:'Apple',   releaseDate:'2022-09-16', msrp:5999 },
+  { name:'iPhone SE 4',              category:'手机', brand:'Apple',   releaseDate:'2025-02-28', msrp:3499 },
+  { name:'Samsung Galaxy S25 Ultra', category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:10999 },
+  { name:'Samsung Galaxy S25+',      category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:7999 },
+  { name:'Samsung Galaxy S25',       category:'手机', brand:'Samsung', releaseDate:'2025-01-31', msrp:6499 },
+  { name:'Samsung Galaxy S24 Ultra', category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:10999 },
+  { name:'Samsung Galaxy S24+',      category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:7499 },
+  { name:'Samsung Galaxy S24',       category:'手机', brand:'Samsung', releaseDate:'2024-01-31', msrp:5999 },
+  { name:'Samsung Galaxy Z Fold 6',  category:'手机', brand:'Samsung', releaseDate:'2024-07-24', msrp:15999 },
+  { name:'Samsung Galaxy Z Flip 6',  category:'手机', brand:'Samsung', releaseDate:'2024-07-24', msrp:8499 },
+  { name:'Xiaomi 16',                category:'手机', brand:'Xiaomi',  releaseDate:'2025-10-29', msrp:4499 },
+  { name:'Xiaomi 15 Ultra',          category:'手机', brand:'Xiaomi',  releaseDate:'2025-02-27', msrp:6499 },
+  { name:'Xiaomi 15 Pro',            category:'手机', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:5299 },
+  { name:'Xiaomi 15',                category:'手机', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:4499 },
+  { name:'Xiaomi 14 Ultra',          category:'手机', brand:'Xiaomi',  releaseDate:'2024-02-22', msrp:5999 },
+  { name:'Redmi K80 Pro',            category:'手机', brand:'Xiaomi',  releaseDate:'2024-11-27', msrp:3299 },
+  { name:'Redmi K80',                category:'手机', brand:'Xiaomi',  releaseDate:'2024-11-27', msrp:2299 },
+  { name:'Huawei Mate 70 Pro+',      category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:8999 },
+  { name:'Huawei Mate 70 Pro',       category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:6499 },
+  { name:'Huawei Mate 70',           category:'手机', brand:'Huawei',  releaseDate:'2024-11-26', msrp:5499 },
+  { name:'Huawei Pura 80 Ultra',     category:'手机', brand:'Huawei',  releaseDate:'2025-04-18', msrp:9999 },
+  { name:'Huawei Pura 80 Pro',       category:'手机', brand:'Huawei',  releaseDate:'2025-04-18', msrp:6999 },
+  { name:'Huawei Mate XT Ultimate',  category:'手机', brand:'Huawei',  releaseDate:'2024-09-20', msrp:19999 },
+  { name:'OPPO Find X9 Pro',         category:'手机', brand:'OPPO',    releaseDate:'2025-10-24', msrp:5999 },
+  { name:'OPPO Find X8 Pro',         category:'手机', brand:'OPPO',    releaseDate:'2024-10-24', msrp:5299 },
+  { name:'vivo X200 Pro',            category:'手机', brand:'vivo',    releaseDate:'2024-10-14', msrp:5299 },
+  { name:'OnePlus 13',               category:'手机', brand:'OnePlus', releaseDate:'2024-11-01', msrp:4499 },
+  { name:'Google Pixel 10 Pro',      category:'手机', brand:'Google',  releaseDate:'2025-08-20', msrp:7999 },
+  { name:'Google Pixel 9 Pro',       category:'手机', brand:'Google',  releaseDate:'2024-08-22', msrp:7499 },
+  { name:'Nothing Phone (3)',        category:'手机', brand:'Nothing', releaseDate:'2025-03-04', msrp:4599 },
+  // ── 平板 ──
+  { name:'iPad Pro 13" M5',          category:'平板', brand:'Apple',   releaseDate:'2025-05-15', msrp:8999 },
+  { name:'iPad Pro 11" M5',          category:'平板', brand:'Apple',   releaseDate:'2025-05-15', msrp:6499 },
+  { name:'iPad Pro 13" M4',          category:'平板', brand:'Apple',   releaseDate:'2024-05-15', msrp:8999 },
+  { name:'iPad Pro 11" M4',          category:'平板', brand:'Apple',   releaseDate:'2024-05-15', msrp:6499 },
+  { name:'iPad Air 13" M3',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:5699 },
+  { name:'iPad Air 11" M3',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:4399 },
+  { name:'iPad (11th gen)',          category:'平板', brand:'Apple',   releaseDate:'2025-03-12', msrp:2999 },
+  { name:'iPad mini (A17 Pro)',      category:'平板', brand:'Apple',   releaseDate:'2024-10-23', msrp:3999 },
+  { name:'Samsung Galaxy Tab S10 Ultra', category:'平板', brand:'Samsung', releaseDate:'2024-10-03', msrp:10999 },
+  { name:'Samsung Galaxy Tab S10+',  category:'平板', brand:'Samsung', releaseDate:'2024-10-03', msrp:7999 },
+  { name:'Samsung Galaxy Tab S9 FE', category:'平板', brand:'Samsung', releaseDate:'2023-10-04', msrp:2999 },
+  { name:'Xiaomi Pad 7 Pro',         category:'平板', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:2999 },
+  { name:'Xiaomi Pad 7',             category:'平板', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:1999 },
+  { name:'Huawei MatePad Pro 13.2"', category:'平板', brand:'Huawei',  releaseDate:'2024-11-26', msrp:5999 },
+  { name:'Huawei MatePad 11.5"S',    category:'平板', brand:'Huawei',  releaseDate:'2024-05-15', msrp:2599 },
+  { name:'OPPO Pad 3 Pro',           category:'平板', brand:'OPPO',    releaseDate:'2024-10-24', msrp:2999 },
+  { name:'vivo Pad 3 Pro',           category:'平板', brand:'vivo',    releaseDate:'2024-03-26', msrp:2999 },
+  // ── 笔记本电脑 ──
+  { name:'MacBook Pro 16" M5 Max',   category:'笔记本电脑', brand:'Apple', releaseDate:'2025-10-30', msrp:27999 },
+  { name:'MacBook Pro 14" M5 Pro',   category:'笔记本电脑', brand:'Apple', releaseDate:'2025-10-30', msrp:16999 },
+  { name:'MacBook Pro 16" M4 Max',   category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:27999 },
+  { name:'MacBook Pro 14" M4 Pro',   category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:16999 },
+  { name:'MacBook Pro 14" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-10-30', msrp:12999 },
+  { name:'MacBook Air 15" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2025-03-12', msrp:10499 },
+  { name:'MacBook Air 13" M4',       category:'笔记本电脑', brand:'Apple', releaseDate:'2025-03-12', msrp:8999 },
+  { name:'MacBook Air 15" M3',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-03-08', msrp:10499 },
+  { name:'MacBook Air 13" M3',       category:'笔记本电脑', brand:'Apple', releaseDate:'2024-03-08', msrp:8999 },
+  { name:'ThinkPad X1 Carbon Gen 13',category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2025-01-07', msrp:12999 },
+  { name:'ThinkPad X1 Carbon Gen 12',category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2024-03-15', msrp:12999 },
+  { name:'ThinkPad T14s Gen 6',      category:'笔记本电脑', brand:'Lenovo',  releaseDate:'2024-09-03', msrp:8999 },
+  { name:'Dell XPS 14 (2024)',       category:'笔记本电脑', brand:'Dell',    releaseDate:'2024-03-14', msrp:10999 },
+  { name:'Dell XPS 16 (2024)',       category:'笔记本电脑', brand:'Dell',    releaseDate:'2024-03-14', msrp:13999 },
+  { name:'Huawei MateBook X Pro 2024', category:'笔记本电脑', brand:'Huawei', releaseDate:'2024-04-11', msrp:9999 },
+  { name:'Huawei MateBook 14 2024',  category:'笔记本电脑', brand:'Huawei',  releaseDate:'2024-05-15', msrp:5999 },
+  { name:'Xiaomi Book Pro 16 2024',  category:'笔记本电脑', brand:'Xiaomi',  releaseDate:'2024-07-19', msrp:6999 },
+  { name:'ASUS ROG Zephyrus G16 2024', category:'笔记本电脑', brand:'ASUS', releaseDate:'2024-04-09', msrp:12999 },
+  { name:'ASUS ZenBook S 14',        category:'笔记本电脑', brand:'ASUS',    releaseDate:'2024-09-04', msrp:8999 },
+  { name:'Surface Laptop 7',         category:'笔记本电脑', brand:'Microsoft', releaseDate:'2024-06-18', msrp:9699 },
+  // ── 台式机 ──
+  { name:'iMac 24" M4',              category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:10999 },
+  { name:'Mac mini M4 Pro',          category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:10999 },
+  { name:'Mac mini M4',              category:'台式机', brand:'Apple',   releaseDate:'2024-10-30', msrp:4499 },
+  { name:'Mac Studio M4 Max',        category:'台式机', brand:'Apple',   releaseDate:'2025-06-11', msrp:16499 },
+  { name:'Mac Studio M3 Ultra',      category:'台式机', brand:'Apple',   releaseDate:'2025-03-12', msrp:32999 },
+  { name:'Mac Pro M2 Ultra',         category:'台式机', brand:'Apple',   releaseDate:'2023-06-13', msrp:55999 },
+  { name:'ROG NUC 970',              category:'台式机', brand:'ASUS',    releaseDate:'2024-06-03', msrp:12999 },
+  // ── 相机 ──
+  { name:'Sony A1 II',               category:'相机', brand:'Sony',     releaseDate:'2024-11-19', msrp:47999 },
+  { name:'Sony A7R V',               category:'相机', brand:'Sony',     releaseDate:'2022-12-09', msrp:25999 },
+  { name:'Sony A7 IV',               category:'相机', brand:'Sony',     releaseDate:'2021-12-23', msrp:16999 },
+  { name:'Sony A7C II',              category:'相机', brand:'Sony',     releaseDate:'2023-09-12', msrp:13999 },
+  { name:'Sony ZV-E10 II',           category:'相机', brand:'Sony',     releaseDate:'2024-07-10', msrp:5999 },
+  { name:'Canon EOS R5 Mark II',     category:'相机', brand:'Canon',    releaseDate:'2024-07-17', msrp:26999 },
+  { name:'Canon EOS R6 Mark II',     category:'相机', brand:'Canon',    releaseDate:'2022-11-29', msrp:15999 },
+  { name:'Canon EOS R8',             category:'相机', brand:'Canon',    releaseDate:'2023-04-18', msrp:10499 },
+  { name:'Nikon Z6 III',             category:'相机', brand:'Nikon',    releaseDate:'2024-06-17', msrp:18999 },
+  { name:'Nikon Z8',                 category:'相机', brand:'Nikon',    releaseDate:'2023-05-26', msrp:27999 },
+  { name:'Nikon Zf',                 category:'相机', brand:'Nikon',    releaseDate:'2023-10-12', msrp:13799 },
+  { name:'Fujifilm X-T5',            category:'相机', brand:'Fujifilm', releaseDate:'2022-11-25', msrp:11990 },
+  { name:'Fujifilm X100VI',          category:'相机', brand:'Fujifilm', releaseDate:'2024-03-14', msrp:9790 },
+  { name:'DJI Osmo Pocket 3',        category:'相机', brand:'DJI',      releaseDate:'2023-10-25', msrp:3499 },
+  { name:'GoPro Hero 13 Black',      category:'相机', brand:'GoPro',    releaseDate:'2024-09-04', msrp:3298 },
+  { name:'Insta360 X4',              category:'相机', brand:'Insta360', releaseDate:'2024-04-16', msrp:3499 },
+  // ── 耳机 ──
+  { name:'AirPods Pro 3',            category:'耳机', brand:'Apple',    releaseDate:'2025-09-20', msrp:1899 },
+  { name:'AirPods Pro 2',            category:'耳机', brand:'Apple',    releaseDate:'2022-09-23', msrp:1899 },
+  { name:'AirPods 4 (ANC)',          category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:1399 },
+  { name:'AirPods 4',                category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:999 },
+  { name:'AirPods Max (USB-C)',      category:'耳机', brand:'Apple',    releaseDate:'2024-09-20', msrp:3999 },
+  { name:'Sony WH-1000XM6',          category:'耳机', brand:'Sony',     releaseDate:'2025-05-15', msrp:2999 },
+  { name:'Sony WH-1000XM5',          category:'耳机', brand:'Sony',     releaseDate:'2022-05-20', msrp:2499 },
+  { name:'Sony WF-1000XM5',          category:'耳机', brand:'Sony',     releaseDate:'2023-07-27', msrp:1999 },
+  { name:'Sony WH-1000XM4',          category:'耳机', brand:'Sony',     releaseDate:'2020-08-07', msrp:1799 },
+  { name:'Bose QC Ultra Headphones', category:'耳机', brand:'Bose',     releaseDate:'2023-10-10', msrp:3599 },
+  { name:'Bose QC Ultra Earbuds',    category:'耳机', brand:'Bose',     releaseDate:'2023-10-10', msrp:2499 },
+  { name:'Sennheiser Momentum 4',    category:'耳机', brand:'Sennheiser', releaseDate:'2022-08-23', msrp:2999 },
+  { name:'Samsung Galaxy Buds3 Pro', category:'耳机', brand:'Samsung',  releaseDate:'2024-07-24', msrp:1599 },
+  { name:'Xiaomi Buds 5 Pro',        category:'耳机', brand:'Xiaomi',   releaseDate:'2025-02-27', msrp:1299 },
+  // ── 智能手表 ──
+  { name:'Apple Watch Ultra 3',      category:'智能手表', brand:'Apple',  releaseDate:'2025-09-20', msrp:6299 },
+  { name:'Apple Watch Ultra 2',      category:'智能手表', brand:'Apple',  releaseDate:'2023-09-22', msrp:6299 },
+  { name:'Apple Watch Series 10',    category:'智能手表', brand:'Apple',  releaseDate:'2024-09-20', msrp:3199 },
+  { name:'Apple Watch SE 3',         category:'智能手表', brand:'Apple',  releaseDate:'2025-09-20', msrp:2199 },
+  { name:'Samsung Galaxy Watch Ultra', category:'智能手表', brand:'Samsung', releaseDate:'2024-07-24', msrp:4999 },
+  { name:'Samsung Galaxy Watch7',    category:'智能手表', brand:'Samsung', releaseDate:'2024-07-24', msrp:2399 },
+  { name:'Huawei Watch GT 5 Pro',    category:'智能手表', brand:'Huawei',  releaseDate:'2024-09-19', msrp:2488 },
+  { name:'Huawei Watch D2',          category:'智能手表', brand:'Huawei',  releaseDate:'2024-09-19', msrp:2988 },
+  { name:'Xiaomi Watch S4',          category:'智能手表', brand:'Xiaomi',  releaseDate:'2024-10-29', msrp:999 },
+  // ── 游戏主机 ──
+  { name:'Nintendo Switch 2',        category:'游戏主机', brand:'Nintendo',  releaseDate:'2025-06-05', msrp:2699 },
+  { name:'Nintendo Switch OLED',     category:'游戏主机', brand:'Nintendo',  releaseDate:'2021-10-08', msrp:2199 },
+  { name:'Nintendo Switch Lite',     category:'游戏主机', brand:'Nintendo',  releaseDate:'2019-09-20', msrp:999 },
+  { name:'PlayStation 5 Pro',        category:'游戏主机', brand:'Sony',      releaseDate:'2024-11-07', msrp:4999 },
+  { name:'PlayStation 5 Slim',       category:'游戏主机', brand:'Sony',      releaseDate:'2023-11-10', msrp:2999 },
+  { name:'Xbox Series X (2TB)',      category:'游戏主机', brand:'Microsoft', releaseDate:'2024-10-15', msrp:3899 },
+  { name:'Xbox Series S (1TB)',      category:'游戏主机', brand:'Microsoft', releaseDate:'2023-09-01', msrp:2399 },
+  { name:'Steam Deck OLED (1TB)',    category:'游戏主机', brand:'Valve',     releaseDate:'2023-11-16', msrp:4399 },
+  { name:'ROG Ally X',               category:'游戏主机', brand:'ASUS',      releaseDate:'2024-07-22', msrp:5199 },
+  { name:'Lenovo Legion Go',         category:'游戏主机', brand:'Lenovo',    releaseDate:'2023-10-31', msrp:4999 },
+  // ── 无人机 ──
+  { name:'DJI Mavic 4 Pro',          category:'无人机', brand:'DJI', releaseDate:'2025-04-24', msrp:10999 },
+  { name:'DJI Mavic 3 Pro',          category:'无人机', brand:'DJI', releaseDate:'2023-04-25', msrp:12888 },
+  { name:'DJI Air 3S',               category:'无人机', brand:'DJI', releaseDate:'2024-10-15', msrp:6988 },
+  { name:'DJI Air 3',                category:'无人机', brand:'DJI', releaseDate:'2023-07-25', msrp:6488 },
+  { name:'DJI Mini 4 Pro',           category:'无人机', brand:'DJI', releaseDate:'2023-09-25', msrp:4788 },
+  { name:'DJI Mini 3 Pro',           category:'无人机', brand:'DJI', releaseDate:'2022-05-10', msrp:3499 },
+  { name:'DJI Neo',                  category:'无人机', brand:'DJI', releaseDate:'2024-09-05', msrp:1299 },
+  { name:'DJI Avata 2',              category:'无人机', brand:'DJI', releaseDate:'2024-04-11', msrp:5288 },
+  // ── 其他 ──
+  { name:'Apple Vision Pro',         category:'其他', brand:'Apple',     releaseDate:'2024-06-28', msrp:29999 },
+  { name:'Meta Quest 3 (512GB)',     category:'其他', brand:'Meta',      releaseDate:'2023-10-10', msrp:4499 },
+  { name:'Meta Quest 3S',            category:'其他', brand:'Meta',      releaseDate:'2024-10-15', msrp:2099 },
+  { name:'Kindle Scribe (2024)',     category:'其他', brand:'Amazon',    releaseDate:'2024-12-04', msrp:2699 },
+  { name:'Kindle Paperwhite 6',      category:'其他', brand:'Amazon',    releaseDate:'2024-10-16', msrp:1299 },
+  { name:'reMarkable Paper Pro',     category:'其他', brand:'reMarkable', releaseDate:'2024-09-18', msrp:4999 },
+  { name:'DJI Osmo Action 5 Pro',    category:'其他', brand:'DJI',       releaseDate:'2024-09-19', msrp:2699 },
+  { name:'Apple TV 4K (3rd gen)',    category:'其他', brand:'Apple',     releaseDate:'2022-11-04', msrp:1199 },
+  { name:'Raspberry Pi 5 (8GB)',     category:'其他', brand:'Raspberry Pi', releaseDate:'2023-10-23', msrp:475 },
+];
 
 /* ============================================================
    State
@@ -1624,6 +1869,7 @@ function openAddDevice() {
   $('#devAppleCareEnd').value = '';
   $('#devEditId').value = '';
   renderCategorySelects();
+  resetPresetPicker();
   openModal('#modalDevice');
   setTimeout(() => $('#devName').focus(), 150);
 }
@@ -1728,6 +1974,102 @@ async function confirmReset() {
   closeModal('#modalReset2');
   renderAll();
   showToast('所有数据已清空', 'success');
+}
+
+/* Preset picker */
+let presetFilterCat = '全部';
+let presetFilterText = '';
+
+function getPresetCategories() {
+  const cats = ['全部'];
+  const seen = new Set();
+  for (const p of PRESET_DEVICES) {
+    if (!seen.has(p.category)) { seen.add(p.category); cats.push(p.category); }
+  }
+  return cats;
+}
+
+function renderPresetCatTabs() {
+  const cats = getPresetCategories();
+  const container = $('#presetCatTabs');
+  container.innerHTML = cats.map(c =>
+    `<button class="preset-cat-tab${c === presetFilterCat ? ' active' : ''}" data-cat="${c}">${c}</button>`
+  ).join('');
+  container.querySelectorAll('.preset-cat-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      presetFilterCat = btn.dataset.cat;
+      renderPresetCatTabs();
+      renderPresetList();
+    });
+  });
+}
+
+function renderPresetList() {
+  let filtered = PRESET_DEVICES;
+  if (presetFilterCat !== '全部') {
+    filtered = filtered.filter(p => p.category === presetFilterCat);
+  }
+  if (presetFilterText) {
+    const q = presetFilterText.toLowerCase();
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
+  }
+  const list = $('#presetList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="preset-item-none">没有匹配的设备预设</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(p => `
+    <div class="preset-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
+      <div class="preset-item-left">
+        <div class="preset-item-name">${p.name}</div>
+        <div class="preset-item-brand">${p.brand}</div>
+      </div>
+      <div class="preset-item-right">
+        <div class="preset-item-price">¥${p.msrp.toLocaleString()}</div>
+        <div class="preset-item-date">${p.releaseDate}</div>
+      </div>
+    </div>
+  `).join('');
+  list.querySelectorAll('.preset-item').forEach(item => {
+    item.addEventListener('click', () => selectPreset(item));
+  });
+}
+
+function selectPreset(item) {
+  $('#devName').value = item.dataset.name;
+  $('#devCategory').value = item.dataset.cat;
+  $('#devPurchaseDate').value = item.dataset.date;
+  $('#devPrice').value = item.dataset.price;
+  $('#devWarrantyEnd').value = '';
+  $('#devAppleCareEnd').value = '';
+  togglePresetPicker(false);
+}
+
+function togglePresetPicker(force) {
+  const picker = $('#presetPicker');
+  const btn = $('#btnTogglePresets');
+  const show = force !== undefined ? force : picker.classList.contains('hidden');
+  if (show) {
+    picker.classList.remove('hidden');
+    btn.classList.add('expanded');
+    btn.setAttribute('aria-expanded', 'true');
+    presetFilterCat = '全部';
+    presetFilterText = '';
+    $('#presetSearch').value = '';
+    renderPresetCatTabs();
+    renderPresetList();
+  } else {
+    picker.classList.add('hidden');
+    btn.classList.remove('expanded');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+}
+
+function resetPresetPicker() {
+  const picker = $('#presetPicker');
+  if (picker) picker.classList.add('hidden');
+  const btn = $('#btnTogglePresets');
+  if (btn) { btn.classList.remove('expanded'); btn.setAttribute('aria-expanded', 'false'); }
 }
 
 /* ============================================================
@@ -2267,6 +2609,13 @@ function bindEvents() {
   });
   $('#btnCloseReset2').addEventListener('click', () => closeModal('#modalReset2'));
   $('#btnCancelReset2').addEventListener('click', () => closeModal('#modalReset2'));
+  // Preset picker events
+  $('#btnTogglePresets').addEventListener('click', () => togglePresetPicker());
+  $('#presetSearch').addEventListener('input', (e) => {
+    presetFilterText = e.target.value;
+    renderPresetList();
+  });
+
   $('#btnConfirmReset').addEventListener('click', confirmReset);
 
   // Glass opacity slider
