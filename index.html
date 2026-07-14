@@ -872,7 +872,7 @@ body.has-custom-bg::before {
   border: none;
   cursor: pointer;
 }
-/* Preset picker */
+/* ── Preset Picker v2 (layered drill-down) ── */
 .preset-toggle {
   display: flex; align-items: center; gap: 6px;
   width: 100%; padding: 6px 0;
@@ -909,22 +909,56 @@ body.has-custom-bg::before {
   transition: all var(--transition);
 }
 .preset-cat-tab.active { background: var(--color-blue); color: #fff; }
-.preset-list { max-height: 240px; overflow-y: auto; padding: 6px 0; }
-.preset-item {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px; gap: 10px;
-  cursor: pointer;
-  transition: background var(--transition);
+/* Brand row */
+.preset-brand-row {
+  display: flex; overflow-x: auto; gap: 4px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-separator);
+  scrollbar-width: none; -ms-overflow-style: none;
 }
-.preset-item:hover { background: var(--color-fill-tertiary); }
-.preset-item-left { min-width: 0; flex: 1; }
-.preset-item-name { font-size: 14px; font-weight: 500; color: var(--color-text); }
-.preset-item-brand { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-.preset-item-right { text-align: right; flex-shrink: 0; }
-.preset-item-price { font-size: 13px; font-weight: 600; color: var(--color-text); }
-.preset-item-date { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.preset-brand-row::-webkit-scrollbar { display: none; }
+.preset-brand-row.hidden { display: none; }
+.preset-brand-chip {
+  flex-shrink: 0; padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px; font-weight: 500;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1px solid var(--color-separator);
+  transition: all var(--transition);
+}
+.preset-brand-chip.active { background: var(--color-blue); color: #fff; border-color: var(--color-blue); }
+/* List */
+.preset-list { max-height: 300px; overflow-y: auto; padding: 4px 0; }
+.preset-group-header {
+  padding: 8px 14px 4px;
+  font-size: 11px; font-weight: 600; color: var(--color-text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.03em;
+  border-top: 1px solid var(--color-separator);
+  margin-top: 2px;
+}
+.preset-group-header:first-child { border-top: none; margin-top: 0; }
+.preset-line-header {
+  padding: 6px 14px 2px;
+  font-size: 12px; font-weight: 500; color: var(--color-text-secondary);
+  display: flex; align-items: center; gap: 4px;
+}
+.preset-line-header .line-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--color-blue); flex-shrink: 0; }
+.preset-config-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 14px 7px 28px; gap: 8px;
+  cursor: pointer; transition: background var(--transition);
+  border-radius: 4px;
+}
+.preset-config-item:hover { background: var(--color-fill-tertiary); }
+.preset-config-item:active { opacity: 0.7; }
+.preset-config-left { min-width: 0; flex: 1; }
+.preset-config-name { font-size: 13px; font-weight: 500; color: var(--color-text); }
+.preset-config-right { text-align: right; flex-shrink: 0; display: flex; gap: 10px; align-items: center; }
+.preset-config-price { font-size: 13px; font-weight: 600; color: var(--color-text); }
+.preset-config-date { font-size: 10px; color: var(--color-text-tertiary); }
 .preset-item-none {
-  padding: 20px; text-align: center;
+  padding: 28px; text-align: center;
   font-size: 13px; color: var(--color-text-tertiary);
 }
 </style>
@@ -1104,9 +1138,10 @@ body.has-custom-bg::before {
         </button>
         <div class="preset-picker hidden" id="presetPicker">
           <div class="preset-search-bar">
-            <input class="form-input" id="presetSearch" type="text" placeholder="搜索型号...">
+            <input class="form-input" id="presetSearch" type="text" placeholder="搜索型号、品牌、产品线...">
           </div>
           <div class="preset-category-tabs" id="presetCatTabs"></div>
+          <div class="preset-brand-row" id="presetBrandRow"></div>
           <div class="preset-list" id="presetList"></div>
         </div>
       </div>
@@ -2160,6 +2195,7 @@ async function confirmReset() {
 
 /* Preset picker */
 let presetFilterCat = '全部';
+let presetFilterBrand = '全部';
 let presetFilterText = '';
 
 function getPresetCategories() {
@@ -2171,48 +2207,89 @@ function getPresetCategories() {
   return cats;
 }
 
+function getPresetBrands(cat) {
+  const brands = new Set();
+  for (const p of PRESET_DEVICES) {
+    if (cat === '全部' || p.category === cat) brands.add(p.brand);
+  }
+  return ['全部', ...Array.from(brands).sort()];
+}
+
 function renderPresetCatTabs() {
   const cats = getPresetCategories();
-  const container = $('#presetCatTabs');
-  container.innerHTML = cats.map(c =>
+  $('#presetCatTabs').innerHTML = cats.map(c =>
     `<button class="preset-cat-tab${c === presetFilterCat ? ' active' : ''}" data-cat="${c}">${c}</button>`
   ).join('');
-  container.querySelectorAll('.preset-cat-tab').forEach(btn => {
+  $('#presetCatTabs').querySelectorAll('.preset-cat-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       presetFilterCat = btn.dataset.cat;
+      presetFilterBrand = '全部';
       renderPresetCatTabs();
+      renderPresetBrandRow();
+      renderPresetList();
+    });
+  });
+}
+
+function renderPresetBrandRow() {
+  const brands = getPresetBrands(presetFilterCat);
+  const row = $('#presetBrandRow');
+  if (brands.length <= 1) { row.classList.add('hidden'); return; }
+  row.classList.remove('hidden');
+  row.innerHTML = brands.map(b =>
+    `<button class="preset-brand-chip${b === presetFilterBrand ? ' active' : ''}" data-brand="${b}">${b}</button>`
+  ).join('');
+  row.querySelectorAll('.preset-brand-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      presetFilterBrand = chip.dataset.brand;
+      renderPresetBrandRow();
       renderPresetList();
     });
   });
 }
 
 function renderPresetList() {
-  let filtered = PRESET_DEVICES;
-  if (presetFilterCat !== '全部') {
-    filtered = filtered.filter(p => p.category === presetFilterCat);
-  }
+  let items = PRESET_DEVICES;
+  if (presetFilterCat !== '全部') items = items.filter(p => p.category === presetFilterCat);
+  if (presetFilterBrand !== '全部') items = items.filter(p => p.brand === presetFilterBrand);
   if (presetFilterText) {
     const q = presetFilterText.toLowerCase();
-    filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.line.toLowerCase().includes(q) || p.config.toLowerCase().includes(q));
+    items = items.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.line.toLowerCase().includes(q) || p.config.toLowerCase().includes(q));
   }
   const list = $('#presetList');
-  if (filtered.length === 0) {
+  if (items.length === 0) {
     list.innerHTML = '<div class="preset-item-none">没有匹配的设备预设</div>';
     return;
   }
-  list.innerHTML = filtered.map(p => `
-    <div class="preset-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
-      <div class="preset-item-left">
-        <div class="preset-item-name">${p.name} <span style="font-size:11px;color:var(--color-text-tertiary);font-weight:400">${p.config}</span></div>
-        <div class="preset-item-brand">${p.brand} · ${p.line}</div>
-      </div>
-      <div class="preset-item-right">
-        <div class="preset-item-price">¥${p.msrp.toLocaleString()}</div>
-        <div class="preset-item-date">${p.releaseDate}</div>
-      </div>
-    </div>
-  `).join('');
-  list.querySelectorAll('.preset-item').forEach(item => {
+  // Group by brand, then by product line
+  const groups = new Map();
+  for (const p of items) {
+    if (!groups.has(p.brand)) groups.set(p.brand, new Map());
+    const lines = groups.get(p.brand);
+    if (!lines.has(p.line)) lines.set(p.line, []);
+    lines.get(p.line).push(p);
+  }
+  // Render grouped list
+  let html = '';
+  for (const [brand, lines] of groups) {
+    html += `<div class="preset-group-header">${brand}</div>`;
+    for (const [lineName, configs] of lines) {
+      html += `<div class="preset-line-header"><span class="line-dot"></span>${lineName}</div>`;
+      for (const p of configs) {
+        html += `<div class="preset-config-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
+          <div class="preset-config-left">
+            <div class="preset-config-name">${p.config}</div>
+          </div>
+          <div class="preset-config-right">
+            <div class="preset-config-price">¥${p.msrp.toLocaleString()}</div>
+            <div class="preset-config-date">${p.releaseDate}</div>
+          </div>
+        </div>`;
+      }
+    }
+  }
+  list.innerHTML = html;
+  list.querySelectorAll('.preset-config-item').forEach(item => {
     item.addEventListener('click', () => selectPreset(item));
   });
 }
@@ -2236,9 +2313,11 @@ function togglePresetPicker(force) {
     btn.classList.add('expanded');
     btn.setAttribute('aria-expanded', 'true');
     presetFilterCat = '全部';
+    presetFilterBrand = '全部';
     presetFilterText = '';
     $('#presetSearch').value = '';
     renderPresetCatTabs();
+    renderPresetBrandRow();
     renderPresetList();
   } else {
     picker.classList.add('hidden');
@@ -2795,6 +2874,7 @@ function bindEvents() {
   $('#btnTogglePresets').addEventListener('click', () => togglePresetPicker());
   $('#presetSearch').addEventListener('input', (e) => {
     presetFilterText = e.target.value;
+    renderPresetBrandRow();
     renderPresetList();
   });
 
