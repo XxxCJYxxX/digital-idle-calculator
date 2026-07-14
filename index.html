@@ -12,7 +12,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 /* ============================================================
-   CSS Custom Properties — Apple HIG Color System
+   CSS Custom Properties — Apple HIG Color System + Liquid Glass
    ============================================================ */
 :root {
   color-scheme: light dark;
@@ -26,6 +26,18 @@
   --color-separator:       light-dark(#E5E5EA, #38383A);
   --color-fill-tertiary:   light-dark(#E8E8ED, #3A3A3C);
   --color-overlay:         light-dark(rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+  /* ── Liquid Glass ── */
+  --glass-bg-card:       light-dark(rgba(255,255,255,0.72), rgba(28,28,30,0.75));
+  --glass-bg-popup:      light-dark(rgba(255,255,255,0.86), rgba(28,28,30,0.88));
+  --glass-bg-input:      light-dark(rgba(242,242,247,0.60), rgba(44,44,46,0.55));
+  --glass-bg-nav:        light-dark(rgba(242,242,247,0.72), rgba(28,28,30,0.72));
+  --glass-bg-hover:      light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.06));
+  --glass-bg-header:     light-dark(rgba(242,242,247,0.68), rgba(0,0,0,0.65));
+  --glass-border:        light-dark(rgba(255,255,255,0.55), rgba(255,255,255,0.07));
+  --glass-border-strong: light-dark(rgba(0,0,0,0.06), rgba(255,255,255,0.10));
+  --glass-blur:          20px;
+  --glass-blur-strong:   40px;
+  --glass-saturate:      180%;
   /* Accent — Apple system colors */
   --color-blue:            light-dark(#007AFF, #0A84FF);
   --color-blue-bg:         light-dark(#E5F0FF, #1A2A44);
@@ -63,6 +75,11 @@ body {
   font-size: 15px;
   min-height: 100dvh;
   letter-spacing: -0.022em;
+  /* Liquid Glass 背景纹理 */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, light-dark(rgba(120,160,255,0.08), rgba(60,100,255,0.10)), transparent),
+    radial-gradient(ellipse 50% 40% at 90% 80%, light-dark(rgba(255,140,100,0.05), rgba(255,100,60,0.06)), transparent);
+  background-attachment: fixed;
 }
 input, select, button, textarea {
   font-family: inherit; font-size: inherit; color: inherit;
@@ -86,6 +103,12 @@ a { color: var(--color-blue); text-decoration: none; }
   margin: 0 auto;
   padding: 0 16px 32px;
 }
+@media (min-width: 1024px) {
+  .app-container {
+    max-width: 1200px;
+    padding: 0 32px 40px;
+  }
+}
 
 /* Header */
 .app-header {
@@ -93,6 +116,21 @@ a { color: var(--color-blue); text-decoration: none; }
   align-items: center;
   justify-content: space-between;
   padding: 20px 0 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--glass-bg-header);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  margin: -8px -16px 0;
+  padding: 16px 16px 8px;
+}
+@media (min-width: 1024px) {
+  .app-header {
+    margin-left: -32px;
+    margin-right: -32px;
+    padding: 20px 32px 12px;
+  }
 }
 .app-title {
   font-size: 28px;
@@ -124,10 +162,13 @@ a { color: var(--color-blue); text-decoration: none; }
   margin: 12px 0 20px;
 }
 .stat-item {
-  background: var(--color-bg-card);
+  background: var(--glass-bg-card);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04), inset 0 0.5px 0 rgba(255,255,255,0.4);
 }
 .stat-label {
   font-size: 12px;
@@ -147,7 +188,10 @@ a { color: var(--color-blue); text-decoration: none; }
 /* Tab Navigation */
 .tab-nav {
   display: flex;
-  background: var(--color-fill-tertiary);
+  background: var(--glass-bg-nav);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: var(--radius-sm);
   padding: 3px;
   margin-bottom: 20px;
@@ -180,8 +224,10 @@ a { color: var(--color-blue); text-decoration: none; }
 .toolbar select {
   appearance: none;
   -webkit-appearance: none;
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-separator);
+  background: var(--glass-bg-card);
+  border: 0.5px solid var(--glass-border-strong);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: var(--radius-sm);
   padding: 8px 32px 8px 12px;
   font-size: 14px;
@@ -214,10 +260,13 @@ a { color: var(--color-blue); text-decoration: none; }
    ============================================================ */
 .device-list { display: flex; flex-direction: column; gap: 10px; }
 .device-card {
-  background: var(--color-bg-card);
+  background: var(--glass-bg-card);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: var(--radius-lg);
   padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04), inset 0 0.5px 0 rgba(255,255,255,0.4);
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 12px;
@@ -256,7 +305,10 @@ a { color: var(--color-blue); text-decoration: none; }
   margin-top: 12px;
 }
 .cost-item {
-  background: var(--color-fill-tertiary);
+  background: var(--glass-bg-input);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   text-align: center;
@@ -327,10 +379,13 @@ a { color: var(--color-blue); text-decoration: none; }
   gap: 16px;
 }
 .chart-card {
-  background: var(--color-bg-card);
+  background: var(--glass-bg-card);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border-radius: var(--radius-lg);
   padding: 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.04), inset 0 0.5px 0 rgba(255,255,255,0.4);
 }
 .chart-title {
   font-size: 16px;
@@ -383,19 +438,22 @@ a { color: var(--color-blue); text-decoration: none; }
   z-index: 1000;
   padding: 16px;
   animation: fadeIn var(--transition-slow);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
 }
 .modal-overlay.hidden { display: none; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-sheet {
-  background: var(--color-bg-elevated);
+  background: var(--glass-bg-popup);
+  border: 0.5px solid var(--glass-border-strong);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: var(--radius-xl);
   width: 100%;
   max-width: 420px;
   max-height: 85dvh;
   overflow-y: auto;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.15), inset 0 0.5px 0 rgba(255,255,255,0.5);
   animation: slideUp var(--transition-slow);
 }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -423,9 +481,11 @@ a { color: var(--color-blue); text-decoration: none; }
 .form-input, .form-select {
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid var(--color-separator);
+  border: 0.5px solid var(--glass-border-strong);
   border-radius: var(--radius-sm);
-  background: var(--color-bg-input);
+  background: var(--glass-bg-input);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
   color: var(--color-text);
   font-size: 15px;
   min-height: 44px;
@@ -499,6 +559,57 @@ a { color: var(--color-blue); text-decoration: none; }
   .compare-table th, .compare-table td { padding: 10px 12px; font-size: 13px; }
 }
 
+/* ── Desktop / PC Layout (≥1024px) ── */
+@media (min-width: 1024px) {
+  .app-title { font-size: 34px; }
+  .app-header { margin-bottom: 16px; }
+
+  /* Stats bar → wider, more breathing room */
+  .stats-bar {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .stat-item { padding: 20px 24px; }
+  .stat-label { font-size: 13px; }
+  .stat-value { font-size: 28px; }
+
+  /* Device cards → 2-column grid */
+  .device-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .device-card { padding: 22px 24px; }
+  .device-name { font-size: 19px; }
+
+  /* Charts → side by side */
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .chart-wrap { max-height: 460px; }
+
+  /* Compare table → larger cells */
+  .compare-table th, .compare-table td { padding: 14px 20px; font-size: 15px; }
+  .compare-table th { font-size: 13px; }
+
+  /* Modals → slightly larger */
+  .modal-sheet { max-width: 480px; }
+
+  /* Tab nav → centered, wider */
+  .tab-nav {
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .tab-btn { font-size: 15px; padding: 10px 24px; }
+
+  /* Toolbar */
+  .toolbar { gap: 12px; }
+  .toolbar select { font-size: 15px; padding: 10px 36px 10px 16px; }
+  .btn-add { font-size: 15px; padding: 10px 22px; }
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -555,9 +666,12 @@ a { color: var(--color-blue); text-decoration: none; }
 }
 .action-dropdown {
   position: absolute; right: 0; top: 44px;
-  background: var(--color-bg-elevated);
+  background: var(--glass-bg-popup);
+  border: 0.5px solid var(--glass-border-strong);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.12), inset 0 0.5px 0 rgba(255,255,255,0.4);
   min-width: 160px;
   padding: 6px;
   z-index: 100;
