@@ -266,6 +266,167 @@
 }
 
 /* ============================================================
+   Kallen · 第六夜想曲 / 午夜鸦羽
+   视觉锚点：幽紫夜幕 / 冰蓝鸦羽 / 月光长发 / 怪盗剪影
+   ============================================================ */
+:root[data-theme="kallen"] {
+  color-scheme: light;
+  --color-bg:              #F0EFF6;
+  --color-bg-card:         #FAF9FD;
+  --color-bg-elevated:     #FDFCFF;
+  --color-bg-input:        #EAE7F5;
+  --color-text:            #1A1530;
+  --color-text-secondary:  #6A6380;
+  --color-text-tertiary:   #9A92B0;
+  --color-separator:       #E2DEF0;
+  --color-fill-tertiary:   #EAE6F5;
+  --color-overlay:         rgba(26,21,48,0.35);
+  --color-blue:            #6C5CE7;
+  --color-blue-bg:         #EFEBFF;
+  --color-red:             #D9465E;
+  --color-red-bg:          #FFEDF0;
+  --color-green:           #38B2AC;
+  --color-green-bg:        #E6FFFA;
+  --color-orange:          #D68E3C;
+  --color-orange-bg:       #FFF5EB;
+  --color-purple:          #9B7EE8;
+  --color-teal:            #5BCEFA;
+  --glass-rgb:             250, 249, 253;
+  --glass-alpha:           0.60;
+  --glass-alpha-strong:    0.82;
+  --glass-alpha-subtle:    0.44;
+  --glass-border:          rgba(108, 92, 231, 0.18);
+  --glass-blur:            28px;
+  --glass-saturate:        190%;
+  --glass-brightness:      1.06;
+  --glass-sheen:           rgba(255,255,255,0.26);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.7);
+  --glass-shadow:          0 1px 2px rgba(26,21,48,0.05),
+                           0 6px 20px rgba(26,21,48,0.07),
+                           0 16px 48px rgba(26,21,48,0.10);
+  --shadow-sm:  0 1px 3px rgba(26,21,48,0.06);
+  --shadow-md:  0 4px 16px rgba(26,21,48,0.07);
+  --shadow-lg:  0 8px 32px rgba(26,21,48,0.10);
+  --kallen-glow-violet:    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,92,231,0.08) 0%, transparent 60%);
+  --kallen-glow-ice:       radial-gradient(ellipse 55% 45% at 85% 80%, rgba(91,206,250,0.06) 0%, transparent 55%);
+  --kallen-glow-moon:      radial-gradient(ellipse 50% 40% at 15% 70%, rgba(179,136,255,0.05) 0%, transparent 60%);
+}
+:root[data-theme="kallen"] body {
+  background:
+    var(--kallen-glow-violet),
+    var(--kallen-glow-ice),
+    var(--kallen-glow-moon),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 38px,
+      rgba(108,92,231,0.02) 38px,
+      rgba(108,92,231,0.02) 40px
+    ),
+    var(--color-bg);
+}
+
+/* 午夜鸦羽（深色） */
+:root[data-theme="kallen-dark"] {
+  color-scheme: dark;
+  --color-bg:              #0D0815;
+  --color-bg-card:         #1A1228;
+  --color-bg-elevated:     #231A35;
+  --color-bg-input:        #1A1228;
+  --color-text:            #EDE8F5;
+  --color-text-secondary:  #A098B8;
+  --color-text-tertiary:   #706888;
+  --color-separator:       #2D2038;
+  --color-fill-tertiary:   #302540;
+  --color-overlay:         rgba(0,0,0,0.60);
+  --color-blue:            #9B7EE8;
+  --color-blue-bg:         #231A3A;
+  --color-red:             #FF6B8A;
+  --color-red-bg:          #2A1520;
+  --color-orange:          #E8A34D;
+  --color-orange-bg:       #2A2015;
+  --color-green:           #4FD1C5;
+  --color-green-bg:        #0D2A28;
+  --color-purple:          #B388FF;
+  --color-purple-bg:       #1A1040;
+  --color-teal:            #4DF0FF;
+  --glass-rgb:             26, 18, 40;
+  --glass-alpha:           0.62;
+  --glass-alpha-strong:    0.82;
+  --glass-alpha-subtle:    0.46;
+  --glass-border:          rgba(155, 126, 232, 0.14);
+  --glass-border-bottom:   rgba(0,0,0,0.18);
+  --glass-blur:            30px;
+  --glass-saturate:        210%;
+  --glass-brightness:      1.12;
+  --glass-sheen:           rgba(255,255,255,0.04);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.07);
+  --glass-shadow:          0 1px 2px rgba(0,0,0,0.30),
+                           0 6px 20px rgba(0,0,0,0.35),
+                           0 16px 48px rgba(0,0,0,0.45);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.50);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.45);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.55);
+  --kallen-glow-violet:    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(155,126,232,0.10) 0%, transparent 60%);
+  --kallen-glow-ice:       radial-gradient(ellipse 55% 45% at 85% 80%, rgba(77,240,255,0.05) 0%, transparent 55%);
+  --kallen-glow-moon:      radial-gradient(ellipse 50% 40% at 15% 70%, rgba(179,136,255,0.04) 0%, transparent 60%);
+}
+:root[data-theme="kallen-dark"] body {
+  background:
+    var(--kallen-glow-violet),
+    var(--kallen-glow-ice),
+    var(--kallen-glow-moon),
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 44px,
+      rgba(155,126,232,0.03) 44px,
+      rgba(155,126,232,0.03) 46px
+    ),
+    var(--color-bg);
+}
+
+/* ── Kallen 专属视觉覆盖 ── */
+[data-theme="kallen"] .tab-btn.active,
+[data-theme="kallen-dark"] .tab-btn.active {
+  border-bottom-color: var(--color-blue);
+  box-shadow: 0 2px 0 var(--color-blue);
+}
+[data-theme="kallen"] .device-card,
+[data-theme="kallen-dark"] .device-card {
+  border-top: 2px solid rgba(91, 206, 250, 0.22);
+  border-left: 2px solid rgba(108, 92, 231, 0.18);
+}
+[data-theme="kallen"] .device-card:hover,
+[data-theme="kallen-dark"] .device-card:hover {
+  border-top-color: rgba(91, 206, 250, 0.44);
+  border-left-color: rgba(108, 92, 231, 0.36);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(108,92,231,0.10);
+}
+[data-theme="kallen"] .stat-item,
+[data-theme="kallen-dark"] .stat-item {
+  border-left: 2px solid rgba(91, 206, 250, 0.30);
+}
+[data-theme="kallen"] .btn-primary {
+  background: linear-gradient(135deg, #6C5CE7 0%, #9B7EE8 100%);
+}
+[data-theme="kallen-dark"] .btn-primary {
+  background: linear-gradient(135deg, #9B7EE8 0%, #6C5CE7 100%);
+}
+[data-theme="kallen"] .icon-btn:hover,
+[data-theme="kallen-dark"] .icon-btn:hover {
+  background: var(--color-blue-bg);
+}
+[data-theme="kallen"] .app-header,
+[data-theme="kallen-dark"] .app-header {
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, transparent 0%, rgba(108,92,231,0.35) 20%, rgba(91,206,250,0.35) 55%, rgba(179,136,255,0.25) 80%, transparent 100%) 1;
+}
+[data-theme="kallen"] .sub-card,
+[data-theme="kallen-dark"] .sub-card {
+  border-left: 3px solid rgba(108, 92, 231, 0.25);
+}
+/* ============================================================
    Sonetto Visual Overrides — character motifs
    ============================================================ */
 
@@ -1709,6 +1870,8 @@ body.has-custom-bg::before {
               <option value="dark">深色</option>
               <option value="sonetto">十四行诗</option>
               <option value="sonetto-dark">十四行诗 · 夜</option>
+              <option value="kallen">第六夜想曲</option>
+              <option value="kallen-dark">午夜鸦羽</option>
             </select>
           </div>
           <div class="divider" role="separator"></div>
@@ -3781,13 +3944,15 @@ function renderRings() {
   const maxIdle = Math.max(...list.map(d => d.totalDays), 1);
   const maxCost = Math.max(...list.map(d => d.dailyCost), 0.01);
   const theme = getEffectiveTheme();
-  const isDark = theme === 'dark' || theme === 'sonetto-dark';
+  const isDark = theme === 'dark' || theme === 'sonetto-dark' || theme === 'kallen-dark';
   const isSonetto = theme === 'sonetto' || theme === 'sonetto-dark';
+  const isKallen = theme === 'kallen' || theme === 'kallen-dark';
 
   // Ring colors
   const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  const colorIdle = isSonetto ? '#E38B37' : '#FF9500';
-  const colorCost = isSonetto ? '#A8D5C8' : '#5AC8FA';
+  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#5BCEFA' : '#FF9500';
+  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#6C5CE7' : '#5AC8FA';
+  if (isKallen && isDark) { colorIdle = '#4DF0FF'; colorCost = '#9B7EE8'; }
   const textColor = getThemeColorVar('--color-text') || (isDark ? '#F5F5F7' : '#1C1C1E');
 
   const CANVAS_SIZE = 200;
@@ -4301,9 +4466,9 @@ function updateThemeMeta() {
   const theme = getEffectiveTheme();
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   let color = '#F2F2F7';
-  if (theme === 'dark') color = '#000000';
-  else if (theme === 'sonetto-dark') color = '#1C1C24';
+  if (theme === 'dark' || theme === 'sonetto-dark' || theme === 'kallen-dark') color = '#000000';
   else if (theme === 'sonetto') color = '#F8F5EE';
+  else if (theme === 'kallen') color = '#F0EFF6';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
