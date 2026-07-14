@@ -1741,9 +1741,7 @@ const PRESET_DEVICES = [
   { name:'Raspberry Pi 5 16GB',       config:'16GB',       category:'其他', brand:'Raspberry Pi', line:'Raspberry Pi 5', releaseDate:'2024-10-01', msrp:618 },
 ];
 
-// Build lookup indices for fast filtering
-const PRESET_CATEGORIES = [...new Set(PRESET_DEVICES.map(p => p.category))].sort();
-const PRESET_BRANDS     = [...new Set(PRESET_DEVICES.map(p => p.brand))].sort();
+// Lookup uses the existing PRESET_CATEGORIES array above
 
 
 /* ============================================================
@@ -2207,17 +2205,6 @@ function renderPresetList() {
       <div class="preset-item-left">
         <div class="preset-item-name">${p.name} <span style="font-size:11px;color:var(--color-text-tertiary);font-weight:400">${p.config}</span></div>
         <div class="preset-item-brand">${p.brand} · ${p.line}</div>
-      </div>
-      <div class="preset-item-right">
-        <div class="preset-item-price">¥${p.msrp.toLocaleString()}</div>
-        <div class="preset-item-date">${p.releaseDate}</div>
-      </div>
-    </div>
-  `).join('');
-    <div class="preset-item" data-name="${p.name}" data-cat="${p.category}" data-date="${p.releaseDate}" data-price="${p.msrp}">
-      <div class="preset-item-left">
-        <div class="preset-item-name">${p.name}</div>
-        <div class="preset-item-brand">${p.brand}</div>
       </div>
       <div class="preset-item-right">
         <div class="preset-item-price">¥${p.msrp.toLocaleString()}</div>
