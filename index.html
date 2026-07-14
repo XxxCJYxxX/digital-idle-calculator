@@ -267,83 +267,78 @@
 
 /* ============================================================
    Kallen · 第六夜想曲
-   冰晶基底 · 鸦羽线 · 时停刻印
+   紫 · 浅紫 · 白 — 怪盗的克制美学
    ============================================================ */
 
-/* ── 配色：雪白基底的冰蓝色调 ── */
+/* ── 三色体系：白底 + 紫色主控 + 浅紫点缀 ── */
 :root[data-theme="kallen"] {
   color-scheme: light;
 
-  --color-bg:              #F3F7FA;
-  --color-bg-card:         #FAFCFE;
+  --color-bg:              #F4F2F8;
+  --color-bg-card:         #FBFAFD;
   --color-bg-elevated:     #FFFFFF;
-  --color-bg-input:        #EDF2F6;
-  --color-text:            #19212E;
-  --color-text-secondary:  #556374;
-  --color-text-tertiary:   #8B98A8;
-  --color-separator:       #DDE4ED;
-  --color-fill-tertiary:   #ECF1F6;
-  --color-overlay:         rgba(25,33,46,0.30);
+  --color-bg-input:        #EFECF5;
+  --color-text:            #1C1830;
+  --color-text-secondary:  #5E5880;
+  --color-text-tertiary:   #8C86A8;
+  --color-separator:       #E4E0F0;
+  --color-fill-tertiary:   #EDEAF5;
+  --color-overlay:         rgba(28,24,48,0.28);
 
-  /* 冰蓝主色 */
-  --color-blue:            #4A90C4;
-  --color-blue-bg:         #EAF3FA;
-  --color-red:             #C85A64;
-  --color-red-bg:          #FCEEF0;
+  /* 紫色主色 */
+  --color-blue:            #6E5CBF;
+  --color-blue-bg:         #F0ECFA;
+  --color-red:             #C05A6A;
+  --color-red-bg:          #FBEEF1;
   --color-green:           #4D9E8A;
   --color-green-bg:        #E8F5F1;
-  --color-orange:          #C4843D;
-  --color-orange-bg:       #FCF3E8;
-  --color-purple:          #5A72A0;
-  --color-teal:            #6DAAC4;
+  --color-orange:          #C08A4D;
+  --color-orange-bg:       #FBF2E6;
+  --color-purple:          #8B7AC8;
+  --color-teal:            #9BA4C4;
 
-  /* 液态玻璃 — 冰面质感 */
-  --glass-rgb:             250, 252, 254;
+  /* 液态玻璃 — 白底紫调 */
+  --glass-rgb:             251, 250, 253;
   --glass-alpha:           0.62;
   --glass-alpha-strong:    0.84;
   --glass-alpha-subtle:    0.46;
-  --glass-border:          rgba(74, 144, 196, 0.14);
+  --glass-border:          rgba(110, 92, 191, 0.14);
   --glass-border-bottom:   rgba(0,0,0,0.04);
   --glass-blur:            28px;
   --glass-saturate:        180%;
   --glass-brightness:      1.04;
   --glass-sheen:           rgba(255,255,255,0.30);
   --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.72);
-  --glass-shadow:          0 1px 2px rgba(25,33,46,0.04),
-                           0 4px 14px rgba(25,33,46,0.05),
-                           0 12px 36px rgba(25,33,46,0.08);
-  --shadow-sm:  0 1px 3px rgba(25,33,46,0.05);
-  --shadow-md:  0 4px 16px rgba(25,33,46,0.06);
-  --shadow-lg:  0 8px 32px rgba(25,33,46,0.09);
+  --glass-shadow:          0 1px 2px rgba(28,24,48,0.04),
+                           0 4px 14px rgba(28,24,48,0.05),
+                           0 12px 36px rgba(28,24,48,0.08);
+  --shadow-sm:  0 1px 3px rgba(28,24,48,0.05);
+  --shadow-md:  0 4px 16px rgba(28,24,48,0.06);
+  --shadow-lg:  0 8px 32px rgba(28,24,48,0.09);
 
-  /* 顶部冷光 */
-  --kallen-frost-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(74,144,196,0.10) 0%, transparent 55%);
+  /* 顶部紫色微光 */
+  --kallen-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(110,92,191,0.10) 0%, transparent 55%);
 }
 
 :root[data-theme="kallen"] body {
-  background:
-    var(--kallen-frost-glow),
-    var(--color-bg);
+  background: var(--kallen-glow), var(--color-bg);
 }
 
-/* ── 冰晶顶线：卡片顶部一道极细的青色线，像霜在玻璃上凝结 ── */
+/* ── 冰晶顶线：卡片上方一道浅紫色细线 ── */
 [data-theme="kallen"] .device-card,
 [data-theme="kallen"] .ring-card,
 [data-theme="kallen"] .sub-card,
 [data-theme="kallen"] .chart-card {
-  border-top: 1px solid rgba(109, 170, 196, 0.30);
+  border-top: 1px solid rgba(139, 122, 200, 0.28);
 }
 
-/* ── 鸦羽线：统计卡左侧一条深靛蓝细线，像乌鸦尾羽落在雪地上 ── */
+/* ── 鸦羽线：统计卡左侧深紫线 ── */
 [data-theme="kallen"] .stat-item {
-  border-left: 2px solid #4A627A;
+  border-left: 2px solid #5A4894;
 }
 
-/* ── 时停刻印：卡片右下角一个精确的 4px 深蓝圆点，
-     无光晕，不闪烁 —— 像乐谱上的终止符、怪盗留下的银色印记 ── */
-[data-theme="kallen"] .device-card {
-  position: relative;
-}
+/* ── 时停刻印：右下角 4px 深紫圆点 ── */
+[data-theme="kallen"] .device-card { position: relative; }
 [data-theme="kallen"] .device-card::after {
   content: "";
   position: absolute;
@@ -352,34 +347,26 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #2D3E5C;
+  background: #5A4894;
   z-index: 4;
   pointer-events: none;
 }
 
-/* ── 冰蓝 tab 选中态：一道窄窄的青蓝底线 ── */
+/* ── 紫色 tab ── */
 [data-theme="kallen"] .tab-btn.active {
-  border-bottom: 2px solid #4A90C4;
-  color: #4A90C4;
+  border-bottom: 2px solid #6E5CBF;
+  color: #6E5CBF;
 }
 
-/* ── 按钮：冰蓝渐变，克制 ── */
-[data-theme="kallen"] .btn-primary {
-  background: #4A90C4;
-}
-[data-theme="kallen"] .btn-primary:hover {
-  background: #3D7FB5;
-}
-[data-theme="kallen"] .icon-btn:hover {
-  background: #EAF3FA;
-}
+/* ── 紫色按钮 ── */
+[data-theme="kallen"] .btn-primary { background: #6E5CBF; }
+[data-theme="kallen"] .btn-primary:hover { background: #5D4CAE; }
+[data-theme="kallen"] .icon-btn:hover { background: #F0ECFA; }
 
 /* ── 订阅卡鸦羽线 ── */
 [data-theme="kallen"] .sub-card {
-  border-left: 1px solid #4A627A;
+  border-left: 1px solid #5A4894;
 }
-
-/* ── header：无装饰，保持干净 ── */
 
 /* ============================================================
    Sonetto Visual Overrides — character motifs
@@ -3904,8 +3891,8 @@ function renderRings() {
 
   // Ring colors
   const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#4A90C4' : '#FF9500';
-  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#4A627A' : '#5AC8FA';
+  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#6E5CBF' : '#FF9500';
+  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#8B7AC8' : '#5AC8FA';
   const textColor = getThemeColorVar('--color-text') || (isDark ? '#F5F5F7' : '#1C1C1E');
 
   const CANVAS_SIZE = 200;
@@ -4421,7 +4408,7 @@ function updateThemeMeta() {
   let color = '#F2F2F7';
   if (theme === 'dark' || theme === 'sonetto-dark' ) color = '#000000';
   else if (theme === 'sonetto') color = '#F8F5EE';
-  else if (theme === 'kallen') color = '#F3F7FA';
+  else if (theme === 'kallen') color = '#F4F2F8';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
