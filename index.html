@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F2F7" id="themeColorMeta">
 <meta name="description" content="电子产品吃灰计算器 - 追踪闲置设备的价值损耗与保修期限">
 <title>吃灰计算器</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -99,6 +98,89 @@
     radial-gradient(ellipse 60% 50% at 90% 80%, rgba(191,90,242,0.08) 0%, transparent 60%),
     var(--color-bg);
 }
+/* Sonetto theme (Retro Academic / Warm Tangerine) */
+:root[data-theme="sonetto"] {
+  color-scheme: light;
+  --color-bg:              #F7F5F0;
+  --color-bg-card:         #FFFFFF;
+  --color-bg-elevated:     #FFFDF9;
+  --color-bg-input:        #F1EEE8;
+  --color-text:            #2A2A30;
+  --color-text-secondary:  #6B665C;
+  --color-text-tertiary:   #9A948A;
+  --color-separator:       #E8E4DB;
+  --color-fill-tertiary:   #EDE9E0;
+  --color-overlay:         rgba(42,42,48,0.35);
+  --color-blue:            #D4863A;
+  --color-blue-bg:         #FFF4E8;
+  --color-red:             #C64B42;
+  --color-red-bg:          #FFEEED;
+  --color-orange:          #E87C3A;
+  --color-orange-bg:       #FFF4E5;
+  --color-green:           #6B9E7C;
+  --color-green-bg:        #E9F7ED;
+  --color-purple:          #8A7EB8;
+  --color-teal:            #A6D9C8;
+  /* Liquid Glass — sonetto */
+  --glass-rgb:             255, 253, 249;
+  --glass-alpha:           0.62;
+  --glass-alpha-strong:    0.82;
+  --glass-alpha-subtle:    0.46;
+  --glass-border:          rgba(212, 168, 71, 0.28);
+  --glass-blur:            22px;
+  --glass-saturate:        175%;
+  --shadow-sm:  0 1px 3px rgba(42,42,48,0.06);
+  --shadow-md:  0 4px 16px rgba(42,42,48,0.06);
+  --shadow-lg:  0 8px 32px rgba(42,42,48,0.10);
+}
+:root[data-theme="sonetto"] body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,124,58,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(166,217,200,0.08) 0%, transparent 60%),
+    var(--color-bg);
+}
+/* Dark Sonetto (Midnight Academic) */
+:root[data-theme="sonetto-dark"] {
+  color-scheme: dark;
+  --color-bg:              #1E1E24;
+  --color-bg-card:         #2A2A30;
+  --color-bg-elevated:     #33333A;
+  --color-bg-input:        #2A2A30;
+  --color-text:            #F7F5F0;
+  --color-text-secondary:  #B0ABA4;
+  --color-text-tertiary:   #7A746B;
+  --color-separator:       #3A3A42;
+  --color-fill-tertiary:   #3E3E46;
+  --color-overlay:         rgba(0,0,0,0.55);
+  --color-blue:            #F5A94D;
+  --color-blue-bg:         #3A2C1A;
+  --color-red:             #FF6B5E;
+  --color-red-bg:          #3A1C1C;
+  --color-orange:          #F5A94D;
+  --color-orange-bg:       #3A2C1A;
+  --color-green:           #7AC293;
+  --color-green-bg:        #1A3320;
+  --color-purple:          #A99DFF;
+  --color-purple-bg:       #2A1A44;
+  --color-teal:            #A6D9C8;
+  --glass-rgb:             42, 42, 48;
+  --glass-alpha:           0.62;
+  --glass-alpha-strong:    0.82;
+  --glass-alpha-subtle:    0.46;
+  --glass-border:          rgba(245, 169, 77, 0.18);
+  --glass-blur:            24px;
+  --glass-saturate:        195%;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.45);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.40);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.50);
+}
+:root[data-theme="sonetto-dark"] body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,124,58,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(166,217,200,0.06) 0%, transparent 60%),
+    var(--color-bg);
+}
+
 /* System preference when no manual override */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
@@ -739,18 +821,26 @@ a { color: var(--color-blue); text-decoration: none; }
   position: relative;
 }
 
-/* Theme toggle button */
-.theme-toggle {
-  width: 44px; height: 44px;
-  display: flex; align-items: center; justify-content: center;
+/* Theme selector */
+.theme-select {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 110px;
+  height: 44px;
+  padding: 0 32px 0 14px;
   border-radius: var(--radius-sm);
-  color: var(--color-blue);
-  transition: background var(--transition);
+  border: 1px solid var(--color-separator);
+  background: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 500;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' fill='none' stroke='%238E8E93' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
   margin-right: 4px;
 }
-.theme-toggle:hover { background: var(--color-fill-tertiary); }
-.theme-toggle:active { opacity: 0.6; }
-.theme-toggle svg { width: 22px; height: 22px; fill: currentColor; }
+.theme-select:focus-visible { border-color: var(--color-blue); outline: none; }
 
 /* Custom background support */
 #customBgLayer {
@@ -1048,10 +1138,13 @@ body.has-custom-bg::before {
   <header class="app-header">
     <h1 class="app-title" role="heading" aria-level="1">吃灰计算器</h1>
     <div class="header-actions">
-      <button class="theme-toggle" id="btnThemeToggle" aria-label="切换日夜模式" title="切换日夜模式">
-        <svg id="iconMoon" viewBox="0 0 24 24" style="display:none"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-        <svg id="iconSun" viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0 .996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
-      </button>
+      <select class="theme-select" id="themeSelect" aria-label="选择主题" title="选择主题">
+  <option value="">自动</option>
+  <option value="light">浅色</option>
+  <option value="dark">深色</option>
+  <option value="sonetto">十四行诗</option>
+  <option value="sonetto-dark">十四行诗 · 夜</option>
+</select>
       <div class="action-menu" id="actionMenuWrap">
         <button class="icon-btn" id="btnActionMenu" aria-label="更多操作" aria-haspopup="true" aria-expanded="false" title="更多操作">
           <svg viewBox="0 0 24 24"><path d="M12 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 7a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
@@ -3119,21 +3212,30 @@ async function handleCSVImport(file) {
 let chartIdle = null;
 let chartCost = null;
 
+function getThemeColorVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+function getEffectiveTheme() {
+  if (document.documentElement.hasAttribute('data-theme')) {
+    return document.documentElement.getAttribute('data-theme');
+  }
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
 function getChartColors() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  return {
-    text: isDark ? '#98989D' : '#6E6E73',
-    grid: isDark ? '#38383A' : '#E5E5EA',
-    bars: [
-      isDark ? '#0A84FF' : '#007AFF',
-      isDark ? '#BF5AF2' : '#AF52DE',
-      isDark ? '#30D158' : '#34C759',
-      isDark ? '#FF9F0A' : '#FF9500',
-      isDark ? '#FF453A' : '#FF3B30',
-      isDark ? '#64D2FF' : '#5AC8FA',
-    ]
-  };
+  const theme = getEffectiveTheme();
+  const isDark = theme === 'dark' || theme === 'sonetto-dark';
+  const isSonetto = theme === 'sonetto' || theme === 'sonetto-dark';
+  const text = getThemeColorVar('--color-text-secondary') || (isDark ? '#98989D' : '#6E6E73');
+  const grid = getThemeColorVar('--color-separator') || (isDark ? '#38383A' : '#E5E5EA');
+  let bars = isDark
+    ? ['#0A84FF', '#BF5AF2', '#30D158', '#FF9F0A', '#FF453A', '#64D2FF']
+    : ['#007AFF', '#AF52DE', '#34C759', '#FF9500', '#FF3B30', '#5AC8FA'];
+  if (isSonetto) {
+    bars = isDark
+      ? ['#F5A94D', '#E87C3A', '#A6D9C8', '#D4A847', '#FF6B5E', '#7AC293']
+      : ['#E87C3A', '#F5A94D', '#A6D9C8', '#D4A847', '#C64B42', '#6B9E7C'];
+  }
+  return { text, grid, bars };
 }
 
 function renderCharts() {
@@ -3615,44 +3717,41 @@ function sanitizePriceInput(e) {
    Theme Detection
    ============================================================ */
 function updateThemeMeta() {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.querySelector('meta[name="theme-color"]').content = isDark ? '#000000' : '#F2F2F7';
+  const theme = getEffectiveTheme();
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  let color = '#F2F2F7';
+  if (theme === 'dark' || theme === 'sonetto-dark') color = '#000000';
+  else if (theme === 'sonetto') color = '#F7F5F0';
+  else if (theme === 'light') color = '#F2F2F7';
+  else if (!theme && prefersDark) color = '#000000';
+  const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = color;
 }
 
 /* ============================================================
-   Theme Toggle
+   Theme Selector
    ============================================================ */
-function getEffectiveTheme() {
-  if (document.documentElement.hasAttribute('data-theme')) {
-    return document.documentElement.getAttribute('data-theme');
+function applyTheme(next) {
+  if (!next) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.removeItem('theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-function applyThemeIcon() {
-  const current = getEffectiveTheme();
-  $('#iconMoon').style.display = current === 'light' ? 'none' : 'block';
-  $('#iconSun').style.display = current === 'light' ? 'block' : 'none';
-}
-
-function toggleTheme() {
-  const current = getEffectiveTheme();
-  const next = current === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  applyThemeIcon();
   updateThemeMeta();
   if (state.currentTab === 'stats') renderCharts();
-  showToast(next === 'dark' ? '已切换到夜间模式' : '已切换到日间模式');
+  if (state.currentTab === 'compare') renderComparison();
+  refreshSubscriptionUI();
 }
 
 function initTheme() {
   const saved = localStorage.getItem('theme');
-  if (saved === 'light' || saved === 'dark') {
+  if (saved) {
     document.documentElement.setAttribute('data-theme', saved);
   }
-  applyThemeIcon();
+  const themeSelect = $('#themeSelect');
+  if (themeSelect) themeSelect.value = saved || '';
   updateThemeMeta();
 }
 
@@ -3952,14 +4051,15 @@ function bindEvents() {
   // Theme change listener
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (!document.documentElement.hasAttribute('data-theme')) {
-      applyThemeIcon();
       updateThemeMeta();
     }
     if (state.currentTab === 'stats') renderCharts();
   });
 
-  // Theme toggle button
-  $('#btnThemeToggle').addEventListener('click', toggleTheme);
+  // Theme selector
+  $('#themeSelect').addEventListener('change', (e) => {
+    applyTheme(e.target.value || null);
+  });
 
   // Custom background
   $('#btnSetBg').addEventListener('click', async () => {
