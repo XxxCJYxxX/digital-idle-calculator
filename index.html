@@ -37,10 +37,14 @@
   --color-purple:          #AF52DE;
   --color-teal:            #5AC8FA;
   /* Liquid Glass */
-  --glass-bg:        rgba(255,255,255,0.68);
-  --glass-bg-strong: rgba(255,255,255,0.82);
-  --glass-bg-subtle: rgba(242,242,247,0.55);
+  --glass-bg:        rgba(var(--glass-rgb), var(--glass-alpha));
+  --glass-bg-strong: rgba(var(--glass-rgb), var(--glass-alpha-strong));
+  --glass-bg-subtle: rgba(var(--glass-rgb), var(--glass-alpha-subtle));
   --glass-border:    rgba(255,255,255,0.50);
+  --glass-rgb:        255, 255, 255;
+  --glass-alpha:       0.68;
+  --glass-alpha-strong: 0.84;
+  --glass-alpha-subtle: 0.50;
   --glass-blur:      20px;
   --glass-saturate:  180%;
   --radius-sm: 8px;
@@ -82,12 +86,18 @@
   --shadow-md:  0 4px 16px rgba(0,0,0,0.4);
   --shadow-lg:  0 8px 32px rgba(0,0,0,0.5);
   /* Liquid Glass — dark */
-  --glass-bg:        rgba(28,28,30,0.72);
-  --glass-bg-strong: rgba(28,28,30,0.88);
-  --glass-bg-subtle: rgba(44,44,46,0.55);
+  --glass-bg:        rgba(28,28,30,var(--glass-alpha));
+  --glass-bg-strong: rgba(28,28,30,var(--glass-alpha-strong));
+  --glass-bg-subtle: rgba(44,44,46,var(--glass-alpha-subtle));
   --glass-border:    rgba(255,255,255,0.07);
   --glass-blur:      24px;
   --glass-saturate:  200%;
+}
+[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(10,132,255,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(191,90,242,0.08) 0%, transparent 60%),
+    var(--color-bg);
 }
 /* System preference when no manual override */
 @media (prefers-color-scheme: dark) {
@@ -126,7 +136,10 @@
 html { -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; }
 body {
   font-family: var(--font-stack);
-  background: var(--color-bg);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,122,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(175,82,222,0.04) 0%, transparent 60%),
+    var(--color-bg);
   color: var(--color-text);
   line-height: 1.47059;
   font-size: 15px;
@@ -831,7 +844,34 @@ body.has-custom-bg::before {
   padding: 4px 10px; border-radius: 6px;
   display: inline-block; margin: 4px 0;
 }
-</style>
+
+/* Glass opacity slider in dropdown */
+.dropdown-slider-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  font-size: 13px; color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.dropdown-slider-row input[type="range"] {
+  flex: 1; height: 20px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--color-fill-tertiary);
+  border-radius: 10px; outline: none;
+}
+.dropdown-slider-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--color-blue);
+  cursor: pointer;
+}
+.dropdown-slider-row input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--color-blue);
+  border: none;
+  cursor: pointer;
+}</style>
 </head>
 <body>
 
@@ -877,6 +917,11 @@ body.has-custom-bg::before {
             清除背景图
           </button>
           <div class="divider" role="separator"></div>
+          <div class="divider" role="separator"></div>
+          <div class="dropdown-slider-row" id="glassOpacityRow">
+            <span>玻璃透明度</span>
+            <input type="range" id="glassOpacitySlider" min="20" max="100" value="68" aria-label="玻璃透明度">
+          </div>
           <button id="btnReset" class="danger" role="menuitem" aria-label="清空全部数据">
             <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
             清空全部数据
@@ -1669,13 +1714,17 @@ function openReset() {
 async function confirmReset() {
   await dbClear('devices');
   await dbClear('categories');
+  await dbClear('settings');
+  await deleteCustomBgImage().catch(() => {});
+  localStorage.removeItem('bgSettings');
+  currentBgImage = null;
   state.devices = [];
   state.categories = [];
-  // Re-create presets
   for (const name of PRESET_CATEGORIES) {
     await dbPut('categories', { name, isPreset: true });
   }
   await loadCategories();
+  await applyCustomBg();
   closeModal('#modalReset2');
   renderAll();
   showToast('所有数据已清空', 'success');
@@ -2220,6 +2269,17 @@ function bindEvents() {
   $('#btnCancelReset2').addEventListener('click', () => closeModal('#modalReset2'));
   $('#btnConfirmReset').addEventListener('click', confirmReset);
 
+  // Glass opacity slider
+  $('#glassOpacitySlider').addEventListener('input', (e) => {
+    const alpha = e.target.value / 100;
+    const strongAlpha = Math.min(1, alpha + 0.16);
+    const subtleAlpha = Math.max(0.1, alpha - 0.18);
+    document.documentElement.style.setProperty('--glass-alpha', alpha);
+    document.documentElement.style.setProperty('--glass-alpha-strong', strongAlpha);
+    document.documentElement.style.setProperty('--glass-alpha-subtle', subtleAlpha);
+    localStorage.setItem('glassOpacity', e.target.value);
+  });
+
   // Export
   $('#btnExport').addEventListener('click', exportCSV);
 
@@ -2381,6 +2441,15 @@ function bindEvents() {
    ============================================================ */
 async function init() {
   initTheme();
+  const savedAlpha = localStorage.getItem('glassOpacity');
+  if (savedAlpha) {
+    const alpha = parseInt(savedAlpha) / 100;
+    document.documentElement.style.setProperty('--glass-alpha', alpha);
+    document.documentElement.style.setProperty('--glass-alpha-strong', Math.min(1, alpha + 0.16));
+    document.documentElement.style.setProperty('--glass-alpha-subtle', Math.max(0.1, alpha - 0.18));
+    const slider = document.getElementById('glassOpacitySlider');
+    if (slider) slider.value = savedAlpha;
+  }
   await openDB();
   await applyCustomBg();
   await loadCategories();
