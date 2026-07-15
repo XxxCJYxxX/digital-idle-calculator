@@ -742,18 +742,18 @@
 
 /* View Transition API (Chrome/Safari/Edge) */
 ::view-transition-old(root) {
-  animation: vtExplode 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: vtFadeOut 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 ::view-transition-new(root) {
-  animation: vtImplode 0.55s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
+  animation: vtFadeIn 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.05s both;
 }
-@keyframes vtExplode {
-  from { opacity: 1; clip-path: circle(100% at 50% 50%); }
-  to   { opacity: 0; clip-path: circle(0% at 50% 50%); }
+@keyframes vtFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
 }
-@keyframes vtImplode {
-  from { opacity: 0; clip-path: circle(0% at 50% 50%); }
-  to   { opacity: 1; clip-path: circle(100% at 50% 50%); }
+@keyframes vtFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Fallback for browsers without View Transition API (e.g. Firefox) */
@@ -2057,19 +2057,6 @@ body.has-custom-bg::before {
   padding: 28px; text-align: center;
   font-size: 13px; color: var(--color-text-tertiary);
 }
-/* ── Theme Burst Canvas ── */
-#themeBurstCanvas {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.1s;
-}
-#themeBurstCanvas.active { opacity: 1; }
-
 </style>
 </head>
 <body>
@@ -4736,93 +4723,9 @@ function updateThemeMeta() {
 }
 
 /* ============================================================
-   Theme Particle Burst Engine
+   Theme Selector
    ============================================================ */
-const burstCanvas = $('#themeBurstCanvas');
-let burstCtx = burstCanvas.getContext('2d');
-let burstParticles = [];
-let burstRAF = null;
-
-function getThemeBurstColors(theme) {
-  switch (theme) {
-    case 'sonetto':       return ['#E38B37','#F5A54D','#FFC04D','#A8D5C8','#C9A13E','#E8D5A0'];
-    case 'sonetto-dark':  return ['#F5A54D','#FF7A3D','#FFC04D','#8ACCB8','#C9A13E','#E8D5A0'];
-    case 'kallen':        return ['#6E5CBF','#8B7AC8','#B388FF','#5A4894','#9BA4C4','#D4CEE8'];
-    case 'dark':          return ['#0A84FF','#BF5AF2','#30D158','#FF9F0A','#FF453A','#64D2FF'];
-    default:              return ['#007AFF','#AF52DE','#34C759','#FF9500','#FF3B30','#5AC8FA'];
-  }
-}
-
-function emitBurst(x, y, colors) {
-  const count = 250;
-  const particles = [];
-  for (let i = 0; i < count; i++) {
-    const a = Math.random() * Math.PI * 2;
-    const s = 2 + Math.random() * 16;
-    particles.push({
-      x, y,
-      vx: Math.cos(a) * s,
-      vy: Math.sin(a) * s,
-      r: 1 + Math.random() * 5,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      life: 1,
-      decay: 0.005 + Math.random() * 0.028,
-      grav: 0.03 + Math.random() * 0.07,
-    });
-  }
-  return particles;
-}
-
-function startBurstAnimation() {
-  if (burstRAF) return;
-  const animate = () => {
-    burstCtx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
-    for (let i = burstParticles.length - 1; i >= 0; i--) {
-      const p = burstParticles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += p.grav;
-      p.vx *= 0.985;
-      p.vy *= 0.985;
-      p.life -= p.decay;
-      if (p.life <= 0) { burstParticles.splice(i, 1); continue; }
-      burstCtx.beginPath();
-      burstCtx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
-      burstCtx.fillStyle = p.color;
-      burstCtx.globalAlpha = p.life * 0.85;
-      burstCtx.fill();
-    }
-    burstCtx.globalAlpha = 1;
-    if (burstParticles.length > 0) {
-      burstRAF = requestAnimationFrame(animate);
-    } else {
-      burstCanvas.classList.remove('active');
-      burstRAF = null;
-    }
-  };
-  burstRAF = requestAnimationFrame(animate);
-}
-
 function applyTheme(next) {
-  const colors = getThemeBurstColors(next || 'light');
-
-  // Particle burst from viewport center
-  burstCanvas.width = window.innerWidth;
-  burstCanvas.height = window.innerHeight;
-  burstCanvas.classList.add('active');
-  burstParticles = burstParticles.concat(
-    emitBurst(window.innerWidth / 2, window.innerHeight / 2, colors)
-  );
-  startBurstAnimation();
-
-  // Second wave: smaller burst 50ms later
-  setTimeout(() => {
-    burstParticles = burstParticles.concat(
-      emitBurst(window.innerWidth / 2, window.innerHeight / 2, colors.map(c => c))
-    );
-    startBurstAnimation();
-  }, 55);
-
   const doSwitch = () => {
     if (!next) {
       document.documentElement.removeAttribute('data-theme');
@@ -4837,6 +4740,7 @@ function applyTheme(next) {
     refreshSubscriptionUI();
   };
 
+  // Smooth view transition (Chrome 111+ / Safari 18+ / Edge 111+)
   if (document.startViewTransition) {
     document.startViewTransition(() => doSwitch());
   } else {
@@ -5326,7 +5230,5 @@ async function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
-<!-- Theme Burst Canvas — particle explosion on theme switch -->
-<canvas id="themeBurstCanvas" aria-hidden="true"></canvas>
 </body>
 </html>
