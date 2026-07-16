@@ -362,6 +362,91 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Augusta — 奥古斯塔 · 赫日威临
+   Inspirations: 七丘总督 / 红雷 / 王者之剑 / 磁能 / 荣耀狮鹫
+   Palette: 白练 → 绯红 → 金辉 → 黑铁
+   ═══════════════════════════════════════════════════════════ */
+:root[data-theme="augusta"] {
+  color-scheme: light;
+
+  /* ── 基底：战铠白（象牙白，非纯白）── */
+  --color-bg:              #F6F4F0;
+  --color-bg-card:         #FDFCFA;
+  --color-bg-elevated:     #FFFFFF;
+  --color-bg-input:        #F0ECE5;
+  --color-text:            #1E1A14;
+  --color-text-secondary:  #5C5242;
+  --color-text-tertiary:   #8A7C68;
+  --color-separator:       #E8E0D4;
+  --color-fill-tertiary:   #F0EBE2;
+  --color-overlay:         rgba(30,26,20,0.30);
+
+  /* ── 红雷主色 ── */
+  --color-blue:            #CF3A2F;
+  --color-blue-bg:         #FDF3F1;
+  --color-red:             #B82820;
+  --color-red-bg:          #FCECEA;
+  --color-green:           #5A8A72;
+  --color-green-bg:        #EDF5F0;
+  --color-orange:          #D4A448;
+  --color-orange-bg:       #FBF5E7;
+  --color-purple:          #8B6F5E;
+  --color-teal:            #9EA89A;
+
+  /* ── 液态玻璃：锻钢冰面 ── */
+  --glass-rgb:             253, 252, 250;
+  --glass-alpha:           0.64;
+  --glass-alpha-strong:    0.86;
+  --glass-alpha-subtle:    0.48;
+  --glass-border:          rgba(207, 58, 47, 0.12);
+  --glass-border-bottom:   rgba(0,0,0,0.03);
+  --glass-blur:            28px;
+  --glass-saturate:        170%;
+  --glass-brightness:      1.04;
+  --glass-sheen:           rgba(255,255,255,0.32);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.74);
+  --glass-shadow:          0 1px 2px rgba(30,26,20,0.03),
+                           0 4px 14px rgba(30,26,20,0.05),
+                           0 12px 36px rgba(30,26,20,0.08);
+  --shadow-sm:  0 1px 3px rgba(30,26,20,0.04);
+  --shadow-md:  0 4px 16px rgba(30,26,20,0.06);
+  --shadow-lg:  0 8px 32px rgba(30,26,20,0.09);
+
+  /* ── 红雷辉光：顶部灼热红晕 ── */
+  --augusta-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(207,58,47,0.08) 0%, transparent 55%);
+}
+
+:root[data-theme="augusta"] body {
+  background:
+    /* 1. 顶部红雷辉光 */
+    var(--augusta-glow),
+    /* 2. 高马尾扫掠 —— 右倾对角线（模拟长发垂下） */
+    repeating-linear-gradient(
+      68deg,
+      transparent 0px,
+      transparent 48px,
+      rgba(207,58,47,0.04) 48px,
+      rgba(207,58,47,0.04) 49px
+    ),
+    /* 3. 剑刃交叠 —— 左倾逆对角线（模拟王者之剑交错） */
+    repeating-linear-gradient(
+      -22deg,
+      transparent 0px,
+      transparent 64px,
+      rgba(212,164,72,0.035) 64px,
+      rgba(212,164,72,0.035) 65px
+    ),
+    /* 4. 雷电磁场 —— 金色微光标点（磁能残余） */
+    radial-gradient(circle at 8% 22%, rgba(212,164,72,0.10) 0px, transparent 5px),
+    radial-gradient(circle at 65% 28%, rgba(207,58,47,0.07) 0px, transparent 7px),
+    radial-gradient(circle at 42% 78%, rgba(212,164,72,0.06) 0px, transparent 6px),
+    radial-gradient(circle at 85% 68%, rgba(207,58,47,0.05) 0px, transparent 5px),
+    radial-gradient(circle at 18% 60%, rgba(212,164,72,0.04) 0px, transparent 7px),
+    /* 5. 底色 */
+    var(--color-bg);
+}
+
+/* ═══════════════════════════════════════════════════════════
    Tab 导航 —— 紫色底线 + 选中发光
    ═══════════════════════════════════════════════════════════ */
 [data-theme="kallen"] .tab-btn {
@@ -553,6 +638,178 @@
   background: #F0ECFA;
   border: 1px solid rgba(110,92,191,0.25);
   color: #5A4894;
+}
+
+/* ============================================================
+   Augusta Visual Overrides — 赫日威临 · 凡铁铸剑
+   ============================================================ */
+
+/* ── Tab 选中：红雷底线 ── */
+[data-theme="augusta"] .tab-btn { color: #8A7C68; }
+[data-theme="augusta"] .tab-btn:hover { color: #CF3A2F; }
+[data-theme="augusta"] .tab-btn.active {
+  color: #CF3A2F;
+  border-bottom: 2px solid #CF3A2F;
+}
+
+/* ── 设备卡片：白铠缎带 + 剑刃印记 ── */
+[data-theme="augusta"] .device-card {
+  border: none;
+  border-top: 1px solid rgba(207,58,47,0.28);
+  border-right: 1px solid rgba(212,164,72,0.10);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+/* 王者之剑刻印 —— 右上角金色菱形（剑格／纹章） */
+[data-theme="augusta"] .device-card::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 5px;
+  height: 5px;
+  background: rgba(212,164,72,0.28);
+  transform: rotate(45deg);
+  z-index: 4;
+  pointer-events: none;
+}
+/* 红雷灼痕 —— 左下角微暗圆点（磁能残余） */
+[data-theme="augusta"] .device-card::after {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(207,58,47,0.22);
+  z-index: 4;
+  pointer-events: none;
+}
+[data-theme="augusta"] .device-card:hover {
+  border-top-color: rgba(207,58,47,0.45);
+  border-right-color: rgba(212,164,72,0.20);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 1px rgba(207,58,47,0.06);
+}
+
+/* ── 环状统计卡片：红雷顶边 ── */
+[data-theme="augusta"] .ring-card {
+  border: none;
+  border-top: 2px solid rgba(207,58,47,0.20);
+}
+[data-theme="augusta"] .ring-card:hover {
+  border-top-color: rgba(207,58,47,0.36);
+}
+
+/* ── 图表面板卡片 ── */
+[data-theme="augusta"] .chart-card {
+  border: none;
+  border-top: 2px solid rgba(207,58,47,0.18);
+}
+
+/* ── 统计卡片：红雷左线 ── */
+[data-theme="augusta"] .stat-item {
+  border-left: 2px solid #CF3A2F;
+}
+
+/* ── 订阅卡片：金铁粗边 ── */
+[data-theme="augusta"] .sub-card {
+  border: none;
+  border-top: 1px solid rgba(207,58,47,0.18);
+  border-left: 2px solid #CF3A2F;
+}
+
+/* ── 订阅概览卡片 ── */
+[data-theme="augusta"] .sub-overview-card {
+  border: none;
+  border-top: 1px solid rgba(207,58,47,0.18);
+}
+
+/* ── 按钮：红→金渐变（熔铁锻剑） ── */
+[data-theme="augusta"] .btn-primary {
+  background: #CF3A2F;
+}
+[data-theme="augusta"] .btn-primary:hover {
+  background: #B82820;
+}
+[data-theme="augusta"] .btn-primary:active {
+  background: #A02018;
+}
+[data-theme="augusta"] .icon-btn { color: #CF3A2F; }
+[data-theme="augusta"] .icon-btn:hover { background: #FDF3F1; }
+
+/* ── 输入框 / 下拉框：红雷聚焦环 ── */
+[data-theme="augusta"] input:focus,
+[data-theme="augusta"] select:focus,
+[data-theme="augusta"] textarea:focus {
+  border-color: #CF3A2F;
+  box-shadow: 0 0 0 3px rgba(207,58,47,0.10);
+}
+
+/* ── 弹窗：红边修饰 ── */
+[data-theme="augusta"] .modal-sheet {
+  border: 1px solid rgba(207,58,47,0.16);
+}
+
+/* ── 下拉菜单 ── */
+[data-theme="augusta"] .action-dropdown {
+  border: 1px solid rgba(207,58,47,0.14);
+}
+
+/* ── App Header：底部红雷渐变线（模拟剑刃划过） ── */
+[data-theme="augusta"] .app-header {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(207,58,47,0.20) 10%,
+    rgba(212,164,72,0.35) 35%,
+    rgba(207,58,47,0.25) 60%,
+    rgba(212,164,72,0.18) 80%,
+    transparent 100%
+  ) 1;
+}
+
+/* ── 工具栏 ── */
+[data-theme="augusta"] .toolbar select,
+[data-theme="augusta"] .sub-toolbar select {
+  border-color: #E8E0D4;
+}
+[data-theme="augusta"] .toolbar select:hover,
+[data-theme="augusta"] .sub-toolbar select:hover {
+  border-color: #CF3A2F;
+}
+
+/* ── 对比表格：锻白表头 ── */
+[data-theme="augusta"] .compare-table th {
+  background: #F7F3EC;
+  color: #8A5430;
+}
+[data-theme="augusta"] .compare-table td {
+  border-color: #E8E0D4;
+}
+
+/* ── 品牌芯片 ── */
+[data-theme="augusta"] .preset-brand-chip {
+  border-color: #E8E0D4;
+}
+[data-theme="augusta"] .preset-brand-chip:hover {
+  border-color: #CF3A2F;
+  background: #FDF3F1;
+}
+
+/* ── Toast: 红雷底 ── */
+[data-theme="augusta"] .toast.success {
+  background: #FDF3F1;
+  border: 1px solid rgba(207,58,47,0.20);
+  color: #8A2A22;
+}
+
+/* ── 下拉滑块行 ── */
+[data-theme="augusta"] .dropdown-slider-row {
+  border-top-color: rgba(207,58,47,0.12);
 }
 
 /* ============================================================
@@ -2120,6 +2377,7 @@ body.has-custom-bg::before {
               <option value="sonetto">十四行诗</option>
               <option value="sonetto-dark">十四行诗 · 夜</option>
               <option value="kallen">第六夜想曲</option>
+              <option value="augusta">奥古斯塔</option>
             </select>
           </div>
           <div class="divider" role="separator"></div>
@@ -4195,11 +4453,12 @@ function renderRings() {
   const isDark = theme === 'dark' || theme === 'sonetto-dark' ;
   const isSonetto = theme === 'sonetto' || theme === 'sonetto-dark';
   const isKallen = theme === 'kallen' ;
+  const isAugusta = theme === 'augusta';
 
   // Ring colors
   const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#6E5CBF' : '#FF9500';
-  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#8B7AC8' : '#5AC8FA';
+  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#6E5CBF' : isAugusta ? '#CF3A2F' : '#FF9500';
+  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#8B7AC8' : isAugusta ? '#D4A448' : '#5AC8FA';
   const textColor = getThemeColorVar('--color-text') || (isDark ? '#F5F5F7' : '#1C1C1E');
 
   const CANVAS_SIZE = 200;
@@ -4716,6 +4975,7 @@ function updateThemeMeta() {
   if (theme === 'dark' || theme === 'sonetto-dark' ) color = '#000000';
   else if (theme === 'sonetto') color = '#F8F5EE';
   else if (theme === 'kallen') color = '#F4F2F8';
+  else if (theme === 'augusta') color = '#F6F4F0';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
