@@ -369,81 +369,84 @@
 :root[data-theme="augusta"] {
   color-scheme: light;
 
-  /* ── 基底：战铠白（象牙白，非纯白）── */
-  --color-bg:              #F6F4F0;
-  --color-bg-card:         #FDFCFA;
+  /* ── 基底：大理石神殿白（暖调，带石质灰）── */
+  --color-bg:              #F7F5EE;
+  --color-bg-card:         #FDFCF8;
   --color-bg-elevated:     #FFFFFF;
-  --color-bg-input:        #F0ECE5;
-  --color-text:            #1E1A14;
-  --color-text-secondary:  #5C5242;
-  --color-text-tertiary:   #8A7C68;
-  --color-separator:       #E8E0D4;
-  --color-fill-tertiary:   #F0EBE2;
-  --color-overlay:         rgba(30,26,20,0.30);
+  --color-bg-input:        #F2EFE6;
+  --color-text:            #292520;
+  --color-text-secondary:  #6A6253;
+  --color-text-tertiary:   #9A9180;
+  --color-separator:       #E8E2D6;
+  --color-fill-tertiary:   #F0ECE2;
+  --color-overlay:         rgba(41,37,32,0.30);
 
-  /* ── 红雷主色 ── */
-  --color-blue:            #CF3A2F;
-  --color-blue-bg:         #FDF3F1;
-  --color-red:             #B82820;
-  --color-red-bg:          #FCECEA;
-  --color-green:           #5A8A72;
-  --color-green-bg:        #EDF5F0;
-  --color-orange:          #D4A448;
-  --color-orange-bg:       #FBF5E7;
-  --color-purple:          #8B6F5E;
+  /* ── 橘红长发 ── */
+  --color-blue:            #E86A3C;
+  --color-blue-bg:         #FDF3EE;
+  --color-red:             #C95730;
+  --color-red-bg:          #FCEBE6;
+  --color-green:           #6B8A74;
+  --color-green-bg:        #EDF3EF;
+  --color-orange:          #C9A86C;
+  --color-orange-bg:       #FBF7EF;
+  --color-purple:          #8A7B68;
   --color-teal:            #9EA89A;
 
-  /* ── 液态玻璃：锻钢冰面 ── */
-  --glass-rgb:             253, 252, 250;
+  /* ── 液态玻璃：大理石冰面 ── */
+  --glass-rgb:             253, 252, 248;
   --glass-alpha:           0.64;
   --glass-alpha-strong:    0.86;
   --glass-alpha-subtle:    0.48;
-  --glass-border:          rgba(207, 58, 47, 0.12);
+  --glass-border:          rgba(201, 168, 108, 0.14);
   --glass-border-bottom:   rgba(0,0,0,0.03);
   --glass-blur:            28px;
-  --glass-saturate:        170%;
+  --glass-saturate:        160%;
   --glass-brightness:      1.04;
-  --glass-sheen:           rgba(255,255,255,0.32);
-  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.74);
-  --glass-shadow:          0 1px 2px rgba(30,26,20,0.03),
-                           0 4px 14px rgba(30,26,20,0.05),
-                           0 12px 36px rgba(30,26,20,0.08);
-  --shadow-sm:  0 1px 3px rgba(30,26,20,0.04);
-  --shadow-md:  0 4px 16px rgba(30,26,20,0.06);
-  --shadow-lg:  0 8px 32px rgba(30,26,20,0.09);
+  --glass-sheen:           rgba(255,255,255,0.34);
+  --glass-shadow-inner:    inset 0 1px 0 rgba(255,255,255,0.76);
+  --glass-shadow:          0 1px 2px rgba(41,37,32,0.03),
+                           0 4px 14px rgba(41,37,32,0.05),
+                           0 12px 36px rgba(41,37,32,0.08);
+  --shadow-sm:  0 1px 3px rgba(41,37,32,0.04);
+  --shadow-md:  0 4px 16px rgba(41,37,32,0.06);
+  --shadow-lg:  0 8px 32px rgba(41,37,32,0.09);
 
-  /* ── 红雷辉光：顶部灼热红晕 ── */
-  --augusta-glow: radial-gradient(ellipse 80% 40% at 50% -8%, rgba(207,58,47,0.08) 0%, transparent 55%);
+  /* ── 神庙顶光：金色放射辉光 ── */
+  --augusta-glow: radial-gradient(ellipse 80% 45% at 50% -8%, rgba(201,168,108,0.10) 0%, transparent 55%);
+
+  /* ── 古希腊回纹（建筑檐口）── */
+  --augusta-meander: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Cpath d='M0 0h40v2H0zM0 0v20h2V0zM4 0v8h8v-2H6V0zM16 0v8h8v-2H18V0zM28 0v8h8v-2H30V0zM4 10h8v2H6v6H4V10zM16 10h8v2H18v6H16V10zM28 10h8v2H30v6H28V10z' fill='%23C9A86C' fill-opacity='0.35'/%3E%3C/svg%3E");
 }
 
 :root[data-theme="augusta"] body {
-  background:
-    /* 1. 顶部红雷辉光 */
+  background-image:
+    /* 1. 顶部回纹檐口 */
+    var(--augusta-meander),
+    /* 2. 神庙顶光 */
     var(--augusta-glow),
-    /* 2. 高马尾扫掠 —— 右倾对角线（模拟长发垂下） */
-    repeating-linear-gradient(
-      68deg,
-      transparent 0px,
-      transparent 48px,
-      rgba(207,58,47,0.04) 48px,
-      rgba(207,58,47,0.04) 49px
-    ),
-    /* 3. 剑刃交叠 —— 左倾逆对角线（模拟王者之剑交错） */
-    repeating-linear-gradient(
-      -22deg,
-      transparent 0px,
-      transparent 64px,
-      rgba(212,164,72,0.035) 64px,
-      rgba(212,164,72,0.035) 65px
-    ),
-    /* 4. 雷电磁场 —— 金色微光标点（磁能残余） */
-    radial-gradient(circle at 8% 22%, rgba(212,164,72,0.10) 0px, transparent 5px),
-    radial-gradient(circle at 65% 28%, rgba(207,58,47,0.07) 0px, transparent 7px),
-    radial-gradient(circle at 42% 78%, rgba(212,164,72,0.06) 0px, transparent 6px),
-    radial-gradient(circle at 85% 68%, rgba(207,58,47,0.05) 0px, transparent 5px),
-    radial-gradient(circle at 18% 60%, rgba(212,164,72,0.04) 0px, transparent 7px),
+    /* 3. 大理石纹理：淡灰石脉 */
+    radial-gradient(ellipse at 20% 30%, rgba(154,145,128,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(154,145,128,0.05) 0%, transparent 45%),
+    linear-gradient(105deg, transparent 60%, rgba(154,145,128,0.03) 60%, rgba(154,145,128,0.03) 62%, transparent 62%),
+    linear-gradient(35deg, transparent 40%, rgba(154,145,128,0.025) 40%, rgba(154,145,128,0.025) 42%, transparent 42%),
+    /* 4. 橘红微光：发梢余晖 */
+    radial-gradient(circle at 8% 22%, rgba(232,106,60,0.08) 0px, transparent 5px),
+    radial-gradient(circle at 65% 28%, rgba(232,106,60,0.06) 0px, transparent 7px),
+    radial-gradient(circle at 42% 78%, rgba(201,168,108,0.06) 0px, transparent 6px),
+    radial-gradient(circle at 85% 68%, rgba(232,106,60,0.05) 0px, transparent 5px),
+    radial-gradient(circle at 18% 60%, rgba(201,168,108,0.04) 0px, transparent 7px),
     /* 5. 底色 */
-    var(--color-bg);
+    linear-gradient(var(--color-bg), var(--color-bg));
+  background-size:
+    40px 20px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%,
+    100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-repeat:
+    repeat-x, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+    no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-position:
+    top center, top center, 0 0, 0 0, 0 0, 0 0,
+    0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -641,175 +644,215 @@
 }
 
 /* ============================================================
-   Augusta Visual Overrides — 赫日威临 · 凡铁铸剑
+   Augusta Visual Overrides — 奥古斯塔 · 神谕殿
+   风格：古希腊大理石 + 橘红长发 + 古铜金纹章 + 威严神庙
    ============================================================ */
 
-/* ── Tab 选中：红雷底线 ── */
-[data-theme="augusta"] .tab-btn { color: #8A7C68; }
-[data-theme="augusta"] .tab-btn:hover { color: #CF3A2F; }
+/* ── Tab 导航：月桂柱式选中态 ── */
+[data-theme="augusta"] .tab-btn { color: #9A9180; }
+[data-theme="augusta"] .tab-btn:hover { color: #C9A86C; }
 [data-theme="augusta"] .tab-btn.active {
-  color: #CF3A2F;
-  border-bottom: 2px solid #CF3A2F;
-}
-
-/* ── 设备卡片：白铠缎带 + 剑刃印记 ── */
-[data-theme="augusta"] .device-card {
-  border: none;
-  border-top: 1px solid rgba(207,58,47,0.28);
-  border-right: 1px solid rgba(212,164,72,0.10);
-  border-radius: var(--radius-md);
+  color: #E86A3C;
+  border-bottom: 2px solid #E86A3C;
+  box-shadow: inset 0 -1px 0 #C9A86C;
+  text-shadow: 0 0 18px rgba(232,106,60,0.15);
   position: relative;
 }
-/* 王者之剑刻印 —— 右上角金色菱形（剑格／纹章） */
+/* 柱头金珠 —— 选中 tab 顶部小太阳 */
+[data-theme="augusta"] .tab-btn.active::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #C9A86C;
+  box-shadow: 0 0 6px rgba(201,168,108,0.5);
+  pointer-events: none;
+}
+
+/* ── 设备卡片：大理石碑 + 檐口回纹 ── */
+[data-theme="augusta"] .device-card {
+  border: none;
+  border-left: 1px solid rgba(201,168,108,0.10);
+  border-radius: var(--radius-md);
+  position: relative;
+  background-image:
+    linear-gradient(90deg, rgba(154,145,128,0.02) 0%, transparent 8%, transparent 92%, rgba(154,145,128,0.02) 100%);
+  box-shadow: inset 0 -1px 0 0 rgba(232,106,60,0.18);
+}
+/* 顶部回纹檐口 —— 古希腊神庙标志 */
 [data-theme="augusta"] .device-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background-image: var(--augusta-meander);
+  background-size: 24px 12px;
+  background-repeat: repeat-x;
+  background-position: top center;
+  z-index: 4;
+  pointer-events: none;
+}
+/* 古铜纹章圆徽 —— 狮鹫/太阳 */
+[data-theme="augusta"] .device-card::after {
   content: "";
   position: absolute;
   top: 10px;
   right: 12px;
-  width: 5px;
-  height: 5px;
-  background: rgba(212,164,72,0.28);
-  transform: rotate(45deg);
-  z-index: 4;
-  pointer-events: none;
-}
-/* 红雷灼痕 —— 左下角微暗圆点（磁能残余） */
-[data-theme="augusta"] .device-card::after {
-  content: "";
-  position: absolute;
-  bottom: 10px;
-  left: 12px;
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(207,58,47,0.22);
-  z-index: 4;
+  border: 1px solid rgba(201,168,108,0.45);
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.8) 0%, rgba(201,168,108,0.15) 50%, transparent 70%);
+  z-index: 5;
   pointer-events: none;
 }
 [data-theme="augusta"] .device-card:hover {
-  border-top-color: rgba(207,58,47,0.45);
-  border-right-color: rgba(212,164,72,0.20);
+  border-left-color: rgba(201,168,108,0.20);
   box-shadow:
     var(--shadow-md),
-    0 0 0 1px rgba(207,58,47,0.06);
+    0 0 0 1px rgba(201,168,108,0.08),
+    0 8px 24px rgba(201,168,108,0.06),
+    inset 0 -1px 0 0 rgba(232,106,60,0.22);
 }
 
-/* ── 环状统计卡片：红雷顶边 ── */
+/* ── 环状统计卡片：神殿圆窗 ── */
 [data-theme="augusta"] .ring-card {
   border: none;
-  border-top: 2px solid rgba(207,58,47,0.20);
+  border-top: 2px solid rgba(201,168,108,0.22);
+  border-bottom: 1px solid rgba(201,168,108,0.10);
 }
 [data-theme="augusta"] .ring-card:hover {
-  border-top-color: rgba(207,58,47,0.36);
+  border-top-color: rgba(201,168,108,0.38);
 }
 
-/* ── 图表面板卡片 ── */
+/* ── 图表面板卡片：檐口顶线 ── */
 [data-theme="augusta"] .chart-card {
   border: none;
-  border-top: 2px solid rgba(207,58,47,0.18);
+  border-top: 2px solid rgba(201,168,108,0.20);
 }
 
-/* ── 统计卡片：红雷左线 ── */
+/* ── 统计卡片：石柱铭牌 ── */
 [data-theme="augusta"] .stat-item {
-  border-left: 2px solid #CF3A2F;
+  border-left: 2px solid #C9A86C;
+  background-image: linear-gradient(90deg, rgba(201,168,108,0.04) 0%, transparent 12%);
 }
 
-/* ── 订阅卡片：金铁粗边 ── */
+/* ── 订阅卡片：卷轴封条 ── */
 [data-theme="augusta"] .sub-card {
   border: none;
-  border-top: 1px solid rgba(207,58,47,0.18);
-  border-left: 2px solid #CF3A2F;
+  border-top: 1px solid rgba(201,168,108,0.18);
+  border-left: 2px solid #C9A86C;
 }
 
 /* ── 订阅概览卡片 ── */
 [data-theme="augusta"] .sub-overview-card {
   border: none;
-  border-top: 1px solid rgba(207,58,47,0.18);
+  border-top: 1px solid rgba(201,168,108,0.18);
 }
 
-/* ── 按钮：红→金渐变（熔铁锻剑） ── */
+/* ── 按钮：陶土→青铜浮雕 ── */
 [data-theme="augusta"] .btn-primary {
-  background: #CF3A2F;
+  background: linear-gradient(180deg, #E86A3C 0%, #C95730 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 2px 4px rgba(41,37,32,0.08);
 }
 [data-theme="augusta"] .btn-primary:hover {
-  background: #B82820;
+  background: linear-gradient(180deg, #D45D32 0%, #B84C28 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.20), 0 3px 6px rgba(41,37,32,0.10);
 }
 [data-theme="augusta"] .btn-primary:active {
-  background: #A02018;
+  background: linear-gradient(180deg, #B84C28 0%, #A04022 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.12);
 }
-[data-theme="augusta"] .icon-btn { color: #CF3A2F; }
-[data-theme="augusta"] .icon-btn:hover { background: #FDF3F1; }
+[data-theme="augusta"] .icon-btn { color: #C9A86C; }
+[data-theme="augusta"] .icon-btn:hover { background: #FBF7EF; }
 
-/* ── 输入框 / 下拉框：红雷聚焦环 ── */
+/* ── 输入框 / 下拉框：神庙祭坛聚焦环 ── */
 [data-theme="augusta"] input:focus,
 [data-theme="augusta"] select:focus,
 [data-theme="augusta"] textarea:focus {
-  border-color: #CF3A2F;
-  box-shadow: 0 0 0 3px rgba(207,58,47,0.10);
+  border-color: #C9A86C;
+  box-shadow: 0 0 0 3px rgba(201,168,108,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
-/* ── 弹窗：红边修饰 ── */
+/* ── 弹窗：神谕石板 ── */
 [data-theme="augusta"] .modal-sheet {
-  border: 1px solid rgba(207,58,47,0.16);
+  border: 1px solid rgba(201,168,108,0.18);
+  border-top: 2px solid rgba(201,168,108,0.28);
 }
 
 /* ── 下拉菜单 ── */
 [data-theme="augusta"] .action-dropdown {
-  border: 1px solid rgba(207,58,47,0.14);
+  border: 1px solid rgba(201,168,108,0.16);
 }
 
-/* ── App Header：底部红雷渐变线（模拟剑刃划过） ── */
+/* ── App Header：神庙檐口线 ── */
 [data-theme="augusta"] .app-header {
   border-bottom: 1px solid transparent;
   border-image: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(207,58,47,0.20) 10%,
-    rgba(212,164,72,0.35) 35%,
-    rgba(207,58,47,0.25) 60%,
-    rgba(212,164,72,0.18) 80%,
+    rgba(201,168,108,0.25) 12%,
+    rgba(232,106,60,0.35) 40%,
+    rgba(201,168,108,0.25) 68%,
     transparent 100%
   ) 1;
 }
 
-/* ── 工具栏 ── */
+/* ── 工具栏：神殿铭文 ── */
 [data-theme="augusta"] .toolbar select,
 [data-theme="augusta"] .sub-toolbar select {
-  border-color: #E8E0D4;
+  border-color: #E8E2D6;
+  background-color: #FDFCF8;
 }
 [data-theme="augusta"] .toolbar select:hover,
 [data-theme="augusta"] .sub-toolbar select:hover {
-  border-color: #CF3A2F;
+  border-color: #C9A86C;
 }
 
-/* ── 对比表格：锻白表头 ── */
+/* ── 对比表格：柱廊神龛 ── */
 [data-theme="augusta"] .compare-table th {
-  background: #F7F3EC;
-  color: #8A5430;
+  background: #F2EFE6;
+  color: #8A6E3E;
+  border-bottom: 2px solid #C9A86C;
 }
 [data-theme="augusta"] .compare-table td {
-  border-color: #E8E0D4;
+  border-color: #E8E2D6;
 }
 
-/* ── 品牌芯片 ── */
+/* ── 品牌芯片 / 预设项：纹章盾 ── */
 [data-theme="augusta"] .preset-brand-chip {
-  border-color: #E8E0D4;
+  border-color: #E8E2D6;
+  background: #FDFCF8;
 }
 [data-theme="augusta"] .preset-brand-chip:hover {
-  border-color: #CF3A2F;
-  background: #FDF3F1;
+  border-color: #C9A86C;
+  background: #FBF7EF;
 }
 
-/* ── Toast: 红雷底 ── */
+/* ── Toast: 神谕羊皮卷 ── */
 [data-theme="augusta"] .toast.success {
-  background: #FDF3F1;
-  border: 1px solid rgba(207,58,47,0.20);
-  color: #8A2A22;
+  background: #FBF7EF;
+  border: 1px solid rgba(201,168,108,0.22);
+  border-top: 2px solid rgba(232,106,60,0.35);
+  color: #8A5430;
 }
 
 /* ── 下拉滑块行 ── */
 [data-theme="augusta"] .dropdown-slider-row {
-  border-top-color: rgba(207,58,47,0.12);
+  border-top-color: rgba(201,168,108,0.12);
+}
+
+/* ── 添加按钮 / 浮动操作：太阳纹章 ── */
+[data-theme="augusta"] .fab-add {
+  background: linear-gradient(135deg, #E86A3C 0%, #C9A86C 100%);
+  box-shadow: 0 4px 14px rgba(232,106,60,0.25);
 }
 
 /* ============================================================
@@ -4457,8 +4500,8 @@ function renderRings() {
 
   // Ring colors
   const trackColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#6E5CBF' : isAugusta ? '#CF3A2F' : '#FF9500';
-  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#8B7AC8' : isAugusta ? '#D4A448' : '#5AC8FA';
+  let colorIdle = isSonetto ? '#E38B37' : isKallen ? '#6E5CBF' : isAugusta ? '#E86A3C' : '#FF9500';
+  let colorCost = isSonetto ? '#A8D5C8' : isKallen ? '#8B7AC8' : isAugusta ? '#C9A86C' : '#5AC8FA';
   const textColor = getThemeColorVar('--color-text') || (isDark ? '#F5F5F7' : '#1C1C1E');
 
   const CANVAS_SIZE = 200;
@@ -4975,7 +5018,7 @@ function updateThemeMeta() {
   if (theme === 'dark' || theme === 'sonetto-dark' ) color = '#000000';
   else if (theme === 'sonetto') color = '#F8F5EE';
   else if (theme === 'kallen') color = '#F4F2F8';
-  else if (theme === 'augusta') color = '#F6F4F0';
+  else if (theme === 'augusta') color = '#F7F5EE';
   else if (theme === 'light') color = '#F2F2F7';
   else if (!theme && prefersDark) color = '#000000';
   const meta = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
