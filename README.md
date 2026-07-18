@@ -31,7 +31,7 @@ Track how fast your unused gadgets lose value and when their warranties expire. 
 - 多设备并排对比
 
 **外观**（Web 版）
-- 5 套主题：浅色、深色、奥古斯塔（大理石金色调）、Kallen、Sonetto（含深色变体）
+- 5 套主题：浅色、深色、奥古斯塔（七丘）、第六夜想曲、十四行诗（含深色「重塑之手」变体）
 - 自定义背景图，存入 IndexedDB，不占 localStorage 配额
 - 毛玻璃质感界面
 
